@@ -17,11 +17,13 @@ package com.events
 		public static var ERROR_RECORD:String = "recordError";
 		public static var SHOW_MICSETTING:String = "userClickRecord";
 		
+		public static var STARTUP:String = "flashStatedUp";
 		private var _url:String = "";
 		private var _time:Number= 0 ;
 		private var _name:String = "";
 		private var _micAccess:Boolean = false;
 		private var _uploadPercent:Number = 0;
+		
 		public function MainEvents(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
 			super(type, bubbles, cancelable);

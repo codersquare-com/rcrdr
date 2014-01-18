@@ -65,6 +65,10 @@
 		         thisMovie("VietEDPlayer").playURL(value);
 		     }
 		     
+		     function doneStep() {
+		     thisMovie("VietEDPlayer").doneStep();
+		     	
+		     }
 		     function JSCallRecord(value1, value2)
 		     {
 		     	thisMovie("VietEDPlayer").recordSound(value1,value2);
@@ -129,18 +133,19 @@
         </div>
         <form name="form1" onsubmit="return false;">
           <a> JS control </a> <br />
-          <input type="text" name="input" value="" />         
+          <input type="text" name="input" value="1.mp3" />         
           <input type="button" value="playurl" onclick="playURL(this.form.input.value);" /><br />         
-          <input type="text" name="input1" value="" />
-          <input type="text" name="input2" value="" />
+          <input type="text" name="input1" value="name" />
+          <input type="text" name="input2" value="12" />
+          
           <input type="button" value="recordSound" onclick="JSCallRecord(this.form.input1.value,this.form.input2.value);" /><br />
-           
+            <input type="button" value="done" onclick="doneStep();" /><br />      
           <a> Button for user </a> <br />
           <input type="button" value="play" onclick="play();" /><br />
           <input type="button" value="replay" onclick="replay();" /><br />
           <input type="button" value="record done" onclick="recordDone();" /><br />
           <input type="button" value="record" onclick="record();" /><br />
-         <textarea cols="60" rows="20" name="output" readonly="true">Initializing...</textarea>
+         <textarea cols="60" rows="20" name="output" >Initializing...</textarea>
      	</form>
         <noscript>
             <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="${width}" height="${height}" id="${application}">

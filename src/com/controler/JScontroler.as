@@ -37,10 +37,15 @@ package com.controler
 				addEventListener(MainEvents.RECORD_DONE, recordDone);
 				addEventListener(MainEvents.UPLOAD_PROGESS, uploadProgess);
 				addEventListener(MainEvents.SHOW_MICSETTING, startAction);
+				addEventListener(MainEvents.STARTUP, flashStartup);
 			}
 			enableAll();
 		}
 		
+		protected function flashStartup(event:Event):void
+		{
+			ExternalInterface.call(Variables.eventHanlers,MainEvents.STARTUP);
+		}		
 		
 		
 		public static function getInstance():JScontroler

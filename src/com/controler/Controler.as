@@ -48,6 +48,9 @@ package com.controler
 			playlist = new Playlist;
 			_recorder = new MicRecorder;
 			playlist.addCallBack(soundCompleteHandler);
+			
+			// startup
+			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.STARTUP,true));
 		}
 		
 		protected function doneStep(event:Event):void
