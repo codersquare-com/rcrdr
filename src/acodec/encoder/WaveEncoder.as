@@ -96,5 +96,20 @@ package acodec.encoder
 			_name = n;
 		}
 		
+		public function clone():IEncoder {
+			var tmp:IEncoder = new WaveEncoder(_volume);
+			(tmp as WaveEncoder).setData(_bytes,_buffer,_name);
+			return tmp;
+		}
+		
+		public function setData(bytes:ByteArray, buffer:ByteArray, name:String):void
+		{
+			_bytes.length = 0;
+			_buffer.length = 0;			
+			_name = name;
+			_bytes.writeBytes(bytes);
+			_buffer.writeBytes(buffer);
+		}			
+		
 	}
 }

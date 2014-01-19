@@ -30,7 +30,6 @@ package com.controler
 		private var playlist:Playlist;
 		private var timer:Timer;
 		private var curEncoderIndex:Number;
-		private var tmp:IEncoder;
 		public function Controler(main:VietEDPlayer)
 		{
 			_main = main;
@@ -48,11 +47,16 @@ package com.controler
 			playlist = new Playlist;
 			_recorder = new MicRecorder;
 			playlist.addCallBack(soundCompleteHandler);
-			
+			_recorder.addCallBack(stopRecord, startRecord);
 			// startup
 			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.STARTUP,true));
 		}
-		
+		private function stopRecord() :void {
+			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.STOP_RECORD,true));
+		}
+		private function startRecord() : void {
+			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.START_RECORD,true));
+		}
 		protected function doneStep(event:Event):void
 		{
 			this.status = Variables.DONE;
@@ -71,18 +75,35 @@ package com.controler
 			_recorder.startup(iencoder,_mic);
 			_recorder.record();
 			_recorder.addEventListener(Event.COMPLETE, user_record_done);
+			
 			timer= new Timer(1000,event.time);
 			timer.addEventListener(TimerEvent.TIMER_COMPLETE, record_timeout);
 			timer.start();
 		}
 		
-		protected function user_record_done(event:Event):void
-		{
-			this.status = Variables.READY;
+		private function addCurrentRecordToPlaylist():void {			
 			playlist.AddWavSound((encoders[curEncoderIndex] as IEncoder).getByteArray());
 			PLAY();
 			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.RECORD_DONE,true));
 			trace("user record done");
+		}
+		
+		protected function user_record_done(event:Event):void
+		{
+			if(this.status == Variables.RECORDDONE){
+				this.status = Variables.READY;
+				addCurrentRecordToPlaylist();
+			} 
+			
+			if (this.status == Variables.RECORD) {
+				// use tmp sound
+				playlist.AddWaveSoundAndPlay((encoders[curEncoderIndex] as IEncoder).getByteArray());
+			}
+			
+			if (this.status == Variables.RE_RECORD) {
+				_recorder.record();
+				this.status = Variables.RECORD;
+			}
 		}
 		
 		protected function record_timeout(event:TimerEvent):void
@@ -114,8 +135,6 @@ package com.controler
 		{
 			if(this.status == Variables.RECORD){			
 				_recorder.stop();
-				tmp = new Mp3Encoder;
-				_recorder.startup(tmp,_mic);				
 			}
 			trace("replay record");
 		}
@@ -123,26 +142,57 @@ package com.controler
 		protected function recordDoneClick(event:ButtonEvents):void
 		{
 			timer.removeEventListener(TimerEvent.TIMER_COMPLETE,record_timeout);
-			_recorder.stop();
+			try {
+				var isStoping:Boolean = _recorder.stop();
+				if(!isStoping) {					
+					this.status = Variables.READY;
+					addCurrentRecordToPlaylist();
+				}
+				else // wait to done					
+					this.status = Variables.RECORDDONE;
+			}catch (e:Error)
+			{
+				this.status = Variables.READY;
+			}
 			trace("record done");
 		}
 		
 		protected function recordClick(event:ButtonEvents):void
 		{
 			if(status == Variables.INITIAL){
-				JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.SHOW_MICSETTING,true));
-				tmp = new Mp3Encoder;
-				_recorder.startup(tmp,_mic);
-				_recorder.record();
-				
-				_recorder.microphone.addEventListener(StatusEvent.STATUS, this.userAccessMicEvent); 
+				_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);	
+				addEventListener(MainEvents.RESIZED, showSetting);
 			}
 			
-			if(status == Variables.RECORD)
+			if(status == Variables.RECORD )
 			{
+				try{
+					var isStoping:Boolean = _recorder.stop();
+					if(!isStoping) {	
+						_recorder.record();
+					}else
+						status = Variables.RE_RECORD;
+					playlist.STOPALL();
+				} catch (e:Error) {}
 				_recorder.record();
 			}
 			trace("Record click");
+		}
+		
+		protected function onStageResize(event:Event):void
+		{
+			_main.stage.removeEventListener(Event.RESIZE, onStageResize);
+			dispatchEvent(new MainEvents(MainEvents.RESIZED,true));
+		}
+		
+		protected function showSetting(event:Event):void
+		{
+			removeEventListener(MainEvents.RESIZED, showSetting);
+			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.SHOW_MICSETTING,true));
+			var tmp:Mp3Encoder = new Mp3Encoder;
+			_recorder.startup(tmp,_mic);
+			_recorder.record();			
+			_recorder.microphone.addEventListener(StatusEvent.STATUS, this.userAccessMicEvent); 			
 		}
 		
 		protected function userAccessMicEvent(event:StatusEvent):void

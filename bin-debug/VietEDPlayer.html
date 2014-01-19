@@ -29,6 +29,7 @@
         </style>
         <script language="JavaScript">
 		     
+         		showMic = true;
 		     function thisMovie(movieName) {
 		         if (navigator.appName.indexOf("Microsoft") != -1) {
 		             return window[movieName];
@@ -37,18 +38,21 @@
 		         }
 		     }
 		     function pageInit() {
-         		jsReady = true;
          		document.getElementById('flashWarper').setAttribute("style","width:10px");
          		document.getElementById('flashWarper').setAttribute("style","height:10px");
      		}
+     		
 		     // butoon function
 		     
-		     function record(){
-		         
-         		document.getElementById('flashWarper').setAttribute("style","width:200px");
-         		document.getElementById('flashWarper').setAttribute("style","height:150px");
-		         thisMovie("VietEDPlayer").recordClick();
+		     function record(){		         	
+			    if(showMic){	     
+	         		document.getElementById('flashWarper').setAttribute("style","width:200px");
+	         		document.getElementById('flashWarper').setAttribute("style","height:150px");
+	         		showMic = false;
+	         	}
+		        thisMovie("VietEDPlayer").recordClick();
 		     }
+		     
 		     function recordDone(){
 		     	thisMovie("VietEDPlayer").recordDoneClick();
 		     }
@@ -76,10 +80,14 @@
 		     
 		     // js receive as function
 		     function jsEventHandler() {
-		     document.forms["form1"].output.value=""
+		     var tmp = document.forms["form1"].output.value;
+		     document.forms["form1"].output.value="";
 		     for (var i = 0; i < arguments.length; i++) {
 		         document.forms["form1"].output.value += "ActionScript says: " + arguments[i] + "\n";
-  				}  				
+  				}  			
+  			document.forms["form1"].output.value += "\n----\n" + tmp;
+  			if(arguments[0] == 'microphoneAccess' && arguments[1] == 'true')
+  			 pageInit();	
 		     }
 		 </script>
         <!-- Enable Browser History by replacing useBrowserHistory tokens with two hyphens -->
@@ -136,7 +144,7 @@
           <input type="text" name="input" value="1.mp3" />         
           <input type="button" value="playurl" onclick="playURL(this.form.input.value);" /><br />         
           <input type="text" name="input1" value="name" />
-          <input type="text" name="input2" value="12" />
+          <input type="text" name="input2" value="120" />
           
           <input type="button" value="recordSound" onclick="JSCallRecord(this.form.input1.value,this.form.input2.value);" /><br />
             <input type="button" value="done" onclick="doneStep();" /><br />      

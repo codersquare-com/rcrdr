@@ -7,17 +7,19 @@ package com.events
 		public static const PLAY_URL:String 	 = "playURL";
 		public static const DONE_STEP:String 	 = "doneStep";
 		public static const UPLOAD_URL:String 	 = "uploadURL";
-		public static const RECORD_SOUND:String 	 = "recordSound";
-		
+		public static const RECORD_SOUND:String 	 = "recordSound";		
 		public static const MICROPHONE_ACCESS:String 	 = "microphoneAccess";
 		public static const PLAY_DONE:String 	 = "playDone";
-		public static const RECORD_DONE:String 	 = "recordDone";
-		
+		public static const RECORD_DONE:String 	 = "recordDone";		
 		public static const UPLOAD_PROGESS:String 	 = "uploadProgess";
-		public static var ERROR_RECORD:String = "recordError";
-		public static var SHOW_MICSETTING:String = "userClickRecord";
+		public static const ERROR_RECORD:String = "recordError";
+		public static const SHOW_MICSETTING:String = "userClickRecord";		
+		public static const STARTUP:String = "flashStatedUp";	
+		public static const RESIZED:String = "resized";
 		
-		public static var STARTUP:String = "flashStatedUp";
+		public static var STOP_RECORD:String = "stopRecord";
+		public static var START_RECORD:String = "startRecord";
+		
 		private var _url:String = "";
 		private var _time:Number= 0 ;
 		private var _name:String = "";

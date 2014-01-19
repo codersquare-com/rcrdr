@@ -13,5 +13,7 @@ package com.common
 		public static var eventHanlers:String = "jsEventHandler";
 		public static var RECORD:String = "recordStatus";
 		public static var DONE:String = "doneStatus";
+		public static var RECORDDONE:String = "recordDoneStatus";
+		public static var RE_RECORD:String = "reRecord";
 	}
 }

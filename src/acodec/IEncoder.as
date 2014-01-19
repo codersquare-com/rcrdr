@@ -8,6 +8,7 @@ package acodec
 		function encode(samples:ByteArray, channels:int=2, bits:int=16, rate:int=44100):void;
 		function getByteArray():ByteArray;
 		function encodeMp3():void;
+		function clone():IEncoder;
 		function get name():String;
 		function set name(n:String):void;
 	}

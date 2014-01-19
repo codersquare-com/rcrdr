@@ -38,11 +38,23 @@ package com.controler
 				addEventListener(MainEvents.UPLOAD_PROGESS, uploadProgess);
 				addEventListener(MainEvents.SHOW_MICSETTING, startAction);
 				addEventListener(MainEvents.STARTUP, flashStartup);
+				addEventListener(MainEvents.START_RECORD, startRecord);
+				addEventListener(MainEvents.STOP_RECORD, stopRecord);
 			}
 			enableAll();
 		}
 		
-		protected function flashStartup(event:Event):void
+		protected function stopRecord(event:MainEvents):void
+		{
+			ExternalInterface.call(Variables.eventHanlers,MainEvents.STOP_RECORD);
+		}
+		
+		protected function startRecord(event:MainEvents):void
+		{
+			ExternalInterface.call(Variables.eventHanlers,MainEvents.START_RECORD);
+		}
+		
+		protected function flashStartup(event:MainEvents):void
 		{
 			ExternalInterface.call(Variables.eventHanlers,MainEvents.STARTUP);
 		}		

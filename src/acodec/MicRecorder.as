@@ -64,7 +64,9 @@ package acodec
 		private var _encoder:IEncoder;
 		private var _completeEvent:Event = new Event ( Event.COMPLETE );
 		private var _recordingEvent:RecordingEvent = new RecordingEvent( RecordingEvent.RECORDING, 0 );
-
+		private var _isRecording:Boolean = false;
+		private var _startAlert:Function;
+		private var _stopAlert:Function;
 		/**
 		 * 
 		 * @param encoder The audio encoder to use
@@ -98,6 +100,9 @@ package acodec
 		{
 			if ( _microphone == null )
 				_microphone = Microphone.getMicrophone();
+			
+			if(_isRecording)
+				return;
 			 
 			_difference = getTimer();
 			
@@ -108,6 +113,9 @@ package acodec
 			
 			_microphone.addEventListener(SampleDataEvent.SAMPLE_DATA, onSampleData);
 			_microphone.addEventListener(StatusEvent.STATUS, onStatus);
+			
+			_isRecording = true;
+			_startAlert();
 		}
 		
 		private function onStatus(event:StatusEvent):void
@@ -132,12 +140,17 @@ package acodec
 		/**
 		 * Stop recording the audio stream and automatically starts the packaging of the output file.
 		 */		
-		public function stop():void
+		public function stop():Boolean
 		{
+			if(!_isRecording)
+				return false;
 			_microphone.removeEventListener(SampleDataEvent.SAMPLE_DATA, onSampleData);			
 			_buffer.position = 0;			
 			_encoder.addEventListener(Event.COMPLETE, completeHandler);
 			_encoder.encode(_buffer, 1);	
+			_isRecording = false;			
+			_stopAlert();
+			return true;
 		}
 		
 		private function completeHandler(e:Event):void
@@ -246,6 +259,12 @@ package acodec
 		public override function toString():String
 		{
 			return "[MicRecorder gain=" + _gain + " rate=" + _rate + " silenceLevel=" + _silenceLevel + " timeOut=" + _timeOut + " microphone:" + _microphone + "]";
+		}
+		
+		public function addCallBack(stopRecord:Function, startRecord:Function):void
+		{
+			_startAlert = startRecord;
+			_stopAlert = stopRecord;
 		}
 	}
 }

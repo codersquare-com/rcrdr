@@ -12,6 +12,7 @@ package com.media
 		private var _currentSound:Number;
 		private var _currentSoundStream:SoundStream;
 		private var _callBack:Function;
+		private var _tmpSoundStream:SoundStream;
 		
 		public function Playlist()
 		{
@@ -32,13 +33,40 @@ package com.media
 			_currentSound = _arrayStream.length - 1;			
 		}
 		
+		public function STOPALL() :void {
+			try {
+				_tmpSoundStream.stop();
+				_currentSoundStream.stop();
+			}catch (e:Error)
+			{
+				trace("tmp stopped");
+			}
+		}
+		public function AddWaveSoundAndPlay(byte:ByteArray) : void {
+			try {
+				_tmpSoundStream.stop();
+			}catch (e:Error)
+			{
+				trace("tmp stopped");
+			}
+			_tmpSoundStream = new WavSound(byte);
+			_tmpSoundStream.play();
+		}
+		
 		public function play():void
 		{
 			if(_currentSound >= _arrayStream.length)
 				return;
+			try {
+				// stop tmp
+				_tmpSoundStream.stop();
+			}catch (e:Error)
+			{
+				trace("tmp stopped");
+			}
 			_currentSoundStream = _arrayStream[_currentSound];
-			_currentSoundStream.play();
 			_currentSoundStream.checkStream(_callBack);
+			_currentSoundStream.play();
 			trace("play");
 		}
 				

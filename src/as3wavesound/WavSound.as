@@ -107,18 +107,19 @@ package as3wavesound {
 		}
 		
 		public function get _percentplayed():Number {
-			trace(_channel.position, _length);
 			return Math.ceil(((_channel.position / _length) * 1000 ) /1000  * 100);
 		}
 		
 		public function checkStream(callback:Function):void
 		{
+			trace("start chek stream");
 			var activeProcess:Number;
 			activeProcess=setInterval(activeProcessFunction, 200);
 			function activeProcessFunction() : void{
 				if (_percentplayed > 99.5 ) {
 					callback();
 					clearInterval(activeProcess);
+					trace("clear");
 				}
 			}
 		}

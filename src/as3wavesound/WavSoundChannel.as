@@ -1,10 +1,11 @@
 package as3wavesound {
+	import as3wavesound.WavSound;
+	import as3wavesound.sazameki.core.AudioSamples;
+	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.media.SoundChannel;
 	import flash.media.SoundTransform;
-	import as3wavesound.WavSound;
-	import as3wavesound.sazameki.core.AudioSamples;
 
 	/**
 	 * Used to keep track of open channels during playback. Each channel represents
@@ -109,7 +110,8 @@ package as3wavesound {
 			
 			var leftPeakRecord:Number = 0;
 			var rightPeakRecord:Number = 0;
-			
+			if (isNaN(phase))
+				return;
 			// finally, mix the samples in the master sample buffer
 			if (!finished) {
 				for (var i:int = 0; i < sampleBufferLength; i++) {

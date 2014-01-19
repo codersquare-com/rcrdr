@@ -81,8 +81,29 @@ package acodec.encoder
 		public function getByteArray():ByteArray
 		{
 			if(mp3Shine != null)
-			return mp3Shine.mp3Data;
+				return mp3Shine.mp3Data;
 			return wave.getByteArray();
+		}
+		
+		public function clone():IEncoder
+		{
+			var tmp:IEncoder = new Mp3Encoder(_volume);
+			(tmp as Mp3Encoder).setData(wave,_status,_name,mp3Shine);
+			return tmp;
+		}
+		
+		public function setData(w:WaveEncoder,status:String,name:String, mp3:ShineMP3Encoder):void
+		{
+			_wave = null;
+			_wave = w.clone() as WaveEncoder;
+			_status = status;
+			_name = name;
+			mp3Shine = null;
+			if(mp3 != null) {
+				mp3Shine = new ShineMP3Encoder(null);
+				mp3Shine.mp3Data.writeBytes(mp3.mp3Data);
+			}
+				
 		}
 		
 		protected function mp3EncodeError(event:Event):void
