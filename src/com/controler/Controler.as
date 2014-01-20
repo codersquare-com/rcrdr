@@ -160,8 +160,14 @@ package com.controler
 		protected function recordClick(event:ButtonEvents):void
 		{
 			if(status == Variables.INITIAL){
-				_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);	
-				addEventListener(MainEvents.RESIZED, showSetting);
+				if(_main.stage.stageWidth > 150 && _main.stage.stageHeight > 150)
+					showSetting(null);
+				else {
+					_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);
+				
+					addEventListener(MainEvents.RESIZED, showSetting);
+				}
+				trace(_main.stage.stageWidth, _main.stage.stageHeight);
 			}
 			
 			if(status == Variables.RECORD )
@@ -172,7 +178,7 @@ package com.controler
 						_recorder.record();
 					}else
 						status = Variables.RE_RECORD;
-					playlist.STOPALL();
+					playlist.STOPALL();					
 				} catch (e:Error) {}
 				_recorder.record();
 			}
@@ -181,13 +187,16 @@ package com.controler
 		
 		protected function onStageResize(event:Event):void
 		{
-			_main.stage.removeEventListener(Event.RESIZE, onStageResize);
+			if(event != null)
+				_main.stage.removeEventListener(Event.RESIZE, onStageResize);
 			dispatchEvent(new MainEvents(MainEvents.RESIZED,true));
+			trace(_main.stage.stageWidth, _main.stage.stageHeight);
 		}
 		
 		protected function showSetting(event:Event):void
 		{
-			removeEventListener(MainEvents.RESIZED, showSetting);
+			if(event != null)
+				removeEventListener(MainEvents.RESIZED, showSetting);
 			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.SHOW_MICSETTING,true));
 			var tmp:Mp3Encoder = new Mp3Encoder;
 			_recorder.startup(tmp,_mic);

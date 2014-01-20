@@ -38,16 +38,14 @@
 		         }
 		     }
 		     function pageInit() {
-         		document.getElementById('flashWarper').setAttribute("style","width:10px");
-         		document.getElementById('flashWarper').setAttribute("style","height:10px");
+         		document.getElementById('flashWarper').setAttribute("style","width:10px;height:10px;");
      		}
      		
 		     // butoon function
 		     
 		     function record(){		         	
 			    if(showMic){	     
-	         		document.getElementById('flashWarper').setAttribute("style","width:200px");
-	         		document.getElementById('flashWarper').setAttribute("style","height:150px");
+	         		document.getElementById('flashWarper').setAttribute("style","width:250px;height:250px;");
 	         		showMic = false;
 	         	}
 		        thisMovie("VietEDPlayer").recordClick();
@@ -149,10 +147,10 @@
           <input type="button" value="recordSound" onclick="JSCallRecord(this.form.input1.value,this.form.input2.value);" /><br />
             <input type="button" value="done" onclick="doneStep();" /><br />      
           <a> Button for user </a> <br />
-          <input type="button" value="play" onclick="play();" /><br />
-          <input type="button" value="replay" onclick="replay();" /><br />
-          <input type="button" value="record done" onclick="recordDone();" /><br />
-          <input type="button" value="record" onclick="record();" /><br />
+          <input type="button" value="PlayAll" onclick="play();" /><br />
+          <input type="button" value="Replay" onclick="replay();" /><br />
+          <input type="button" value="Record done" onclick="recordDone();" /><br />
+          <input type="button" value="Setting mic" onclick="record();" /><br />
          <textarea cols="60" rows="20" name="output" >Initializing...</textarea>
      	</form>
         <noscript>
