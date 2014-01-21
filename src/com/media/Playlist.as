@@ -4,6 +4,7 @@ package com.media
 	
 	import com.common.SoundStream;
 	
+	import flash.sensors.Accelerometer;
 	import flash.utils.ByteArray;
 
 	public class Playlist
@@ -13,6 +14,15 @@ package com.media
 		private var _currentSoundStream:SoundStream;
 		private var _callBack:Function;
 		private var _tmpSoundStream:SoundStream;
+		
+		public function updateVolume(vol:Number) :void {
+			if(_currentSoundStream != null)
+				_currentSoundStream.updateVolume(vol);
+			if(_tmpSoundStream != null)
+				_tmpSoundStream.updateVolume(vol);
+		}
+		
+	
 		
 		public function Playlist()
 		{

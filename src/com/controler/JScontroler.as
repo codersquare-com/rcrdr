@@ -30,6 +30,8 @@ package com.controler
 				ExternalInterface.addCallback(MainEvents.RECORD_SOUND, recordSound);
 				ExternalInterface.addCallback(MainEvents.DONE_STEP, doneStep);
 				ExternalInterface.addCallback(MainEvents.UPLOAD_URL, uploadURL);
+				ExternalInterface.addCallback(MainEvents.VOLUME_IN, volumeIn);
+				ExternalInterface.addCallback(MainEvents.VOLUME_OUT, volumeOut);
 				
 				// flash call js
 				addEventListener(MainEvents.MICROPHONE_ACCESS, microphoneAccess);
@@ -42,6 +44,21 @@ package com.controler
 				addEventListener(MainEvents.STOP_RECORD, stopRecord);
 			}
 			enableAll();
+		}
+		
+		private function volumeOut(vol:Number):void
+		{
+			var me:MainEvents = new MainEvents(MainEvents.VOLUME_OUT,true);
+			me.volume = vol;
+			dispatchEvent(me);
+		}
+		
+		private function volumeIn(vol:Number):void
+		{			
+			var me:MainEvents = new MainEvents(MainEvents.VOLUME_IN,true);
+			me.volume = vol;
+			dispatchEvent(me);
+			
 		}
 		
 		protected function stopRecord(event:MainEvents):void

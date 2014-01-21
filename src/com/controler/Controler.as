@@ -43,6 +43,9 @@ package com.controler
 			JScontroler.getInstance().addEventListener(MainEvents.PLAY_URL, playURL);
 			JScontroler.getInstance().addEventListener(MainEvents.RECORD_SOUND, recordSound);
 			JScontroler.getInstance().addEventListener(MainEvents.DONE_STEP, doneStep);
+			JScontroler.getInstance().addEventListener(MainEvents.VOLUME_IN, volumeIn);
+			JScontroler.getInstance().addEventListener(MainEvents.VOLUME_OUT, volumeOut);
+			
 			status = Variables.INITIAL;			
 			playlist = new Playlist;
 			_recorder = new MicRecorder;
@@ -50,6 +53,19 @@ package com.controler
 			_recorder.addCallBack(stopRecord, startRecord);
 			// startup
 			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.STARTUP,true));
+		}
+		
+		protected function volumeOut(event:MainEvents):void
+		{
+			if(playlist != null)
+				playlist.updateVolume(event.volume / 100);
+		}
+		
+		protected function volumeIn(event:MainEvents):void
+		{
+			if(_recorder != null)
+				_recorder.gain = event.volume;
+			
 		}
 		private function stopRecord() :void {
 			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.STOP_RECORD,true));

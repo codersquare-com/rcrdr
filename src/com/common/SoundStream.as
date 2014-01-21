@@ -10,5 +10,6 @@ package com.common
 		function pause():void;
 		function stop():void;
 		function checkStream(callback:Function):void;
+		function updateVolume(vol:Number):void;
 	}
 }

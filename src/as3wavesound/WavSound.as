@@ -172,6 +172,14 @@ package as3wavesound {
 			_iPosition = -1;
 		}
 		
+		public function updateVolume(vol:Number):void
+		{
+			if(_channel != null)
+				_channel.soundTransform.volume = vol;
+			
+		}
+		
+		
 		/**
 		 * No idea if this works. Alpha state. Read up on Sound.extract():
 		 * http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/Sound.html#extract()

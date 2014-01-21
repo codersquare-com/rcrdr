@@ -22,10 +22,16 @@
         -->
         <style type="text/css" media="screen"> 
             html, body  { height:100%; }
-            body { margin:0; padding:0; overflow:auto; text-align:center; 
+            body { margin:0; padding-top:20px; overflow:auto; text-align:center; 
                    background-color: #fffff0; }   
             object:focus { outline:none; }
             #flashContent { display:none; }
+            #left-col { float:left;width:30%;}
+            #right-wrapper { float:left; width:60%;}
+            #right-col { float:left; width:45%;}
+            #middle-col { float:left; width:45%;}
+            #js-control {background-color:#eee;}
+            
         </style>
         <script language="JavaScript">
 		     
@@ -76,6 +82,16 @@
 		     	thisMovie("VietEDPlayer").recordSound(value1,value2);
 		     }
 		     
+		     function volumeIn(value1)
+		     {
+		     	thisMovie("VietEDPlayer").volumeIn(value1);
+		     }
+		     
+		      function volumeOut(value1)
+		     {
+		     	thisMovie("VietEDPlayer").volumeOut(value1);
+		     }
+		     
 		     // js receive as function
 		     function jsEventHandler() {
 		     var tmp = document.forms["form1"].output.value;
@@ -124,35 +140,73 @@
              JavaScript and Flash plug-in support is available. The div is initially hidden so that it doesn't show
              when JavaScript is disabled.
         -->
-        <div id ="flashWarper" style="width:200px; height:150px;" >
-        <div id="flashContent" >
-            <p>
-                To view this page ensure that Adobe Flash Player version 
-                11.1.0 or greater is installed. 
-            </p>
-            <script type="text/javascript"> 
-                var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://"); 
-                document.write("<a href='http://www.adobe.com/go/getflashplayer'><img src='" 
-                                + pageHost + "www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' /></a>" ); 
-            </script> 
+        <div id="left-col">
+            <h3>Flash .swf file area</h3>
+            <div id ="flashWarper" style="width:200px; height:150px;" >
+                <div id="flashContent" >
+                    <p>
+                        To view this page ensure that Adobe Flash Player version 
+                        11.1.0 or greater is installed. 
+                    </p>
+                    <script type="text/javascript"> 
+                        var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://"); 
+                        document.write("<a href='http://www.adobe.com/go/getflashplayer'><img src='" 
+                                        + pageHost + "www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' /></a>" ); 
+                    </script> 
+                </div>
+            </div>
         </div>
-        </div>
+        
+        <div id="right-wrapper">
         <form name="form1" onsubmit="return false;">
-          <a> JS control </a> <br />
-          <input type="text" name="input" value="1.mp3" />         
-          <input type="button" value="playurl" onclick="playURL(this.form.input.value);" /><br />         
-          <input type="text" name="input1" value="name" />
-          <input type="text" name="input2" value="120" />
-          
-          <input type="button" value="recordSound" onclick="JSCallRecord(this.form.input1.value,this.form.input2.value);" /><br />
-            <input type="button" value="done" onclick="doneStep();" /><br />      
-          <a> Button for user </a> <br />
-          <input type="button" value="PlayAll" onclick="play();" /><br />
-          <input type="button" value="Replay" onclick="replay();" /><br />
-          <input type="button" value="Record done" onclick="recordDone();" /><br />
-          <input type="button" value="Setting mic" onclick="record();" /><br />
+           <div id="middle-col">
+          <h3> JS control </h3>
+          <div id='js-control'  style="text-align:left;padding-left:15px;">
+            <div id='form-player'>
+               <h4>Player area</h4>
+              <input type="text" name="input" value="1.mp3" />         
+              <input type="button" value="playurl" onclick="playURL(this.form.input.value);" /><br />         
+           </div>
+           <hr/>
+           <div id='record-area'>
+               <h4>Recorder area </h4>
+              1. <input type="button" value="Mic settings" onclick="record();" />
+              <div style="background-color:white;">               
+              <h5>Sample recording file settings </h5>
+                File name<br/>
+              <input type="text" name="input1" value="name" />
+              <br/>
+                Max Duration (seconds)<br/>              
+              <input type="text" name="input2" value="120" />
+              
+                Volume in (seconds)<br/>              
+              <input type="text" name="input3" value="70" />
+              
+                Volume out (seconds)<br/>              
+              <input type="text" name="input4" value="90" />
+</div>
+              2. <input type="button" value="user: start the recorder" onclick="JSCallRecord(this.form.input1.value,this.form.input2.value);" /><br />
+              3. <input type="button" value="user: stop the recorder" onclick="recordDone();" /><br />
+                            
+              5. <input type="button" value="js: Save last recording" onclick="doneStep();" /><br />      
+              4. <input type="button" value="user: Replay last recording" onclick="replay();" /><br />
+              6. <input type="button" value="user: Play All recordings" onclick="play();" /><br />
+              6. <input type="button" value="user: Volume in" onclick="volumeIn(this.form.input3.value);" /><br />
+              6. <input type="button" value="user: Volume out" onclick="volumeOut(this.form.input4.value);" /><br />
+
+
+
+              
+           </div><!--record-area-->
+          </div>
+          </div>
+          <div id="right-col" style="padding-left:5px;">
+          <h3>Logs</h3>
          <textarea cols="60" rows="20" name="output" >Initializing...</textarea>
+          </div>
      	</form>
+     	
+     	</div>
         <noscript>
             <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="100%" height="100%" id="VietEDPlayer">
                 <param name="movie" value="VietEDPlayer.swf" />

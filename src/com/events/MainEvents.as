@@ -20,17 +20,31 @@ package com.events
 		public static var STOP_RECORD:String = "stopRecord";
 		public static var START_RECORD:String = "startRecord";
 		
+		public static var VOLUME_IN:String = "volumeIn";
+		public static var VOLUME_OUT:String = "volumeOut";
+		
 		private var _url:String = "";
 		private var _time:Number= 0 ;
 		private var _name:String = "";
 		private var _micAccess:Boolean = false;
 		private var _uploadPercent:Number = 0;
+		private var _volume:Number;
 		
 		public function MainEvents(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
 			super(type, bubbles, cancelable);
 		}
 		
+		public function get volume():Number
+		{
+			return _volume;
+		}
+
+		public function set volume(value:Number):void
+		{
+			_volume = value;
+		}
+
 		public function get uploadPercent():Number
 		{
 			return _uploadPercent;
@@ -59,6 +73,7 @@ package com.events
 		public function set name(value:String):void
 		{
 			_name = value;
+			
 		}
 
 		public function get time():Number

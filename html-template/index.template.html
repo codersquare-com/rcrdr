@@ -82,6 +82,16 @@
 		     	thisMovie("VietEDPlayer").recordSound(value1,value2);
 		     }
 		     
+		     function volumeIn(value1)
+		     {
+		     	thisMovie("VietEDPlayer").volumeIn(value1);
+		     }
+		     
+		      function volumeOut(value1)
+		     {
+		     	thisMovie("VietEDPlayer").volumeOut(value1);
+		     }
+		     
 		     // js receive as function
 		     function jsEventHandler() {
 		     var tmp = document.forms["form1"].output.value;
@@ -168,6 +178,12 @@
               <br/>
                 Max Duration (seconds)<br/>              
               <input type="text" name="input2" value="120" />
+              
+                Volume in (seconds)<br/>              
+              <input type="text" name="input3" value="70" />
+              
+                Volume out (seconds)<br/>              
+              <input type="text" name="input4" value="90" />
 </div>
               2. <input type="button" value="user: start the recorder" onclick="JSCallRecord(this.form.input1.value,this.form.input2.value);" /><br />
               3. <input type="button" value="user: stop the recorder" onclick="recordDone();" /><br />
@@ -175,6 +191,8 @@
               5. <input type="button" value="js: Save last recording" onclick="doneStep();" /><br />      
               4. <input type="button" value="user: Replay last recording" onclick="replay();" /><br />
               6. <input type="button" value="user: Play All recordings" onclick="play();" /><br />
+              6. <input type="button" value="user: Volume in" onclick="volumeIn(this.form.input3.value);" /><br />
+              6. <input type="button" value="user: Volume out" onclick="volumeOut(this.form.input4.value);" /><br />
 
 
 
