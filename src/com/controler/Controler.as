@@ -150,22 +150,27 @@ package com.controler
 		protected function replayClick(event:ButtonEvents):void
 		{
 			if(this.status == Variables.RECORD){			
-				_recorder.stop();
+				var isStoping:Boolean = _recorder.stop();
+				if(!isStoping) {			
+					// stoped
+					user_record_done(null);
+				}
 			}
 			trace("replay record");
 		}
 		
 		protected function recordDoneClick(event:ButtonEvents):void
 		{
-			timer.removeEventListener(TimerEvent.TIMER_COMPLETE,record_timeout);
+			if(timer != null)
+				timer.removeEventListener(TimerEvent.TIMER_COMPLETE,record_timeout);
 			try {
+				this.status = Variables.RECORDDONE;
 				var isStoping:Boolean = _recorder.stop();
 				if(!isStoping) {					
 					this.status = Variables.READY;
 					addCurrentRecordToPlaylist();
 				}
-				else // wait to done					
-					this.status = Variables.RECORDDONE;
+					
 			}catch (e:Error)
 			{
 				this.status = Variables.READY;

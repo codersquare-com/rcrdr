@@ -115,11 +115,11 @@ package as3wavesound {
 			trace("start chek stream");
 			var activeProcess:Number;
 			activeProcess=setInterval(activeProcessFunction, 200);
-			function activeProcessFunction() : void{
-				if (_percentplayed > 99.5 ) {
+			function activeProcessFunction() : void{				
+				trace("clear" + _percentplayed);
+				if (_percentplayed > 99.5 || _percentplayed == 0 ) {
 					callback();
 					clearInterval(activeProcess);
-					trace("clear");
 				}
 			}
 		}
