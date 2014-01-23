@@ -1,0 +1,13 @@
+@CHARSET "UTF-8";
+
+      object:focus { outline:none; }
+      #flashContent { display:none; }
+      #flashWrapper {
+      	border: 2px solid red;
+      }
+      
+      #js-control {background-color:#eee;}
+	  span.recording  {
+	  	font-weight:bold;
+	  	cursor:pointer;
+	  }
