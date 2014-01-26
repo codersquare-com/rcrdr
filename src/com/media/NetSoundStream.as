@@ -24,7 +24,11 @@ package com.media
 		private var iVolume:Number;
 		private var percentLoaded:Number;
 		private var iPosition:Number;
+		private var url:String;
 		
+		public function getName():String{
+			return url;
+		}
 		
 		public function NetSoundStream() {
 			this.oSoundChannel = new SoundChannel();
@@ -48,6 +52,7 @@ package com.media
 		public function startup(obj:Object):void {
 			
 			var myURLReq:URLRequest = new URLRequest(obj as String);
+			url = obj as String;
 			oSound = new Sound();
 			oSound.addEventListener(Event.COMPLETE, completeHandler);
 			oSound.addEventListener(Event.ID3, id3Handler);
@@ -132,6 +137,12 @@ package com.media
 			return Math.ceil(oSoundChannel.position / oSound.length * 1000) / 1000 * (percentLoaded / 100) * 100;
 		}
 		
+		public function timeTotal():Number
+		{
+			return _timeTotal;
+		}
+		
+		
 		public function get _timePlayed():Number {
 			return Math.round(oSoundChannel.position);
 		}
@@ -148,7 +159,7 @@ package com.media
 			activeProcess=setInterval(activeProcessFunction, 200);
 			function activeProcessFunction() : void{
 				if (percentLoaded==100 && _percentplayed > 99.5) {
-					callback();
+					callback(url);
 					clearInterval(activeProcess);
 				}
 			}

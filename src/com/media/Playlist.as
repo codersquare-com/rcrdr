@@ -21,9 +21,7 @@ package com.media
 			if(_tmpSoundStream != null)
 				_tmpSoundStream.updateVolume(vol);
 		}
-		
-	
-		
+				
 		public function Playlist()
 		{
 			_arrayStream = new Array();
@@ -37,8 +35,8 @@ package com.media
 			_currentSound = _arrayStream.length - 1;			
 		}
 		
-		public function AddWavSound(byte:ByteArray):void {
-			var ss:SoundStream = new WavSound(byte);
+		public function AddWavSound(byte:ByteArray, name:String):void {
+			var ss:SoundStream = new WavSound(byte, name);
 			_arrayStream.push(ss);
 			_currentSound = _arrayStream.length - 1;			
 		}
@@ -59,11 +57,11 @@ package com.media
 			{
 				trace("tmp stopped");
 			}
-			_tmpSoundStream = new WavSound(byte);
+			_tmpSoundStream = new WavSound(byte,"tmp");
 			_tmpSoundStream.play();
 		}
 		
-		public function play():void
+		public function play(time:Number = -1):void
 		{
 			if(_currentSound >= _arrayStream.length)
 				return;
@@ -76,7 +74,9 @@ package com.media
 			}
 			_currentSoundStream = _arrayStream[_currentSound];
 			_currentSoundStream.checkStream(_callBack);
-			_currentSoundStream.play();
+			if(time != -1)
+				_currentSoundStream.play(time);
+			else _currentSoundStream.play();
 			trace("play");
 		}
 				
@@ -96,6 +96,35 @@ package com.media
 		
 		public function addCallBack(callBack:Function):void {
 			_callBack = callBack;				
+		}
+		
+		public function getSoundTime(name:String):Number {
+			var inSonglist:Boolean = false;
+			for(var i:Number = 0;i < _arrayStream.length; i++)
+			{
+				if(name == (_arrayStream[i] as SoundStream).getName())
+				{
+					return (_arrayStream[i] as SoundStream).timeTotal();
+				}
+			}
+			
+			return -1;
+		}
+		
+		
+		public function playSpecial(name:String, time:Number):void
+		{
+			var inSonglist:Boolean = false;
+			for(var i:Number = 0;i < _arrayStream.length; i++)
+			{
+				if(name == (_arrayStream[i] as SoundStream).getName())
+				{
+					_currentSound = i;
+					inSonglist = true;
+				}
+			}
+			if(inSonglist)
+				play(time);
 		}
 	}
 }

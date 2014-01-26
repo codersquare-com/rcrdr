@@ -72,6 +72,7 @@ package acodec.encoder
 		
 		public function getByteArray():ByteArray
 		{			
+			_bytes.position = 0;
 			return _bytes;
 		}
 		

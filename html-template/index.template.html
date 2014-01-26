@@ -23,7 +23,7 @@
         <style type="text/css" media="screen"> 
             html, body  { height:100%; }
             body { margin:0; padding-top:20px; overflow:auto; text-align:center; 
-                   background-color: #fffff0; }   
+                   background-color: #827F7E; }   
             object:focus { outline:none; }
             #flashContent { display:none; }
             #left-col { float:left;width:30%;}
@@ -92,15 +92,40 @@
 		     	thisMovie("VietEDPlayer").volumeOut(value1);
 		     }
 		     
+		     function showMicrophone(val)
+		     {
+		     	document.getElementById('flashWarper').setAttribute("style","width:250px;height:250px;");
+		     	thisMovie("VietEDPlayer").showMicrophone(val);
+		     }
+		     
+		     function showNumberOfMicrophone()
+		     {
+		     	thisMovie("VietEDPlayer").showNumberOfMicrophone();
+		     }
+		     
+		     function showPlaybackProgress(val)
+		     {
+		        thisMovie("VietEDPlayer").showPlaybackProgress(val);
+		     }
+		     function playFileAtTime(val1, val2)
+		     {
+		     	 thisMovie("VietEDPlayer").play(val1,val2);
+		     }
+		     
+		     function startUpload(val)
+		     {
+		     var array = val.split(",");
+		     	thisMovie("VietEDPlayer").startUpload(array);
+		     }
 		     // js receive as function
 		     function jsEventHandler() {
 		     var tmp = document.forms["form1"].output.value;
-		     document.forms["form1"].output.value="";
+		     document.forms["form1"].output.value="ActionScript says: ";
 		     for (var i = 0; i < arguments.length; i++) {
-		         document.forms["form1"].output.value += "ActionScript says: " + arguments[i] + "\n";
+		         document.forms["form1"].output.value += "" + arguments[i] + "\n";
   				}  			
   			document.forms["form1"].output.value += "\n----\n" + tmp;
-  			if(arguments[0] == 'microphoneAccess' && arguments[1] == 'true')
+  			if(arguments[0] == 'microphoneAccess' && arguments[1] == true)
   			 pageInit();	
 		     }
 		 </script>
@@ -170,7 +195,7 @@
            <hr/>
            <div id='record-area'>
                <h4>Recorder area </h4>
-              1. <input type="button" value="Mic settings" onclick="record();" />
+              1. <input type="button" value="Record Again" onclick="record();" />
               <div style="background-color:white;">               
               <h5>Sample recording file settings </h5>
                 File name<br/>
@@ -178,23 +203,43 @@
               <br/>
                 Max Duration (seconds)<br/>              
               <input type="text" name="input2" value="120" />
-              
-                Volume in (seconds)<br/>              
+               <br/>
+                Volume in <br/>              
               <input type="text" name="input3" value="70" />
-              
-                Volume out (seconds)<br/>              
+               <br/>
+                Volume out <br/>              
               <input type="text" name="input4" value="90" />
-</div>
+               <br/>
+              Microphone <br/>              
+              <input type="text" name="input5" value="-1" />
+               <br/>
+               showPlaybackProgress <br/>              
+              <input type="text" name="input6" value="-1" />
+               <br/>
+			</div>
               2. <input type="button" value="user: start the recorder" onclick="JSCallRecord(this.form.input1.value,this.form.input2.value);" /><br />
               3. <input type="button" value="user: stop the recorder" onclick="recordDone();" /><br />
                             
               5. <input type="button" value="js: Save last recording" onclick="doneStep();" /><br />      
               4. <input type="button" value="user: Replay last recording" onclick="replay();" /><br />
               6. <input type="button" value="user: Play All recordings" onclick="play();" /><br />
-              6. <input type="button" value="user: Volume in" onclick="volumeIn(this.form.input3.value);" /><br />
-              6. <input type="button" value="user: Volume out" onclick="volumeOut(this.form.input4.value);" /><br />
-
-
+              7. <input type="button" value="user: Volume in" onclick="volumeIn(this.form.input3.value);" /><br />
+              8. <input type="button" value="user: Volume out" onclick="volumeOut(this.form.input4.value);" /><br />
+              9. <input type="button" value="user: Get Microphone x setting" onclick="showMicrophone(this.form.input5.value);" /><br />
+              
+              10. <input type="button" value="user: Get nuber of Microphone" onclick="showNumberOfMicrophone();" /><br />
+			11. <input type="button" value="user: playbackProgress" onclick="showPlaybackProgress(this.form.input6.value);" /><br />
+						
+               play file <br/>              
+              <input type="text" name="input7" value="-1" />
+               <br/>
+                play time <br/>              
+              <input type="text" name="input8" value="-1" />
+               <br/>
+       12. <input type="button" value="user: play" onclick="playFileAtTime(this.form.input7.value,this.form.input8.value);" /><br />
+        <input type="text" name="input9" value="name," />
+               <br/>
+       13. <input type="button" value="user: startUpload" onclick="startUpload(this.form.input9.value);" /><br />
 
               
            </div><!--record-area-->

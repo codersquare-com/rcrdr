@@ -15,5 +15,6 @@ package com.common
 		public static var DONE:String = "doneStatus";
 		public static var RECORDDONE:String = "recordDoneStatus";
 		public static var RE_RECORD:String = "reRecord";
+		public static var UPLOAD_URL:String;
 	}
 }

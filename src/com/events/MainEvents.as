@@ -15,13 +15,18 @@ package com.events
 		public static const ERROR_RECORD:String = "recordError";
 		public static const SHOW_MICSETTING:String = "userClickRecord";		
 		public static const STARTUP:String = "flashStatedUp";	
-		public static const RESIZED:String = "resized";
-		
+		public static const RESIZED:String = "resized";		
 		public static var STOP_RECORD:String = "stopRecord";
-		public static var START_RECORD:String = "startRecord";
-		
+		public static var START_RECORD:String = "startRecord";		
 		public static var VOLUME_IN:String = "volumeIn";
-		public static var VOLUME_OUT:String = "volumeOut";
+		public static var VOLUME_OUT:String = "volumeOut";		
+		public static var SHOW_MICROPHONE:String = "showMicrophone";		
+		public static var GET_MIC_NUM:String = "showNumberOfMicrophone";
+		public static var MIC_NUMBER:String = "micNumber";
+		public static var CALLBACK_INTERVAL:String = "showPlaybackProgress";
+		public static var CALLBACK_FUNCTION:String = "playbackProgress";
+		public static var PLAY:String = "play";
+		public static var START_UPLOAD:String = "startUpload";
 		
 		private var _url:String = "";
 		private var _time:Number= 0 ;
@@ -29,6 +34,9 @@ package com.events
 		private var _micAccess:Boolean = false;
 		private var _uploadPercent:Number = 0;
 		private var _volume:Number;
+		public var micNum:Number;
+		public var interval:Number;
+		public var uploadFile:Array;
 		
 		public function MainEvents(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{

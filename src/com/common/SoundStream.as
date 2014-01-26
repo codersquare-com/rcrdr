@@ -11,5 +11,7 @@ package com.common
 		function stop():void;
 		function checkStream(callback:Function):void;
 		function updateVolume(vol:Number):void;
+		function getName():String;
+		function timeTotal():Number;
 	}
 }

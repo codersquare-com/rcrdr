@@ -67,6 +67,7 @@ package acodec
 		private var _isRecording:Boolean = false;
 		private var _startAlert:Function;
 		private var _stopAlert:Function;
+		private var _micNum:Number;
 		/**
 		 * 
 		 * @param encoder The audio encoder to use
@@ -82,7 +83,7 @@ package acodec
 		}
 		
 		
-		public function startup(encoder:IEncoder, microphone:Microphone=null, gain:uint=100, rate:uint=44, silenceLevel:uint=0, timeOut:uint=4000) :void
+		public function startup(encoder:IEncoder, gain:uint, microphone:Microphone ,micNum:Number, rate:uint=44, silenceLevel:uint=0, timeOut:uint=4000) :void
 		{
 			_encoder = encoder;
 			_microphone = microphone;
@@ -90,6 +91,7 @@ package acodec
 			_rate = rate;
 			_silenceLevel = silenceLevel;
 			_timeOut = timeOut;
+			_micNum = micNum;
 		}
 		
 		/**
@@ -99,7 +101,7 @@ package acodec
 		public function record():void
 		{
 			if ( _microphone == null )
-				_microphone = Microphone.getMicrophone();
+				_microphone = Microphone.getMicrophone(_micNum);
 			
 			if(_isRecording)
 				return;

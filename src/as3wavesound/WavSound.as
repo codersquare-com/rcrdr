@@ -94,6 +94,8 @@ package as3wavesound {
 		
 		private var _iPosition:Number;
 		
+		private var _recordName:String;
+		
 		/**
 		 * Constructor: loads wavdata using loadWav().
 		 * 
@@ -101,10 +103,17 @@ package as3wavesound {
 		 * @param	audioSettings An optional playback configuration (mono/stereo, 
 		 * 			sample rate and bit rate).
 		 */
-		public function WavSound(wavData:ByteArray, audioSettings:AudioSetting = null) {
+		public function WavSound(wavData:ByteArray,name:String, audioSettings:AudioSetting = null) {
 			load(wavData, audioSettings);
+			_recordName =name;
 			_iPosition = -1;
 		}
+		
+		public function getName():String
+		{
+			return _recordName;
+		}
+		
 		
 		public function get _percentplayed():Number {
 			return Math.ceil(((_channel.position / _length) * 1000 ) /1000  * 100);
@@ -118,7 +127,7 @@ package as3wavesound {
 			function activeProcessFunction() : void{				
 				trace("clear" + _percentplayed);
 				if (_percentplayed > 99.5 || _percentplayed == 0 ) {
-					callback();
+					callback(_recordName);
 					clearInterval(activeProcess);
 				}
 			}
@@ -220,6 +229,12 @@ package as3wavesound {
 		public function get length() : Number {
 			return _length;
 		}
+		
+		public function timeTotal():Number
+		{
+			return length;
+		}
+		
 		
 		internal function get samples():AudioSamples {
 			return _samples;
