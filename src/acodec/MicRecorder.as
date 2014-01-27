@@ -67,7 +67,7 @@ package acodec
 		private var _isRecording:Boolean = false;
 		private var _startAlert:Function;
 		private var _stopAlert:Function;
-		private var _micNum:Number;
+		private var _micNum:int;
 		/**
 		 * 
 		 * @param encoder The audio encoder to use
@@ -94,11 +94,40 @@ package acodec
 			_micNum = micNum;
 		}
 		
+		public function check():void {
+			if ( _microphone == null )
+				_microphone = Microphone.getMicrophone(_micNum);
+			
+			if(_isRecording)
+				return;
+			
+			_difference = getTimer();
+			
+			_microphone.setSilenceLevel(_silenceLevel, _timeOut);
+			_microphone.gain = _gain;
+			_microphone.rate = _rate;
+			_buffer.length = 0;
+			
+			_microphone.addEventListener(SampleDataEvent.SAMPLE_DATA, onSampleData1);
+			_microphone.addEventListener(StatusEvent.STATUS, onStatus1);
+		}
+		
+		protected function onSampleData1(event:SampleDataEvent):void
+		{
+			_microphone.removeEventListener(SampleDataEvent.SAMPLE_DATA, onSampleData1);	
+		}
+		
+		protected function onStatus1(event:StatusEvent):void
+		{
+			// TODO Auto-generated method stub
+			
+		}		
+		
 		/**
 		 * Starts recording from the default or specified microphone.
 		 * The first time the record() method is called the settings manager may pop-up to request access to the Microphone.
 		 */		
-		public function record():void
+		public function record(check:Boolean = false):void
 		{
 			if ( _microphone == null )
 				_microphone = Microphone.getMicrophone(_micNum);
@@ -117,7 +146,8 @@ package acodec
 			_microphone.addEventListener(StatusEvent.STATUS, onStatus);
 			
 			_isRecording = true;
-			_startAlert();
+			if(!check)
+				_startAlert();
 		}
 		
 		private function onStatus(event:StatusEvent):void
@@ -142,7 +172,7 @@ package acodec
 		/**
 		 * Stop recording the audio stream and automatically starts the packaging of the output file.
 		 */		
-		public function stop():Boolean
+		public function stop(check:Boolean = false):Boolean
 		{
 			if(!_isRecording)
 				return false;
@@ -150,8 +180,9 @@ package acodec
 			_buffer.position = 0;			
 			_encoder.addEventListener(Event.COMPLETE, completeHandler);
 			_encoder.encode(_buffer, 1);	
-			_isRecording = false;			
-			_stopAlert();
+			_isRecording = false;	
+			if(!check)
+				_stopAlert();
 			return true;
 		}
 		

@@ -53,6 +53,9 @@ package com.controler
 			enableAll();
 		}
 		
+		public function debug(string:String):void {
+			ExternalInterface.call(Variables.eventHanlers,"Debug alert", string);
+		}
 		private function startUpload(args:Array):void
 		{
 			var me:MainEvents = new MainEvents(MainEvents.START_UPLOAD,true);

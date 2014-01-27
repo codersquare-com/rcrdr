@@ -311,7 +311,7 @@ package com.controler
 			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.SHOW_MICSETTING,true));
 			var tmp:Mp3Encoder = new Mp3Encoder;
 			_recorder.startup(tmp,_gain, _mic,_micNum);
-			_recorder.record();			
+			_recorder.check();			
 			_recorder.microphone.addEventListener(StatusEvent.STATUS, this.userAccessMicEvent); 			
 		}
 		
