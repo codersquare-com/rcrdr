@@ -44,7 +44,7 @@ package com.controler
 			// control button
 			JScontroler.getInstance().addEventListener(ButtonEvents.PLAY_CLICK, playClick);
 			JScontroler.getInstance().addEventListener(ButtonEvents.RECORD_CLICK, recordClick);
-			JScontroler.getInstance().addEventListener(ButtonEvents.RECORD_DONE_CLICK, recordDoneClick);
+			JScontroler.getInstance().addEventListener(ButtonEvents.RECORD_DONE_CLICK, stopRecorder);
 			JScontroler.getInstance().addEventListener(ButtonEvents.REPLAY_CLICK, replayClick);
 			
 			// control js auto event
@@ -58,7 +58,7 @@ package com.controler
 			JScontroler.getInstance().addEventListener(MainEvents.CALLBACK_INTERVAL, showPlaybackProgress);
 			JScontroler.getInstance().addEventListener(MainEvents.PLAY, play);
 			JScontroler.getInstance().addEventListener(MainEvents.UPLOAD_URL, uploadUrl);
-			
+			JScontroler.getInstance().addEventListener(MainEvents.GET_PARAMETERS, getParams);
 			JScontroler.getInstance().addEventListener(MainEvents.START_UPLOAD, startUpload);
 			status = Variables.INITIAL;			
 			playlist = new Playlist;
@@ -71,6 +71,23 @@ package com.controler
 			_micNum = -1;
 			interValProcess = 0;
 			interValRuning = false;
+		}
+		
+		protected function getParams(event:MainEvents):void
+		{
+			var me:MainEvents = new MainEvents(MainEvents.SET_PARAMETERS, true);			
+			me.name = event.name;
+			switch (event.name) {
+				case Variables.VOLUME_OUT:
+					me.url = "" +  playlist.vol *100;
+					break;
+				case Variables.VOLUME_IN:
+					
+					me.url = "" +  _gain;
+					break;
+			}
+			
+			JScontroler.getInstance().dispatchEvent(me);
 		}
 		
 		private function uploadCallback():void {
@@ -155,12 +172,39 @@ package com.controler
 		protected function doneStep(event:Event):void
 		{
 			this.status = Variables.DONE;			
+			addCurrentRecordToPlaylist1();
 		}
 		
 		protected function recordSound(event:MainEvents):void
 		{
-			if(this.status != Variables.INITIAL || this.status != Variables.READY)
-				JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.ERROR_RECORD,true));
+			if(status == Variables.INITIAL){
+				if(_main.stage.stageWidth > 150 && _main.stage.stageHeight > 150)
+					showSetting(null);
+				else {
+					_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);
+					
+					addEventListener(MainEvents.RESIZED, showSetting);
+				}
+				trace(_main.stage.stageWidth, _main.stage.stageHeight);
+			}
+			
+			if (encoders.length > 0 )
+			{
+				if((encoders[curEncoderIndex] as IEncoder).name == event.name)
+				{// dang record roi
+					try{
+						var isStoping:Boolean = _recorder.stop();
+						if(!isStoping) {	
+							_recorder.record();
+						}else
+							status = Variables.RE_RECORD;
+						playlist.STOPALL();					
+					} catch (e:Error) {}
+					_recorder.record();
+					return;
+				}
+			}
+			trace("new record"  + event.name);
 			this.status = Variables.RECORD;
 			var iencoder:IEncoder = new Mp3Encoder;
 			iencoder.name = event.name;
@@ -173,9 +217,10 @@ package com.controler
 			timer= new Timer(1000,event.time);
 			timer.addEventListener(TimerEvent.TIMER_COMPLETE, record_timeout);
 			timer.start();
+			
 		}
 		
-		private function addCurrentRecordToPlaylist():void {			
+		private function addCurrentRecordToPlaylist1():void {			
 			playlist.AddWavSound((encoders[curEncoderIndex] as IEncoder).getByteArray(),encoders[curEncoderIndex].name);
 			PLAY();
 			var me:MainEvents = new MainEvents(MainEvents.RECORD_DONE,true);
@@ -193,15 +238,10 @@ package com.controler
 		}
 		
 		protected function user_record_done(event:Event):void
-		{
-			if(this.status == Variables.RECORDDONE){
-				this.status = Variables.READY;
-				addCurrentRecordToPlaylist();
-			} 
-			
-			if (this.status == Variables.RECORD) {
-				// use tmp sound
-				playlist.AddWaveSoundAndPlay((encoders[curEncoderIndex] as IEncoder).getByteArray());
+		{			
+			if (this.status == Variables.RECORD ||this.status== Variables.RECORDDONE) {
+				// use tmp sound				
+				playlist.AddWaveSoundAndPlay((encoders[curEncoderIndex] as IEncoder).getByteArray(), event == null);
 			}
 			
 			if (this.status == Variables.RE_RECORD) {
@@ -212,7 +252,7 @@ package com.controler
 		
 		protected function record_timeout(event:TimerEvent):void
 		{
-			recordDoneClick(null);
+			doneStep(null);
 		}
 		
 		private function soundCompleteHandler(name:String):void {
@@ -239,9 +279,10 @@ package com.controler
 		
 		protected function replayClick(event:ButtonEvents):void
 		{
-			if(this.status == Variables.RECORD){			
+			if(this.status == Variables.RECORD || status== Variables.RECORDDONE){			
 				var isStoping:Boolean = _recorder.stop();
-				if(!isStoping) {			
+				if(!isStoping)
+				{			
 					// stoped
 					user_record_done(null);
 				}
@@ -249,7 +290,7 @@ package com.controler
 			trace("replay record");
 		}
 		
-		protected function recordDoneClick(event:ButtonEvents):void
+		protected function stopRecorder(event:ButtonEvents):void
 		{
 			if(timer != null)
 				timer.removeEventListener(TimerEvent.TIMER_COMPLETE,record_timeout);
@@ -258,7 +299,7 @@ package com.controler
 				var isStoping:Boolean = _recorder.stop();
 				if(!isStoping) {					
 					this.status = Variables.READY;
-					addCurrentRecordToPlaylist();
+					//addCurrentRecordToPlaylist();
 				}
 					
 			}catch (e:Error)
@@ -274,8 +315,7 @@ package com.controler
 				if(_main.stage.stageWidth > 150 && _main.stage.stageHeight > 150)
 					showSetting(null);
 				else {
-					_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);
-				
+					_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);				
 					addEventListener(MainEvents.RESIZED, showSetting);
 				}
 				trace(_main.stage.stageWidth, _main.stage.stageHeight);
@@ -312,7 +352,7 @@ package com.controler
 			var tmp:Mp3Encoder = new Mp3Encoder;
 			_recorder.startup(tmp,_gain, _mic,_micNum);
 			_recorder.check();			
-			_recorder.microphone.addEventListener(StatusEvent.STATUS, this.userAccessMicEvent); 			
+			_recorder.microphone.addEventListener(StatusEvent.STATUS, this.userAccessMicEvent, false, 0, true); 			
 		}
 		
 		protected function userAccessMicEvent(event:StatusEvent):void

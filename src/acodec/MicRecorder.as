@@ -3,12 +3,19 @@ package acodec
 	
 	import acodec.events.RecordingEvent;
 	
+	import com.controler.JScontroler;
+	import com.events.MainEvents;
+	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.SampleDataEvent;
 	import flash.events.StatusEvent;
+	import flash.events.TimerEvent;
 	import flash.media.Microphone;
+	import flash.system.Security;
+	import flash.system.SecurityPanel;
 	import flash.utils.ByteArray;
+	import flash.utils.Timer;
 	import flash.utils.getTimer;
 	
 	
@@ -68,6 +75,7 @@ package acodec
 		private var _startAlert:Function;
 		private var _stopAlert:Function;
 		private var _micNum:int;
+		private var _alowMic:Boolean;
 		/**
 		 * 
 		 * @param encoder The audio encoder to use
@@ -92,17 +100,22 @@ package acodec
 			_silenceLevel = silenceLevel;
 			_timeOut = timeOut;
 			_micNum = micNum;
+			_alowMic = true;
 		}
 		
 		public function check():void {
-			if ( _microphone == null )
-				_microphone = Microphone.getMicrophone(_micNum);
 			
+			if ( _microphone == null ) {
+				_microphone = Microphone.getMicrophone(_micNum);
+				Security.showSettings(SecurityPanel.DEFAULT);
+			}
+			
+			_alowMic = false;
 			if(_isRecording)
 				return;
 			
 			_difference = getTimer();
-			
+					
 			_microphone.setSilenceLevel(_silenceLevel, _timeOut);
 			_microphone.gain = _gain;
 			_microphone.rate = _rate;
@@ -114,6 +127,13 @@ package acodec
 		
 		protected function onSampleData1(event:SampleDataEvent):void
 		{
+			if(!_alowMic)
+			{
+					var e:MainEvents = new MainEvents(MainEvents.MICROPHONE_ACCESS,true);
+					e.micAccess = true;
+					JScontroler.getInstance().dispatchEvent(e);
+					_alowMic = true;
+			}
 			_microphone.removeEventListener(SampleDataEvent.SAMPLE_DATA, onSampleData1);	
 		}
 		
@@ -129,11 +149,14 @@ package acodec
 		 */		
 		public function record(check:Boolean = false):void
 		{
-			if ( _microphone == null )
+			if ( _microphone == null ) {
 				_microphone = Microphone.getMicrophone(_micNum);
+			}
 			
+			//_alowMic = false;
 			if(_isRecording)
 				return;
+			
 			 
 			_difference = getTimer();
 			
@@ -148,7 +171,22 @@ package acodec
 			_isRecording = true;
 			if(!check)
 				_startAlert();
+			
+			var t:Timer = new Timer(1000,3);
+			t.addEventListener(TimerEvent.TIMER_COMPLETE, twosecondwithnodata);
+			t.start();
 		}
+		
+		protected function twosecondwithnodata(event:TimerEvent):void
+		{
+			if(_alowMic)
+				return;
+			var e:MainEvents = new MainEvents(MainEvents.MICROPHONE_ACCESS,true);
+			e.micAccess = false;
+			JScontroler.getInstance().dispatchEvent(e);
+			
+		}
+		
 		
 		private function onStatus(event:StatusEvent):void
 		{
@@ -161,6 +199,13 @@ package acodec
 		 */		
 		private function onSampleData(event:SampleDataEvent):void
 		{
+			if(!_alowMic)
+			{
+				var e:MainEvents = new MainEvents(MainEvents.MICROPHONE_ACCESS,true);
+				e.micAccess = true;
+				JScontroler.getInstance().dispatchEvent(e);
+				_alowMic = true;
+			}
 			_recordingEvent.time = getTimer() - _difference;
 			
 			dispatchEvent( _recordingEvent );
@@ -176,6 +221,7 @@ package acodec
 		{
 			if(!_isRecording)
 				return false;
+			try{
 			_microphone.removeEventListener(SampleDataEvent.SAMPLE_DATA, onSampleData);			
 			_buffer.position = 0;			
 			_encoder.addEventListener(Event.COMPLETE, completeHandler);
@@ -183,6 +229,11 @@ package acodec
 			_isRecording = false;	
 			if(!check)
 				_stopAlert();
+			} catch (e:Error)
+			{
+				trace(e);
+				return false;
+			}
 			return true;
 		}
 		

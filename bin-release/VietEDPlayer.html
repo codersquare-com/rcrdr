@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- saved from url=(0014)about:internet -->
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> 
-    <!-- 
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!-- 
     Smart developers always View Source. 
     
     This application was built using Adobe Flex, an open source framework
@@ -10,275 +10,343 @@
     
     Learn more about Flex at http://flex.org 
     // -->
-    <head>
-        <title></title>
-        <meta name="google" value="notranslate" />         
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <!-- Include CSS to eliminate any default margins/padding and set the height of the html element and 
+
+<head>
+    <title></title>
+    <meta name="google" value="notranslate" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- Include CSS to eliminate any default margins/padding and set the height of the html element and 
              the body element to 100%, because Firefox, or any Gecko based browser, interprets percentage as 
              the percentage of the height of its parent container, which has to be set explicitly.  Fix for
              Firefox 3.6 focus border issues.  Initially, don't display flashContent div so it won't show 
              if JavaScript disabled.
         -->
-        <style type="text/css" media="screen"> 
-            html, body  { height:100%; }
-            body { margin:0; padding-top:20px; overflow:auto; text-align:center; 
-                   background-color: #827F7E; }   
-            object:focus { outline:none; }
-            #flashContent { display:none; }
-            #left-col { float:left;width:30%;}
-            #right-wrapper { float:left; width:60%;}
-            #right-col { float:left; width:45%;}
-            #middle-col { float:left; width:45%;}
-            #js-control {background-color:#eee;}
-            
-        </style>
-        <script language="JavaScript">
-		     
-         		showMic = true;
-		     function thisMovie(movieName) {
-		         if (navigator.appName.indexOf("Microsoft") != -1) {
-		             return window[movieName];
-		         } else {
-		             return document[movieName];
-		         }
-		     }
-		     function pageInit() {
-         		document.getElementById('flashWarper').setAttribute("style","width:10px;height:10px;");
-     		}
-     		
-		     // butoon function
-		     
-		     function record(){		         	
-			    if(showMic){	     
-	         		document.getElementById('flashWarper').setAttribute("style","width:250px;height:250px;");
-	         		showMic = false;
-	         	}
-		        thisMovie("VietEDPlayer").recordClick();
-		     }
-		     
-		     function recordDone(){
-		     	thisMovie("VietEDPlayer").recordDoneClick();
-		     }
-		     
-		      function play(){
-		         thisMovie("VietEDPlayer").playClick();
-		     }
-		     function replay(){
-		         thisMovie("VietEDPlayer").replayClick();
-		     }
-		     
-		     // js call as funcion
-		     function playURL(value) {
-		         thisMovie("VietEDPlayer").playURL(value);
-		     }
-		     
-		     function doneStep() {
-		     thisMovie("VietEDPlayer").doneStep();
-		     	
-		     }
-		     function JSCallRecord(value1, value2)
-		     {
-		     	thisMovie("VietEDPlayer").recordSound(value1,value2);
-		     }
-		     
-		     function volumeIn(value1)
-		     {
-		     	thisMovie("VietEDPlayer").volumeIn(value1);
-		     }
-		     
-		      function volumeOut(value1)
-		     {
-		     	thisMovie("VietEDPlayer").volumeOut(value1);
-		     }
-		     
-		     function showMicrophone(val)
-		     {
-		     	document.getElementById('flashWarper').setAttribute("style","width:250px;height:250px;");
-		     	thisMovie("VietEDPlayer").showMicrophone(val);
-		     }
-		     
-		     function showNumberOfMicrophone()
-		     {
-		     	thisMovie("VietEDPlayer").showNumberOfMicrophone();
-		     }
-		     
-		     function showPlaybackProgress(val)
-		     {
-		        thisMovie("VietEDPlayer").showPlaybackProgress(val);
-		     }
-		     function playFileAtTime(val1, val2)
-		     {
-		     	 thisMovie("VietEDPlayer").play(val1,val2);
-		     }
-		     
-		     function startUpload(val)
-		     {
-		     var array = val.split(",");
-		     	thisMovie("VietEDPlayer").startUpload(array);
-		     }
-		     // js receive as function
-		     function jsEventHandler() {
-		     var tmp = document.forms["form1"].output.value;
-		     document.forms["form1"].output.value="ActionScript says: ";
-		     for (var i = 0; i < arguments.length; i++) {
-		         document.forms["form1"].output.value += "" + arguments[i] + "\n";
-  				}  			
-  			document.forms["form1"].output.value += "\n----\n" + tmp;
-  			if(arguments[0] == 'microphoneAccess' && arguments[1] == true)
-  			 pageInit();	
-		     }
-		 </script>
-        <!-- Enable Browser History by replacing useBrowserHistory tokens with two hyphens -->
-        <!-- BEGIN Browser History required section -->
+    <style type="text/css" media="screen">
+        html,
+        body {
+            height: 100%;
+        }
+        body {
+            margin: 0;
+            padding-top: 20px;
+            overflow: auto;
+            text-align: center;
+            background-color: #827F7E;
+        }
+        object:focus {
+            outline: none;
+        }
+        #flashContent {
+            display: none;
+        }
+        #left-col {
+            float: left;
+            width: 30%;
+        }
+        #right-wrapper {
+            float: left;
+            width: 60%;
+        }
+        #right-col {
+            float: left;
+            width: 45%;
+        }
+        #middle-col {
+            float: left;
+            width: 45%;
+        }
+        #js-control {
+            background-color: #eee;
+        }
+    </style>
+    <script language="JavaScript">
+        showMic = true;
+
+        function thisMovie(movieName) {
+            if (navigator.appName.indexOf("Microsoft") != -1) {
+                return window[movieName];
+            } else {
+                return document[movieName];
+            }
+        }
+
+        function pageInit() {
+            document.getElementById('flashWarper').setAttribute("style", "width:10px;height:10px;");
+           //     document.getElementById('flashWarper').setAttribute("style", "width:250px;height:250px;");
+        }
+
+         // butoon function
+
+        function record() {
+            if (showMic) {
+                document.getElementById('flashWarper').setAttribute("style", "width:250px;height:250px;");
+                showMic = false;
+            }
+            thisMovie("VietEDPlayer").recordClick();
+        }
+
+        function stopRecordClick() {
+            thisMovie("VietEDPlayer").stopRecordClick();
+        }
+
+        function play() {
+            thisMovie("VietEDPlayer").playClick();
+        }
+
+        function replay() {
+            thisMovie("VietEDPlayer").replayClick();
+        }
+
+         // js call as funcion
+        function playURL(value) {
+            thisMovie("VietEDPlayer").playURL(value);
+        }
+
+        function saveRecording() {
+            thisMovie("VietEDPlayer").saveRecording();
+
+        }
+
+        function JSCallRecord(value1, value2) {
+            thisMovie("VietEDPlayer").recordSound(value1, value2);
+        }
+
+        function volumeIn(value1) {
+            thisMovie("VietEDPlayer").volumeIn(value1);
+        }
+
+        function volumeOut(value1) {
+            thisMovie("VietEDPlayer").volumeOut(value1);
+        }
+
+        function showMicrophone(val) {
+            document.getElementById('flashWarper').setAttribute("style", "width:250px;height:250px;");
+            thisMovie("VietEDPlayer").showMicrophone(val);
+        }
+
+        function showNumberOfMicrophone() {
+            thisMovie("VietEDPlayer").showNumberOfMicrophone();
+        }
+
+        function showPlaybackProgress(val) {
+            thisMovie("VietEDPlayer").showPlaybackProgress(val);
+        }
+
+        function playFileAtTime(val1, val2) {
+            thisMovie("VietEDPlayer").play(val1, val2);
+        }
+
+        function startUpload(val) {
+            var array = val.split(",");
+            thisMovie("VietEDPlayer").startUpload(array);
+        }
+        
+        function pause_resume() {
+        	thisMovie("VietEDPlayer").pause_resume();
+        }
+        
+        function getParameters(val) {
+        	thisMovie("VietEDPlayer").getParameters(val);
+        }
+         // js receive as function
+        function jsEventHandler() {
+            var tmp = document.forms["form1"].output.value;
+            document.forms["form1"].output.value = "ActionScript says: ";
+            for (var i = 0; i < arguments.length; i++) {
+                document.forms["form1"].output.value += "" + arguments[i] + "\n";
+            }
+            document.forms["form1"].output.value += "\n----\n" + tmp;
+            //if (arguments[0] == 'microphoneAccess' && arguments[1] == true)
+               //pageInit();
+        }
+    </script>
+    <!-- Enable Browser History by replacing useBrowserHistory tokens with two hyphens -->
+    <!-- BEGIN Browser History required section -->
         <link rel="stylesheet" type="text/css" href="history/history.css" />
         <script type="text/javascript" src="history/history.js"></script>
-        <!-- END Browser History required section -->  
-            
-        <script type="text/javascript" src="swfobject.js"></script>
-        <script type="text/javascript">
-            // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
-            var swfVersionStr = "11.1.0";
-            // To use express install, set to playerProductInstall.swf, otherwise the empty string. 
-            var xiSwfUrlStr = "playerProductInstall.swf";
-            var flashvars = {};
-            var params = {};
-            params.quality = "high";
-            params.bgcolor = "#ffffff";
-            params.allowscriptaccess = "always";
-            params.allowfullscreen = "true";
-            var attributes = {};
-            attributes.id = "VietEDPlayer";
-            attributes.name = "VietEDPlayer";
-            attributes.align = "middle";
-            swfobject.embedSWF(
-                "VietEDPlayer.swf", "flashContent", 
-                "100%", "100%", 
-                swfVersionStr, xiSwfUrlStr, 
-                flashvars, params, attributes);
-            // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
-            swfobject.createCSS("#flashContent", "display:block;text-align:left;");
-        </script>
-    </head>
-    <body onload="pageInit();">
-        <!-- SWFObject's dynamic embed method replaces this alternative HTML content with Flash content when enough 
+        <!-- END Browser History required section -->
+
+    <script type="text/javascript" src="swfobject.js"></script>
+    <script type="text/javascript">
+        // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
+        var swfVersionStr = "11.1.0";
+         // To use express install, set to playerProductInstall.swf, otherwise the empty string. 
+        var xiSwfUrlStr = "playerProductInstall.swf";
+        var flashvars = {};
+        var params = {};
+        params.quality = "high";
+        params.bgcolor = "#ffffff";
+        params.allowscriptaccess = "always";
+        params.allowfullscreen = "true";
+        var attributes = {};
+        attributes.id = "VietEDPlayer";
+        attributes.name = "VietEDPlayer";
+        attributes.align = "middle";
+        swfobject.embedSWF(
+            "VietEDPlayer.swf", "flashContent",
+            "100%", "100%",
+            swfVersionStr, xiSwfUrlStr,
+            flashvars, params, attributes);
+         // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
+        swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+    </script>
+</head>
+
+<body onload="pageInit();">
+    <!-- SWFObject's dynamic embed method replaces this alternative HTML content with Flash content when enough 
              JavaScript and Flash plug-in support is available. The div is initially hidden so that it doesn't show
              when JavaScript is disabled.
         -->
-        <div id="left-col">
-            <h3>Flash .swf file area</h3>
-            <div id ="flashWarper" style="width:200px; height:150px;" >
-                <div id="flashContent" >
-                    <p>
-                        To view this page ensure that Adobe Flash Player version 
-                        11.1.0 or greater is installed. 
-                    </p>
-                    <script type="text/javascript"> 
-                        var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://"); 
-                        document.write("<a href='http://www.adobe.com/go/getflashplayer'><img src='" 
-                                        + pageHost + "www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' /></a>" ); 
-                    </script> 
-                </div>
+    <div id="left-col">
+        <h3>Flash .swf file area</h3>
+        <div id="flashWarper" style="width:200px; height:150px;">
+            <div id="flashContent">
+                <p>
+                    To view this page ensure that Adobe Flash Player version 11.1.0 or greater is installed.
+                </p>
+                <script type="text/javascript">
+                    var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://");
+                    document.write("<a href='http://www.adobe.com/go/getflashplayer'><img src='" + pageHost + "www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' /></a>");
+                </script>
             </div>
         </div>
-        
-        <div id="right-wrapper">
-        <form name="form1" onsubmit="return false;">
-           <div id="middle-col">
-          <h3> JS control </h3>
-          <div id='js-control'  style="text-align:left;padding-left:15px;">
-            <div id='form-player'>
-               <h4>Player area</h4>
-              <input type="text" name="input" value="1.mp3" />         
-              <input type="button" value="playurl" onclick="playURL(this.form.input.value);" /><br />         
-           </div>
-           <hr/>
-           <div id='record-area'>
-               <h4>Recorder area </h4>
-              1. <input type="button" value="Record Again" onclick="record();" />
-              <div style="background-color:white;">               
-              <h5>Sample recording file settings </h5>
-                File name<br/>
-              <input type="text" name="input1" value="name" />
-              <br/>
-                Max Duration (seconds)<br/>              
-              <input type="text" name="input2" value="120" />
-               <br/>
-                Volume in <br/>              
-              <input type="text" name="input3" value="70" />
-               <br/>
-                Volume out <br/>              
-              <input type="text" name="input4" value="90" />
-               <br/>
-              Microphone <br/>              
-              <input type="text" name="input5" value="-1" />
-               <br/>
-               showPlaybackProgress <br/>              
-              <input type="text" name="input6" value="-1" />
-               <br/>
-			</div>
-              2. <input type="button" value="user: start the recorder" onclick="JSCallRecord(this.form.input1.value,this.form.input2.value);" /><br />
-              3. <input type="button" value="user: stop the recorder" onclick="recordDone();" /><br />
-                            
-              5. <input type="button" value="js: Save last recording" onclick="doneStep();" /><br />      
-              4. <input type="button" value="user: Replay last recording" onclick="replay();" /><br />
-              6. <input type="button" value="user: Play All recordings" onclick="play();" /><br />
-              7. <input type="button" value="user: Volume in" onclick="volumeIn(this.form.input3.value);" /><br />
-              8. <input type="button" value="user: Volume out" onclick="volumeOut(this.form.input4.value);" /><br />
-              9. <input type="button" value="user: Get Microphone x setting" onclick="showMicrophone(this.form.input5.value);" /><br />
-              
-              10. <input type="button" value="user: Get nuber of Microphone" onclick="showNumberOfMicrophone();" /><br />
-			11. <input type="button" value="user: playbackProgress" onclick="showPlaybackProgress(this.form.input6.value);" /><br />
-						
-               play file <br/>              
-              <input type="text" name="input7" value="-1" />
-               <br/>
-                play time <br/>              
-              <input type="text" name="input8" value="-1" />
-               <br/>
-       12. <input type="button" value="user: play" onclick="playFileAtTime(this.form.input7.value,this.form.input8.value);" /><br />
-        <input type="text" name="input9" value="name," />
-               <br/>
-       13. <input type="button" value="user: startUpload" onclick="startUpload(this.form.input9.value);" /><br />
+    </div>
 
-              
-           </div><!--record-area-->
-          </div>
-          </div>
-          <div id="right-col" style="padding-left:5px;">
-          <h3>Logs</h3>
-         <textarea cols="60" rows="20" name="output" >Initializing...</textarea>
-          </div>
-     	</form>
-     	
-     	</div>
-        <noscript>
-            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="100%" height="100%" id="VietEDPlayer">
-                <param name="movie" value="VietEDPlayer.swf" />
+    <div id="right-wrapper">
+        <form name="form1" onsubmit="return false;">
+            <div id="middle-col">
+                <h3> JS control </h3>
+                <div id='js-control' style="text-align:left;padding-left:15px;">
+                    <div id='form-player'>
+                        <h4>Player area</h4>
+                        <input type="text" name="input" value="1.mp3" />
+                        <input type="button" value="playurl | Không dùng" onclick="playURL(this.form.input.value);" />
+                        <br />
+                    </div>
+                    <hr/>
+                    <div id='record-area'>
+                        <h4>Recorder area </h4>
+                        <a>1.</a>
+                        <input type="button" value="Record Again | Không dùng" onclick="record();" />
+
+                        <h5>Sample recording file settings </h5>
+                        <a>File name</a>
+                        <br/>
+                        <input type="text" name="input1" value="name" />
+                        <br/>
+                        <a>Max Duration (seconds)</a>
+                        <br/>
+                        <input type="text" name="input2" value="120" />
+                        <br/>
+                        <a>2.</a>
+                        <input type="button" value="user: start the recorder" onclick="JSCallRecord(this.form.input1.value,this.form.input2.value);" />
+                        <br />
+                        <a>3.</a>
+                        <input type="button" value="user: stop the recorder" onclick="stopRecordClick();" />
+                        <br />
+                        <a>4.</a>
+                        <input type="button" value="user: Replay last recording" onclick="replay();" />
+                        <br />
+
+                        <a>5.</a>
+                        <input type="button" value="js: Save last recording" onclick="saveRecording();" />
+                        <br/>
+                        <br/>
+                         <br/>
+                        <a>Volume in</a>	
+                        <br />					
+                        <input type="text" name="input3" value="70" />
+                         <br/>
+                        <input type="button" value="user: Volume in" onclick="volumeIn(this.form.input3.value);" />
+                        <br/>
+                        <a>Volume out</a>
+                        <br/>
+                        <input type="text" name="input4" value="90" />                     
+                        
+                        <br /> 
+                        <input type="button" value="user: Volume out" onclick="volumeOut(this.form.input4.value);" />
+                        <br/><br/><br/>
+                        <a>Microphone</a>
+                        <br /> 
+                        <input type="text" name="input5" value="-1" />
+                        <br/>
+                        <input type="button" value="user: Get Microphone x setting" onclick="showMicrophone(this.form.input5.value);" />
+                        <br /> 
+                        <input type="button" value="user: Get nuber of Microphone" onclick="showNumberOfMicrophone();" />
+                        <br /> <br/><br/><br/>
+                        
+                        
+                       
+                        <a>showPlaybackProgress</a>
+                        <br/>
+                        <input type="text" name="input6" value="-1" />
+                        <br/>
+						
+                        <input type="button" value="user: playbackProgress" onclick="showPlaybackProgress(this.form.input6.value);" />
+                        <br />
+                        
+                        
+                        
+                        <br /><a>play file</a>
+                        <br/>
+                        <input type="text" name="input7" value="1.mp3" />
+                        <br/><a>play time</a>
+                        <br/>
+                        <input type="text" name="input8" value="-1" />
+                        <br/> 
+                        <input type="button" value="user: play" onclick="playFileAtTime(this.form.input7.value,this.form.input8.value);" />
+                        <br />
+                        
+                        <input type="button" value="user: Play All recordings" onclick="play();" />
+                        <br /> 
+                        <input type="button" value="user: pause_resume" onclick="pause_resume();" />
+                        <br /> 
+                        <br/><br/><br/>
+                        
+                        <br/>
+                        <input type="text" name="input20" value="volumeOut" />
+                        <br/> 
+                        <input type="button" value="Lay params" onclick="getParameters(this.form.input20.value);" />
+                        <br />
+
+                    </div>
+                    <!--record-area-->
+                </div>
+            </div>
+            <div id="right-col" style="padding-left:5px;">
+                <h3>Logs</h3>
+                <textarea cols="60" rows="20" name="output">Initializing...</textarea>
+            </div>
+        </form>
+
+    </div>
+    <noscript>
+        <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="100%" height="100%" id="VietEDPlayer">
+            <param name="movie" value="VietEDPlayer.swf" />
+            <param name="quality" value="high" />
+            <param name="bgcolor" value="#ffffff" />
+            <param name="allowScriptAccess" value="sameDomain" />
+            <param name="allowFullScreen" value="true" />
+            <!--[if !IE]>-->
+            <object type="application/x-shockwave-flash" data="VietEDPlayer.swf" width="100%" height="100%">
                 <param name="quality" value="high" />
                 <param name="bgcolor" value="#ffffff" />
                 <param name="allowScriptAccess" value="sameDomain" />
                 <param name="allowFullScreen" value="true" />
-                <!--[if !IE]>-->
-                <object type="application/x-shockwave-flash" data="VietEDPlayer.swf" width="100%" height="100%">
-                    <param name="quality" value="high" />
-                    <param name="bgcolor" value="#ffffff" />
-                    <param name="allowScriptAccess" value="sameDomain" />
-                    <param name="allowFullScreen" value="true" />
                 <!--<![endif]-->
                 <!--[if gte IE 6]>-->
-                    <p> 
-                        Either scripts and active content are not permitted to run or Adobe Flash Player version
-                        11.1.0 or greater is not installed.
-                    </p>
+                <p>
+                    Either scripts and active content are not permitted to run or Adobe Flash Player version 11.1.0 or greater is not installed.
+                </p>
                 <!--<![endif]-->
-                    <a href="http://www.adobe.com/go/getflashplayer">
-                        <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash Player" />
-                    </a>
+                <a href="http://www.adobe.com/go/getflashplayer">
+                    <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash Player" />
+                </a>
                 <!--[if !IE]>-->
-                </object>
-                <!--<![endif]-->
             </object>
-        </noscript>     
-   </body>
+            <!--<![endif]-->
+        </object>
+    </noscript>
+</body>
+
 </html>

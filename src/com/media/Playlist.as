@@ -4,6 +4,7 @@ package com.media
 	
 	import com.common.SoundStream;
 	
+	import flash.sampler.pauseSampling;
 	import flash.sensors.Accelerometer;
 	import flash.utils.ByteArray;
 
@@ -12,10 +13,20 @@ package com.media
 		private var _arrayStream:Array;
 		private var _currentSound:Number;
 		private var _currentSoundStream:SoundStream;
+
+		public function get vol():Number
+		{
+			return _vol;
+		}
+
 		private var _callBack:Function;
 		private var _tmpSoundStream:SoundStream;
+		private var _timeInterval:Number;
+		private var _isPlaying:Boolean;
+		private var _vol:Number = 1;
 		
 		public function updateVolume(vol:Number) :void {
+			_vol = vol;
 			if(_currentSoundStream != null)
 				_currentSoundStream.updateVolume(vol);
 			if(_tmpSoundStream != null)
@@ -32,33 +43,44 @@ package com.media
 			var ss:SoundStream = new NetSoundStream();
 			ss.startup(url);
 			_arrayStream.push(ss);
-			_currentSound = _arrayStream.length - 1;			
+			_currentSound = _arrayStream.length - 1;	
+			_timeInterval = -1;
+			_isPlaying = true;
 		}
 		
 		public function AddWavSound(byte:ByteArray, name:String):void {
 			var ss:SoundStream = new WavSound(byte, name);
 			_arrayStream.push(ss);
-			_currentSound = _arrayStream.length - 1;			
+			_currentSound = _arrayStream.length - 1;	
+			_timeInterval = -1;
+			_isPlaying = true;			
 		}
 		
 		public function STOPALL() :void {
 			try {
 				_tmpSoundStream.stop();
+			}catch (e:Error)
+			{
+				trace("tmp stopped");
+			}
+			try {
 				_currentSoundStream.stop();
 			}catch (e:Error)
 			{
 				trace("tmp stopped");
 			}
 		}
-		public function AddWaveSoundAndPlay(byte:ByteArray) : void {
+		public function AddWaveSoundAndPlay(byte:ByteArray, isPlay:Boolean) : void {
 			try {
 				_tmpSoundStream.stop();
 			}catch (e:Error)
 			{
-				trace("tmp stopped");
+				trace("tmp stopped" + isPlay + " " + byte.length);
 			}
+			byte.position = 0;
 			_tmpSoundStream = new WavSound(byte,"tmp");
-			_tmpSoundStream.play();
+			if(isPlay)
+				_tmpSoundStream.play();
 		}
 		
 		public function play(time:Number = -1):void
@@ -114,6 +136,22 @@ package com.media
 		
 		public function playSpecial(name:String, time:Number):void
 		{
+			if(name == "" && _isPlaying)
+			{
+				_timeInterval = _currentSoundStream.getInterval();
+				STOPALL();
+				_isPlaying = false;
+				return;
+			}
+			
+			if(name == "" && !_isPlaying)
+			{
+				_timeInterval = _currentSoundStream.getInterval();
+				_isPlaying = true;
+				play(_timeInterval);
+				return;
+			}
+			
 			var inSonglist:Boolean = false;
 			for(var i:Number = 0;i < _arrayStream.length; i++)
 			{
@@ -125,6 +163,10 @@ package com.media
 			}
 			if(inSonglist)
 				play(time);
+			else {
+				AddSound(name);
+				play(-1);
+			}
 		}
 	}
 }

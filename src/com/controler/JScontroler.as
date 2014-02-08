@@ -35,6 +35,9 @@ package com.controler
 				ExternalInterface.addCallback(MainEvents.GET_MIC_NUM,showNumberOfMicrophone);
 				ExternalInterface.addCallback(MainEvents.CALLBACK_INTERVAL,showPlaybackProgress);
 				ExternalInterface.addCallback(MainEvents.PLAY, play);
+				ExternalInterface.addCallback(MainEvents.PAUSE, pause);
+				ExternalInterface.addCallback(MainEvents.GET_PARAMETERS, getParameters);			
+				
 				
 				ExternalInterface.addCallback(MainEvents.UPLOAD_URL, setUploadURL);
 				ExternalInterface.addCallback(MainEvents.START_UPLOAD, startUpload);
@@ -49,8 +52,26 @@ package com.controler
 				addEventListener(MainEvents.STOP_RECORD, stopRecord);
 				addEventListener(MainEvents.MIC_NUMBER, micNumber);
 				addEventListener(MainEvents.CALLBACK_FUNCTION, callBackFunction);
+				addEventListener(MainEvents.SET_PARAMETERS, resultParam);
 			}
 			enableAll();
+		}
+		
+		private function pause():void
+		{
+			play("",-1);
+		}
+		
+		protected function resultParam(event:MainEvents):void
+		{
+			ExternalInterface.call(Variables.eventHanlers,MainEvents.GET_PARAMETERS, event.name, event.url);
+		}
+		
+		private function getParameters(param:String):void
+		{
+			var me:MainEvents = new MainEvents(MainEvents.GET_PARAMETERS,true);
+			me.name = param;
+			dispatchEvent(me);
 		}
 		
 		public function debug(string:String):void {

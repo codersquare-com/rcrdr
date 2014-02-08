@@ -119,6 +119,12 @@ package as3wavesound {
 			return Math.ceil(((_channel.position / _length) * 1000 ) /1000  * 100);
 		}
 		
+		public function getInterval():Number
+		{
+			return _channel.position;
+		}
+		
+		
 		public function checkStream(callback:Function):void
 		{
 			trace("start chek stream");

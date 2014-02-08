@@ -16,5 +16,7 @@ package com.common
 		public static var RECORDDONE:String = "recordDoneStatus";
 		public static var RE_RECORD:String = "reRecord";
 		public static var UPLOAD_URL:String;
+		public static var VOLUME_OUT:Object = "volumeOut";
+		public static var VOLUME_IN:Object = "volumeIn";
 	}
 }

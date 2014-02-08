@@ -13,5 +13,6 @@ package com.common
 		function updateVolume(vol:Number):void;
 		function getName():String;
 		function timeTotal():Number;
+		function getInterval():Number;
 	}
 }

@@ -150,6 +150,13 @@ package com.media
 			return Math.round(oSoundChannel.position);
 		}
 		
+		public function getInterval():Number
+		{
+			return position;
+		}
+		
+		
+		
 		public function get _timeTotal():Number {
 			return oSound.length;
 		}

@@ -5,7 +5,7 @@ package com.events
 	public class MainEvents extends Event
 	{
 		public static const PLAY_URL:String 	 = "playURL";
-		public static const DONE_STEP:String 	 = "doneStep";
+		public static const DONE_STEP:String 	 = "saveRecording";
 		public static const UPLOAD_URL:String 	 = "uploadURL";
 		public static const RECORD_SOUND:String 	 = "recordSound";		
 		public static const MICROPHONE_ACCESS:String 	 = "microphoneAccess";
@@ -37,6 +37,9 @@ package com.events
 		public var micNum:Number;
 		public var interval:Number;
 		public var uploadFile:Array;
+		public static var GET_PARAMETERS:String = "getParameters";
+		public static var SET_PARAMETERS:String = "setParameters";
+		public static var PAUSE:String = "pause_resume";
 		
 		public function MainEvents(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
