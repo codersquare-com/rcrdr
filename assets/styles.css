@@ -6,8 +6,34 @@
       	border: 2px solid red;
       }
       
-      #js-control {background-color:#eee;}
+      
 	  span.recording  {
 	  	font-weight:bold;
 	  	cursor:pointer;
+	  }
+	  
+	.slider-selection {
+		background : #3CA5D9;
+	}
+	.scale {
+		color:gray;
+		font-size:80%;
+	}
+	  
+	  #actions i 
+	  {
+	  	font-size: 200%;
+	  	cursor:pointer;
+	  }
+	  .recorded
+	  {
+	  color:green;  !important;
+	  }
+	  .being_recorded
+	  {
+	  	color:red;
+	  }
+	  .playing
+	  {
+	  	color:yellow;
 	  }

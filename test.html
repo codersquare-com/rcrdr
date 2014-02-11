@@ -22,10 +22,10 @@
         -->
         <!-- Enable Browser History by replacing useBrowserHistory tokens with two hyphens -->
         <!-- BEGIN Browser History required section -->
-        <link rel="stylesheet" type="text/css" href="bin-release/history/history.css" />
-        <script type="text/javascript" src="bin-release/history/history.js"></script>
+        <link rel="stylesheet" type="text/css" href="bin-debug/history/history.css" />
+        <script type="text/javascript" src="bin-debug/history/history.js"></script>
         <!-- END Browser History required section -->  
-        <script type="text/javascript" src="bin-release/swfobject.js"></script>
+        <script type="text/javascript" src="bin-debug/swfobject.js"></script>
 
         <script>
         var jsEventHandler;
@@ -33,9 +33,13 @@
         <script src="/assets/jquery.js"></script>
     	<script src="assets/bootstrap-3.0.0/dist/js/bootstrap.min.js"></script>
     	
+    	
+    	<script src="assets/bootstrap-slider/js/bootstrap-slider.js"></script>
+    	
 		<link href="assets/bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet">			
-        <link rel="stylesheet" type="text/css" href="assets/styles.css" />
+    	<link rel="stylesheet" href="assets/bootstrap-slider/css/bootstrap-slider.css" />
         <script src="assets/main.js"></script>
+        <link rel="stylesheet" type="text/css" href="assets/styles.css" />
             
         <script type="text/javascript">
             // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
@@ -53,7 +57,7 @@
             attributes.name = "VietEDPlayer";
             attributes.align = "middle";
             swfobject.embedSWF(
-                "bin-release/VietEDPlayer.swf", "flashContent", 
+                "bin-debug/VietEDPlayer.swf", "flashContent", 
                 "100%", "100%", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes);
@@ -85,12 +89,16 @@
             </div>
             
             <h4>Conversation</h4>
+            <a href='javascript:void(0);' class='btn btn-default' id='play_conversation'>
+            <i class='glyphicon glyphicon-play'></i>Play conversation</a>
             <div class='well' id='conversation'>
-            Peter: <span class='recording' data-id='file1.mp3'>Hello Mary</span>
+            Peter: <span title='click to record' class='recording' data-id='1.mp3' data-duration='120'>Hello Mary</span>
             <br/>
-            Marry: <span class='recording' data-id='file2.mp3'>Hello Petery how are you?</span>
+            Marry: <span title='click to record' class='recording' data-id='2.mp3' data-duration='10'>Hello Petery how are you?</span>
             <br/>
-            Peter: <span class='recording' data-id='file3.mp3'>Im fine thank you, and you?</span>
+            Peter: <span title='click to record' class='recording' data-id='3.mp3'  data-duration='5'>Im fine thank you, and you?</span>
+            <br/>
+            Marry: <span title='click to record' class='recording' data-id='4.mp3'  data-duration='5'>That's great to hear</span>
             </div>
         </div>
         
@@ -98,21 +106,28 @@
         <div class='row'>
 	           <div class='col-md-6'>
 		          <h3> JS control </h3>
-		          <div id='js-control'>
+		          <div id='js-control' class='well'>
 		            <div id='form-player'>
 		               <h4>Player area</h4>
-		              <input type="text" name="input" value="1.mp3" id='sample_mp3'/>         
-		              <input type="button" 
-		              	value="playurl" id='playurl' 
-		              	/><br />         
+		              <input type="text" name="input" value="bin-debug/1.mp3" id='sample_mp3'/>         
+		              
+		              <a class='btn btn-primary' id='playURL'><i class='glyphicon glyphicon-play'></i></a>
+		              <a class='btn btn-primary' id='pauseURL' style='display:none;'><i class='glyphicon glyphicon-pause'></i></a> 
+		              <a class='btn btn-primary' id='stopURL' style='display:none;color:red;'><i class='glyphicon glyphicon-stop'></i></a> 
+		              		
 		           </div>
 		           <hr/>
-		           <div id='record-area'>
-		               <h4>Recorder area </h4>
-		                1. <input type="button" value="Mic settings" id='mic_setting' />
+		           <div>
+			           <a href='javascript:void(0);' class='btn btn-sm btn-primary' id='mic_setting'>
+			           Mic Access Permissions</a>
+			           
+		           </div>
+		           
+		           <div style='min-height:20px;'></div>
+		           <div id='record-area' style='display:none;'>
 		              
-		              
-		              <div style="background-color:white;">               
+		              <div>
+		              	<h4>Recorder area </h4>               
 				              <h5>Sample recording file settings </h5>
 				                File name<br/>
 				              <input type="text" name="input1" value="name" id='recording_name'/>
@@ -121,46 +136,81 @@
 				              <input type="text" name="input2" value="120" id='recording_dur' />
 				              <br/>
 				              
-				              
-				                Volume in<br/>              
-				              <input type="text" name="input3" value="70" id='volumeIn' /> 
-				              <input type="button" value="Set VolumeIn" id='volumeInBtn' />
-				              
-				              
-				              Volume out (seconds)<br/>              
-				              <input type="text" name="input4" value="90" id='volumeOut'/>
-				              <input type="button" value="Set Volume out" id='volumeOutBtn' /><br />
-					</div>
-					
+				              <div  style="background-color:white;">
+					              <h4>Volume Settings</h4>
+					              <div id='volumeToggler'>
+					              <a href='javascript:void(0);'>Settings</a>
+					              <div id='volumeWrapper'>
+					              	<div>
+					                	<i title='Mic volume' class='glyphicon glyphicon-volume-up'
+					                	 style='color:green;'></i> 
+					                	 <span class='scale' id='volumeInValue'>0</span>
+					                	 <span class='scale'>%</span>  
+					                
+										<input type="text"
+										  id='volumeIn' 
+										  value="70" 
+										  data-slider-min="0" 
+										  data-slider-max="100" 
+										  data-slider-step="1" 
+										  data-slider-value="70" 
+										  data-slider-orientation="horizontal" 
+										  data-slider-selection="before"
+										  data-slider-tooltip="show">		
+							        
+							        </div>
+									<div style='min-height:30px'></div>
+					              	<div>
+					                	<i title='Sound volume' class='glyphicon glyphicon-headphones'
+					                	 style='color:green;'></i> 
+					                	 <span class='scale' id='volumeOutValue'>0</span>
+					                	 <span class='scale'>%</span>  
+					                
+										<input type="text"
+										  id='volumeOut' 
+										  value="70" 
+										  data-slider-min="0" 
+										  data-slider-max="100" 
+										  data-slider-step="1" 
+										  data-slider-value="70" 
+										  data-slider-orientation="horizontal" 
+										  data-slider-selection="before"
+										  data-slider-tooltip="show">		
+										<span class='scale'>100</span>            
+						        	</div>
+						        	</div>
+						        	</div> <!-- volumeToggler -->
+						       	</div>
+					</div>						       
 					<div id='actions'>
 						<h3>Actions</h3>
 							<div>
-				              2. <input type="button" class='btn' value="user: start the recorder"
-				              	id='start_recording' 
-				              	 />
-			              	 </div>
+				              <i title='Start recording' class='glyphicon glyphicon-record' style='color:green;'
+				              	id='startRecording'></i> 
 			              	 
-			              	 <div>
-					              3. <input type="button" class='btn' value="user: stop the recorder"
-					              	id='recordDone'/>
-			              	 </div>
-							<div>
-					              5. <input type="button" class='btn' value="js: Save last recording" id='doneStep' /><br />      
-							</div>
-							
-							<div>
-					              4. <input type="button" class='btn' value="user: Replay last recording" id='replay' /><br />
-							</div>			                            
-							<div>
+			              	 	<i title='Stop recording' class='glyphicon glyphicon-stop' style='color:red;display:none;'
+				              	id='stopRecording'></i> 
+			              	 
+			              	 	<i title='Save recording' class='glyphicon glyphicon-ok' style='color:green;display:none;'
+				              	id='saveRecording'></i> 
+					              
+			              	 	<i title='Replay last recording' class='glyphicon glyphicon-play' 
+			              	 		style='display:none;'
+				              	id='replayRecording'></i> 
+
+<hr/>
+<div>					              
 					              6. <input type="button" class='btn' value="user: Play All recordings" id='play' /><br />
+</div>					              
 							</div>
 					</div>
 		           </div><!--record-area-->
 		          </div>
 	          </div>
 	          <div id="right-col" class='col-md-6'>
-		          <h3>Logs</h3>
+		          <h3>AS Logs</h3>
 		         <textarea id='log-textarea' style='width:100%;' rows="20" name="output" ></textarea>
+		         <a href='javascript:void(0);' id='clear_log'>Clear logs</a>
 	          </div>
 	     	
      	   </div>
