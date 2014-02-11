@@ -100,7 +100,7 @@ $(document).ready(function(){
      {
          playDone = function()
          {
-             log_string('playDone');
+             log_string('---playDone---');
              if (playingConversation)
              {
                  //console.log(123);
@@ -167,7 +167,7 @@ $(document).ready(function(){
 
          $("#play_conversation").click(function(){
              playingConversation = true;
-             $("#conversation .recording:eq(1)").trigger('recording.play'); 
+             $("#conversation .recording:eq(0)").trigger('recording.play'); 
          });
         
          $("#playURL").click(function(){
