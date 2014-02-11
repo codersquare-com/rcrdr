@@ -6,18 +6,18 @@ package com.events
 	{
 		public static const PLAY_URL:String 	 = "playURL";
 		public static const DONE_STEP:String 	 = "saveRecording";
+		public static var STOP_RECORD:String = "stopRecording";
+		public static var START_RECORD:String = "startRecording";
 		public static const UPLOAD_URL:String 	 = "uploadURL";
-		public static const RECORD_SOUND:String 	 = "recordSound";		
+		//public static const RECORD_SOUND:String 	 = "startRecord";		
 		public static const MICROPHONE_ACCESS:String 	 = "microphoneAccess";
 		public static const PLAY_DONE:String 	 = "playDone";
-		public static const RECORD_DONE:String 	 = "recordDone";		
+		public static const RECORD_DONE:String 	 = "saveRecordingDone";		
 		public static const UPLOAD_PROGESS:String 	 = "uploadProgess";
 		public static const ERROR_RECORD:String = "recordError";
 		public static const SHOW_MICSETTING:String = "userClickRecord";		
-		public static const STARTUP:String = "flashStatedUp";	
-		public static const RESIZED:String = "resized";		
-		public static var STOP_RECORD:String = "stopRecord";
-		public static var START_RECORD:String = "startRecord";		
+		public static const STARTUP:String = "flashLoaded";	
+		public static const RESIZED:String = "resized";				
 		public static var VOLUME_IN:String = "volumeIn";
 		public static var VOLUME_OUT:String = "volumeOut";		
 		public static var SHOW_MICROPHONE:String = "showMicrophone";		
@@ -40,6 +40,9 @@ package com.events
 		public static var GET_PARAMETERS:String = "getParameters";
 		public static var SET_PARAMETERS:String = "setParameters";
 		public static var PAUSE:String = "pause_resume";
+		public static var START_RECORD_AS3:String = "startRecordingAs3";
+		public static var STOP_RECORD_AS3:String = "stopRecordingAs3";
+		public static var RECORDING_TIMEOUT:String = "recordingTimeout";
 		
 		public function MainEvents(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{

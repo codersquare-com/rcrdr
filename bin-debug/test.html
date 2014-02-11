@@ -22,15 +22,15 @@
         -->
         <!-- Enable Browser History by replacing useBrowserHistory tokens with two hyphens -->
         <!-- BEGIN Browser History required section -->
-        <link rel="stylesheet" type="text/css" href="history/history.css" />
-        <script type="text/javascript" src="history/history.js"></script>
+        <link rel="stylesheet" type="text/css" href="bin-debug/history/history.css" />
+        <script type="text/javascript" src="bin-debug/history/history.js"></script>
         <!-- END Browser History required section -->  
-        <script type="text/javascript" src="swfobject.js"></script>
+        <script type="text/javascript" src="bin-debug/swfobject.js"></script>
 
         <script>
         var jsEventHandler;
         </script>
-        <script src="assets/jquery.js"></script>
+        <script src="/assets/jquery.js"></script>
     	<script src="assets/bootstrap-3.0.0/dist/js/bootstrap.min.js"></script>
     	
     	
@@ -57,7 +57,7 @@
             attributes.name = "VietEDPlayer";
             attributes.align = "middle";
             swfobject.embedSWF(
-                "VietEDPlayer.swf", "flashContent", 
+                "bin-debug/VietEDPlayer.swf", "flashContent", 
                 "100%", "100%", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes);
@@ -71,6 +71,7 @@
              when JavaScript is disabled.
         -->
         <div class='container'><div class='row'>
+
         <div class='col-md-3'>
             <h3>Flash .swf file area</h3>
             <div id ="flashWrapper" style="width:200px; height:150px;" >
@@ -109,6 +110,7 @@
 		            <div id='form-player'>
 		               <h4>Player area</h4>
 		              <input type="text" name="input" value="bin-debug/1.mp3" id='sample_mp3'/>         
+		              
 		              <a class='btn btn-primary' id='playURL'><i class='glyphicon glyphicon-play'></i></a>
 		              <a class='btn btn-primary' id='pauseURL' style='display:none;'><i class='glyphicon glyphicon-pause'></i></a> 
 		              <a class='btn btn-primary' id='stopURL' style='display:none;color:red;'><i class='glyphicon glyphicon-stop'></i></a> 

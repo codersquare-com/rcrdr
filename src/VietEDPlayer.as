@@ -22,6 +22,7 @@ package
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.system.Security;
+	import flash.system.System;
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
 	

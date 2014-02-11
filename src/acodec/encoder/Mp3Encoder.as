@@ -63,10 +63,11 @@ package acodec.encoder
 		 */		
 		public function encode( samples:ByteArray, channels:int=2, bits:int=16, rate:int=44100 ):void
 		{			
-			if(status == Variables.MP3_ENCODED_WAV){
-				dispatchEvent(new Event(Event.COMPLETE));
-				return;
-			}
+			//if(status == Variables.MP3_ENCODED_WAV){
+				//dispatchEvent(new Event(Event.COMPLETE));
+				//return;
+			//}
+			_wave = new WaveEncoder(_volume);
 			wave.addEventListener(Event.COMPLETE, waveCompleteHandler);
 			wave.encode(samples,channels,bits,rate);	
 		}
@@ -80,8 +81,8 @@ package acodec.encoder
 		
 		public function getByteArray():ByteArray
 		{
-			if(mp3Shine != null)
-				return mp3Shine.mp3Data;
+			//if(mp3Shine != null)
+				//return mp3Shine.mp3Data;
 			return wave.getByteArray();
 		}
 		

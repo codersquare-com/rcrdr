@@ -3,6 +3,7 @@ package acodec
 	
 	import acodec.events.RecordingEvent;
 	
+	import com.common.Variables;
 	import com.controler.JScontroler;
 	import com.events.MainEvents;
 	
@@ -100,7 +101,7 @@ package acodec
 			_silenceLevel = silenceLevel;
 			_timeOut = timeOut;
 			_micNum = micNum;
-			_alowMic = true;
+			_alowMic = false;
 		}
 		
 		public function check():void {
@@ -223,9 +224,10 @@ package acodec
 				return false;
 			try{
 			_microphone.removeEventListener(SampleDataEvent.SAMPLE_DATA, onSampleData);			
-			_buffer.position = 0;			
+			_buffer.position = 0;		
 			_encoder.addEventListener(Event.COMPLETE, completeHandler);
-			_encoder.encode(_buffer, 1);	
+			_encoder.encode(_buffer, 1);
+			trace(_buffer.length);
 			_isRecording = false;	
 			if(!check)
 				_stopAlert();

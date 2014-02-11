@@ -132,7 +132,7 @@ package as3wavesound {
 			activeProcess=setInterval(activeProcessFunction, 200);
 			function activeProcessFunction() : void{				
 				trace("clear" + _percentplayed);
-				if (_percentplayed > 99.5 || _percentplayed == 0 ) {
+				if (_percentplayed > 99.9 || _percentplayed == 0 ) {
 					callback(_recordName);
 					clearInterval(activeProcess);
 				}
@@ -192,6 +192,7 @@ package as3wavesound {
 			if(_channel != null)
 				_channel.soundTransform.volume = vol;
 			
+			trace("update volume", vol);
 		}
 		
 		

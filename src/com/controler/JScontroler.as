@@ -21,13 +21,13 @@ package com.controler
 			if(ExternalInterface.available && ExternalInterface.objectID) {		
 				// Visible events
 				ExternalInterface.addCallback(ButtonEvents.PLAY_CLICK, playClick);
-				ExternalInterface.addCallback(ButtonEvents.RECORD_CLICK, recordClick);
-				ExternalInterface.addCallback(ButtonEvents.RECORD_DONE_CLICK, recordDoneClick);
-				ExternalInterface.addCallback(ButtonEvents.REPLAY_CLICK, replayClick);
+				//ExternalInterface.addCallback(ButtonEvents.S, recordClick);
+				ExternalInterface.addCallback(MainEvents.STOP_RECORD, recordDoneClick);
+				ExternalInterface.addCallback(ButtonEvents.REPLAY_CLICK, replayRecording);
 				ExternalInterface.addCallback(ButtonEvents.SHOW_MICROPHONE, showMicrophone);				
 				// Invisible events
 				ExternalInterface.addCallback(MainEvents.PLAY_URL, playURL);
-				ExternalInterface.addCallback(MainEvents.RECORD_SOUND, recordSound);
+				ExternalInterface.addCallback(MainEvents.START_RECORD, recordSound);
 				ExternalInterface.addCallback(MainEvents.DONE_STEP, doneStep);
 				ExternalInterface.addCallback(MainEvents.UPLOAD_URL, uploadURL);
 				ExternalInterface.addCallback(MainEvents.VOLUME_IN, volumeIn);
@@ -53,8 +53,14 @@ package com.controler
 				addEventListener(MainEvents.MIC_NUMBER, micNumber);
 				addEventListener(MainEvents.CALLBACK_FUNCTION, callBackFunction);
 				addEventListener(MainEvents.SET_PARAMETERS, resultParam);
+				addEventListener(MainEvents.RECORDING_TIMEOUT, recordingTimeout);
 			}
 			enableAll();
+		}
+		
+		protected function recordingTimeout(event:Event):void
+		{
+			ExternalInterface.call(Variables.eventHanlers,MainEvents.RECORDING_TIMEOUT);
 		}
 		
 		private function pause():void
@@ -77,6 +83,7 @@ package com.controler
 		public function debug(string:String):void {
 			ExternalInterface.call(Variables.eventHanlers,"Debug alert", string);
 		}
+		
 		private function startUpload(args:Array):void
 		{
 			var me:MainEvents = new MainEvents(MainEvents.START_UPLOAD,true);
@@ -179,7 +186,7 @@ package com.controler
 		
 		protected function playDone(event:MainEvents):void
 		{
-			ExternalInterface.call(Variables.eventHanlers,MainEvents.PLAY_DONE, event.name);
+			ExternalInterface.call(MainEvents.PLAY_DONE, event.name);
 		}
 		
 		protected function microphoneAccess(event:MainEvents):void
@@ -207,7 +214,7 @@ package com.controler
 		
 		private function recordSound(vname:String, vtime:Number):void
 		{
-			var mainEvent:MainEvents = new MainEvents(MainEvents.RECORD_SOUND,true);
+			var mainEvent:MainEvents = new MainEvents(MainEvents.START_RECORD_AS3,true);
 			mainEvent.name = vname;
 			mainEvent.time = vtime;
 			dispatchEvent(mainEvent);
@@ -220,27 +227,27 @@ package com.controler
 			dispatchEvent(mainEvent);			
 		}
 		
-		private function replayClick():void
+		private function replayRecording():void
 		{
 			if(!replay_click)
 				return;
 				
-			dispatchEvent(new ButtonEvents(ButtonEvents.REPLAY_CLICK,true));
+			dispatchEvent(new ButtonEvents(ButtonEvents.REPLAY_CLICK_AS3,true));
 		}
 		
 		private function recordDoneClick():void
 		{
 			if(!recordDone_click)
 				return;
-			dispatchEvent(new ButtonEvents(ButtonEvents.RECORD_DONE_CLICK,true));
+			dispatchEvent(new MainEvents(MainEvents.STOP_RECORD_AS3,true));
 		}
 		
-		private function recordClick():void
-		{
-			if(!record_click)
-				return;
-			dispatchEvent(new ButtonEvents(ButtonEvents.RECORD_CLICK,true));
-		}
+//		private function recordClick():void
+//		{
+//			if(!record_click)
+//				return;
+//			dispatchEvent(new MainEvents(MainEvents.START_RECORD,true));
+//		}
 		
 		private function playClick():void
 		{

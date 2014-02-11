@@ -37,15 +37,18 @@ package com.media
 		{
 			_arrayStream = new Array();
 			_currentSound = 0;
+			_isPlaying = false;
 		}
 		
 		public function AddSound(url:String):void {
-			var ss:SoundStream = new NetSoundStream();
-			ss.startup(url);
-			_arrayStream.push(ss);
-			_currentSound = _arrayStream.length - 1;	
-			_timeInterval = -1;
-			_isPlaying = true;
+			if(!_isPlaying){
+				var ss:SoundStream = new NetSoundStream();
+				ss.startup(url);
+				_arrayStream.push(ss);
+				_currentSound = _arrayStream.length - 1;	
+				_timeInterval = -1;
+				updateVolume(_vol);
+			}
 		}
 		
 		public function AddWavSound(byte:ByteArray, name:String):void {
@@ -53,7 +56,7 @@ package com.media
 			_arrayStream.push(ss);
 			_currentSound = _arrayStream.length - 1;	
 			_timeInterval = -1;
-			_isPlaying = true;			
+			updateVolume(_vol);
 		}
 		
 		public function STOPALL() :void {
@@ -71,6 +74,8 @@ package com.media
 			}
 		}
 		public function AddWaveSoundAndPlay(byte:ByteArray, isPlay:Boolean) : void {
+			if(_isPlaying)
+				return;
 			try {
 				_tmpSoundStream.stop();
 			}catch (e:Error)
@@ -78,13 +83,18 @@ package com.media
 				trace("tmp stopped" + isPlay + " " + byte.length);
 			}
 			byte.position = 0;
+			_tmpSoundStream = null;
 			_tmpSoundStream = new WavSound(byte,"tmp");
 			if(isPlay)
 				_tmpSoundStream.play();
+			updateVolume(_vol);
+			trace("playing",byte.length);
 		}
 		
 		public function play(time:Number = -1):void
 		{
+			if(_isPlaying)
+				return;
 			if(_currentSound >= _arrayStream.length)
 				return;
 			try {
@@ -99,12 +109,18 @@ package com.media
 			if(time != -1)
 				_currentSoundStream.play(time);
 			else _currentSoundStream.play();
+			
+			_isPlaying = true;	
 			trace("play");
+			updateVolume(_vol);
 		}
 				
 		public function PLAYALL() :void {
 			_currentSound = 0;
-			_callBack = NEXT;	
+			_callBack = function (abc:String):void {
+				NEXT();
+				_isPlaying = false;
+			}	
 			play();		
 		}
 		
@@ -112,12 +128,18 @@ package com.media
 			if(_currentSound >= _arrayStream.length)
 				return;
 			_currentSound ++;
-			_callBack = NEXT;	
+			_callBack = function (abc:String):void {
+				NEXT();
+				_isPlaying = false;
+			}
 			play();		
 		}
 		
 		public function addCallBack(callBack:Function):void {
-			_callBack = callBack;				
+			_callBack = function (abc:String):void {				
+				_isPlaying = false;
+				callBack(abc);
+			}
 		}
 		
 		public function getSoundTime(name:String):Number {

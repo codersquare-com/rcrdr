@@ -43,13 +43,13 @@ package com.controler
 			_main = main;
 			// control button
 			JScontroler.getInstance().addEventListener(ButtonEvents.PLAY_CLICK, playClick);
-			JScontroler.getInstance().addEventListener(ButtonEvents.RECORD_CLICK, recordClick);
-			JScontroler.getInstance().addEventListener(ButtonEvents.RECORD_DONE_CLICK, stopRecorder);
-			JScontroler.getInstance().addEventListener(ButtonEvents.REPLAY_CLICK, replayClick);
+			//JScontroler.getInstance().addEventListener(MainEvents.START_RECORD, recordClick);
+			JScontroler.getInstance().addEventListener(MainEvents.STOP_RECORD_AS3, stopRecorder);
+			JScontroler.getInstance().addEventListener(ButtonEvents.REPLAY_CLICK_AS3, replayClick);
 			
 			// control js auto event
 			JScontroler.getInstance().addEventListener(MainEvents.PLAY_URL, playURL);
-			JScontroler.getInstance().addEventListener(MainEvents.RECORD_SOUND, recordSound);
+			JScontroler.getInstance().addEventListener(MainEvents.START_RECORD_AS3, startRecording);
 			JScontroler.getInstance().addEventListener(MainEvents.DONE_STEP, doneStep);
 			JScontroler.getInstance().addEventListener(MainEvents.VOLUME_IN, volumeIn);
 			JScontroler.getInstance().addEventListener(MainEvents.VOLUME_OUT, volumeOut);
@@ -150,7 +150,7 @@ package com.controler
 		}
 		
 		protected function volumeOut(event:MainEvents):void
-		{
+		{			
 			if(playlist != null)
 				playlist.updateVolume(event.volume / 100);
 		}
@@ -171,23 +171,26 @@ package com.controler
 		}
 		protected function doneStep(event:Event):void
 		{
-			this.status = Variables.DONE;			
-			addCurrentRecordToPlaylist1();
+			this.status = Variables.DONE;
+			var isStoping:Boolean = _recorder.stop();
+			if(!isStoping) {	
+				addCurrentRecordToPlaylist1();
+			}
 		}
 		
-		protected function recordSound(event:MainEvents):void
-		{
+		protected function startRecording(event:MainEvents):void
+		{			
+			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.SHOW_MICSETTING,true));
 			if(status == Variables.INITIAL){
 				if(_main.stage.stageWidth > 150 && _main.stage.stageHeight > 150)
 					showSetting(null);
 				else {
 					_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);
-					
+						
 					addEventListener(MainEvents.RESIZED, showSetting);
 				}
 				trace(_main.stage.stageWidth, _main.stage.stageHeight);
 			}
-			
 			if (encoders.length > 0 )
 			{
 				if((encoders[curEncoderIndex] as IEncoder).name == event.name)
@@ -196,11 +199,12 @@ package com.controler
 						var isStoping:Boolean = _recorder.stop();
 						if(!isStoping) {	
 							_recorder.record();
+							status = Variables.RECORD;
 						}else
 							status = Variables.RE_RECORD;
 						playlist.STOPALL();					
 					} catch (e:Error) {}
-					_recorder.record();
+					//_recorder.record();
 					return;
 				}
 			}
@@ -225,6 +229,7 @@ package com.controler
 			PLAY();
 			var me:MainEvents = new MainEvents(MainEvents.RECORD_DONE,true);
 			me.time = playlist.getSoundTime(encoders[curEncoderIndex].name);
+			me.name = encoders[curEncoderIndex].name;
 			JScontroler.getInstance().dispatchEvent(me);
 			
 			(encoders[curEncoderIndex] as IEncoder).addEventListener(Event.COMPLETE, encodeMp3Done);
@@ -238,10 +243,18 @@ package com.controler
 		}
 		
 		protected function user_record_done(event:Event):void
-		{			
+		{	
+			if (this.status == Variables.DONE)
+			{
+				addCurrentRecordToPlaylist1();
+				JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.RECORDING_TIMEOUT,true));
+			}
+			
 			if (this.status == Variables.RECORD ||this.status== Variables.RECORDDONE) {
 				// use tmp sound				
-				playlist.AddWaveSoundAndPlay((encoders[curEncoderIndex] as IEncoder).getByteArray(), event == null);
+				if(event == null)
+					playlist.AddWaveSoundAndPlay((encoders[curEncoderIndex] as IEncoder).getByteArray(), event == null);
+				trace("xx",curEncoderIndex);
 			}
 			
 			if (this.status == Variables.RE_RECORD) {
@@ -290,7 +303,7 @@ package com.controler
 			trace("replay record");
 		}
 		
-		protected function stopRecorder(event:ButtonEvents):void
+		protected function stopRecorder(event:MainEvents):void
 		{
 			if(timer != null)
 				timer.removeEventListener(TimerEvent.TIMER_COMPLETE,record_timeout);
@@ -309,32 +322,32 @@ package com.controler
 			trace("record done");
 		}
 		
-		protected function recordClick(event:ButtonEvents):void
-		{
-			if(status == Variables.INITIAL){
-				if(_main.stage.stageWidth > 150 && _main.stage.stageHeight > 150)
-					showSetting(null);
-				else {
-					_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);				
-					addEventListener(MainEvents.RESIZED, showSetting);
-				}
-				trace(_main.stage.stageWidth, _main.stage.stageHeight);
-			}
-			
-			if(status == Variables.RECORD )
-			{
-				try{
-					var isStoping:Boolean = _recorder.stop();
-					if(!isStoping) {	
-						_recorder.record();
-					}else
-						status = Variables.RE_RECORD;
-					playlist.STOPALL();					
-				} catch (e:Error) {}
-				_recorder.record();
-			}
-			trace("Record click");
-		}
+//		protected function recordClick(event:ButtonEvents):void
+//		{
+//			if(status == Variables.INITIAL){
+//				if(_main.stage.stageWidth > 150 && _main.stage.stageHeight > 150)
+//					showSetting(null);
+//				else {
+//					_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);				
+//					addEventListener(MainEvents.RESIZED, showSetting);
+//				}
+//				trace(_main.stage.stageWidth, _main.stage.stageHeight);
+//			}
+//			
+//			if(status == Variables.RECORD )
+//			{
+//				try{
+//					var isStoping:Boolean = _recorder.stop();
+//					if(!isStoping) {	
+//						_recorder.record();
+//						this.status = Variables.RECORD;
+//					}else
+//						status = Variables.RE_RECORD;
+//					playlist.STOPALL();					
+//				} catch (e:Error) {}
+//			}
+//			trace("Record click");
+//		}
 		
 		protected function onStageResize(event:Event):void
 		{
@@ -348,7 +361,7 @@ package com.controler
 		{
 			if(event != null)
 				removeEventListener(MainEvents.RESIZED, showSetting);
-			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.SHOW_MICSETTING,true));
+			
 			var tmp:Mp3Encoder = new Mp3Encoder;
 			_recorder.startup(tmp,_gain, _mic,_micNum);
 			_recorder.check();			
