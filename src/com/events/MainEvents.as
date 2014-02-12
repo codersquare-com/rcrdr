@@ -43,6 +43,7 @@ package com.events
 		public static var START_RECORD_AS3:String = "startRecordingAs3";
 		public static var STOP_RECORD_AS3:String = "stopRecordingAs3";
 		public static var RECORDING_TIMEOUT:String = "recordingTimeout";
+		public static var DONE_STEP_AS3:String = "saveRecordingAs3";
 		
 		public function MainEvents(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{

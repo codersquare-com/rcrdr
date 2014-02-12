@@ -29,7 +29,6 @@ package com.controler
 				ExternalInterface.addCallback(MainEvents.PLAY_URL, playURL);
 				ExternalInterface.addCallback(MainEvents.START_RECORD, recordSound);
 				ExternalInterface.addCallback(MainEvents.DONE_STEP, doneStep);
-				ExternalInterface.addCallback(MainEvents.UPLOAD_URL, uploadURL);
 				ExternalInterface.addCallback(MainEvents.VOLUME_IN, volumeIn);
 				ExternalInterface.addCallback(MainEvents.VOLUME_OUT, volumeOut);
 				ExternalInterface.addCallback(MainEvents.GET_MIC_NUM,showNumberOfMicrophone);
@@ -199,16 +198,10 @@ package com.controler
 			ExternalInterface.call(Variables.eventHanlers,MainEvents.SHOW_MICSETTING);			
 		}
 		
-		private function uploadURL(vurl:String):void
-		{
-			var mainEvent:MainEvents = new MainEvents(MainEvents.UPLOAD_URL,true);
-			mainEvent.url = vurl;
-			dispatchEvent(mainEvent);
-		}
 		
 		private function doneStep():void
 		{
-			dispatchEvent(new MainEvents(MainEvents.DONE_STEP,true));
+			dispatchEvent(new MainEvents(MainEvents.DONE_STEP_AS3,true));
 			
 		}
 		

@@ -50,7 +50,7 @@ package com.controler
 			// control js auto event
 			JScontroler.getInstance().addEventListener(MainEvents.PLAY_URL, playURL);
 			JScontroler.getInstance().addEventListener(MainEvents.START_RECORD_AS3, startRecording);
-			JScontroler.getInstance().addEventListener(MainEvents.DONE_STEP, doneStep);
+			JScontroler.getInstance().addEventListener(MainEvents.DONE_STEP_AS3, doneStep);
 			JScontroler.getInstance().addEventListener(MainEvents.VOLUME_IN, volumeIn);
 			JScontroler.getInstance().addEventListener(MainEvents.VOLUME_OUT, volumeOut);
 			JScontroler.getInstance().addEventListener(MainEvents.SHOW_MICROPHONE, showMicrophone);
