@@ -38,6 +38,7 @@
     	
 		<link href="assets/bootstrap-3.0.0/dist/css/bootstrap.min.css" rel="stylesheet">			
     	<link rel="stylesheet" href="assets/bootstrap-slider-1.9.5/css/bootstrap-slider.css" />
+    	<script src="assets/utils.js"></script>
         <script src="assets/main.js"></script>
         <link rel="stylesheet" type="text/css" href="assets/styles.css" />
             
@@ -70,7 +71,212 @@
              JavaScript and Flash plug-in support is available. The div is initially hidden so that it doesn't show
              when JavaScript is disabled.
         -->
-        <div class='container'><div class='row'>
+        <div class='container'>
+        <div><hr/></div>
+        <div class='row' id='conversation'>
+        	<div class='col-md-6' >
+	            
+				<div id='conversation-control'>
+					
+					<span id='play-conversation-control'>
+						<h4>Conversation</h4>
+						
+			            <a href='javascript:void(0);' class='btn btn-default' id='play_conversation'
+			            style='color:green;'
+			            >
+			            <i class='glyphicon glyphicon-play'></i></a>
+
+			            <a href='javascript:void(0);' class='btn btn-default' id='resume_conversation' 
+			            style='display:none;'>
+			            <i class='glyphicon glyphicon-play'></i></a>
+			            
+			            <a href='javascript:void(0);' class='btn btn-default' id='pause_conversation' 
+			            style='display:none;'>
+			            <i class='glyphicon glyphicon-pause'></i></a>
+
+			            <a class='btn btn-default' id='show-roleplay' 
+			            	><i class='glyphicon glyphicon-ok'></i> RolePlay this conversation</a>
+			            	
+			           <br/>
+			           
+			           <input type='checkbox' checked='checked' name='show-transcript' 
+			         		id='conversation-show-transcript'/> 
+				         		<label for='conversation-show-transcript'>Show Transcript</label>
+			         </span>
+			         
+			         <span id='roleplay-conversation-control' style='display:none;'>
+			            <a class='btn btn-default' id='show-conversation'  
+			            	><i class='glyphicon glyphicon-arrow-left'></i> Listen again</a>
+			            	
+			         	<input type='checkbox' name='show-transcript' checked='checked' id='roleplay-show-transcript'/> 
+				         		<label for='roleplay-show-transcript'>Show whole conversation's Transcript</label>
+			         </span>   
+	            </div>
+	            
+	            <div id='conversation-transcript'  class='well'>
+			            Peter: <span title='click to record' 
+			            	class='recording' 
+			            	data-id='1.mp3' 
+			            	data-duration='120'
+			            	data-role='Peter'>
+			            - Hello Mary</span>
+			            <br/>
+			            
+			            Mary: 
+			            <span title='click to record' 
+			            	class='recording' 
+			            	data-id='2.mp3' 
+			            	data-duration='10'
+			            	data-role='Mary'>
+			           		- Hello Peter, How are you?
+			           	</span>
+			            <br/>
+			            
+			            Peter: 
+			            <span title='click to record' class='recording' data-id='3.mp3'  data-duration='5'
+			            data-role='Peter'>
+			            - Im fine thank you, and you?
+			            </span>
+			            <br/>
+			            
+			            Mary: <span title='click to record' 
+				            class='recording' 
+				            data-id='4.mp3'
+				            data-duration='5'
+				            data-role='Mary'>
+				            - That's great to hear
+				         </span>
+	            </div>
+	                    	
+        		<div id='conversation-recorder' style='display:none;'>
+        			<h4>Recorder</h4>
+        			
+        			<div id='roleplay-setting'>
+	        			Difficulty settings
+        				<div class='well'>
+        					<div>
+				         	<input type='checkbox' name='roleplay-show-sentence-transcript' checked='checked' id='roleplay-show-sentence-transcript'/> 
+				         		<label for='roleplay-show-sentence-transcript'>Show Transcript when speaking</label>
+				         		(Untick if you're a hardcore)
+        					</div>
+							
+							<div>
+							Speaking Speed
+							<br/>
+						       <select id='speaking-speed' class='form-control'>
+								   	<option value='slow'>-- Slow . You can listen to your saying first before next -- </option>
+								   	<option value='fast'>-- Fast . No re-listen. Just flowing. Hardcore only -- </option>
+							   </select>				         		
+							</div>
+				         		
+						<div>
+							Speaking Speed
+							<br/>
+						       <select id='pause-period' class='form-control'>
+								   	<option value='0'>-- Fast . No pause between sentences -- </option>
+								   	<option value='1'>-- Pause 1 second between every sentence -- </option>
+							   </select>				         		
+							</div>
+											         		
+				         		<div id='availableRoles'>
+			        			<div>
+			        				Choose role(s)
+			        			</div>
+		        			</div>
+				         		
+        				</div>
+        			</div>
+        			<div>
+        				<a href='javascript:void(0);' class='btn btn-default' id='startRoleplaying'
+			         	   style='color:green;'>
+			            <i class='glyphicon glyphicon-play'></i> <b>Start roleplaying</b></a>
+        			</div>
+        			
+        			<div  class='well'>
+        				<span id='playingSentenceTranscript'>
+        				</span>
+        			
+			            <span id='actions' class='pull-right'>
+						    <i title='Start recording' class='glyphicon glyphicon-record' style='color:red;'
+			              	id='startRecording'></i> 
+			             	 
+			             	 	<i title='Stop recording' class='glyphicon glyphicon-stop' style='color:red;display:none;'
+			              	id='stopRecording'></i> 
+			             	 
+			             	 	<i title='Replay last recording' class='glyphicon glyphicon-play' 
+			             	 		style='display:none;'
+			              	id='replayRecording'></i> 
+			
+			             	 	<i title='Save recording' class='glyphicon glyphicon-ok' style='color:green;display:none;'
+			              	id='saveRecording'></i> 
+			            </span>
+					</div>
+					
+					<div>
+						<a href='javascript:void(0);' class='btn btn-default' id='replayRoleplaying'
+			         	   style='color:green;display:none;'>
+			            <i class='glyphicon glyphicon-play'></i> <b>Listen to your roleplaying</b></a>
+					 </div>           
+        		</div>
+        	</div>
+        	
+        	<div class='col-md-3'>
+					<div  style="background-color:white;">
+					              <h4>Recorder Settings</h4>
+					              <div id='volumeToggler'>
+					              <a href='javascript:void(0);'>Settings</a>
+					              <div id='volumeWrapper'>
+					              	<div>
+					                	<i title='Mic volume' class='glyphicon glyphicon-volume-up'
+					                	 style='color:green;'></i> 
+					                	 <span class='scale' id='volumeInValue'>0</span><span class='scale'>%</span>  
+					                
+										<input type="text"
+										  id='volumeIn' 
+										  value="90" 
+										  data-slider-min="0" 
+										  data-slider-max="100" 
+										  data-slider-step="1" 
+										  data-slider-value="90" 
+										  data-slider-orientation="horizontal" 
+										  data-slider-selection="before"
+										  data-slider-tooltip="show">		
+							        	<span class='scale'>100</span>      
+							        </div>
+									<div style='min-height:30px'></div>
+					              	<div>
+					                	<i title='Sound volume' class='glyphicon glyphicon-headphones'
+					                	 style='color:green;'></i> 
+					                	 <span class='scale' id='volumeOutValue'>0</span><span class='scale'>%</span>  
+					                
+										<input type="text"
+										  id='volumeOut' 
+										  value="100" 
+										  data-slider-min="0" 
+										  data-slider-max="100" 
+										  data-slider-step="1" 
+										  data-slider-value="100" 
+										  data-slider-orientation="horizontal" 
+										  data-slider-selection="before"
+										  data-slider-tooltip="show">		
+										<span class='scale'>100</span>            
+						        	</div>
+						        	</div>
+						        	</div> <!-- volumeToggler -->
+						       	</div>           	
+        	</div>
+        	<div class='col-md-3'>
+        	     <h4>AS Logs</h4>
+        	     <a href='javascript:void(0);' class='clear_log'>Clear logs</a>
+		         <textarea id='log-textarea' style='width:100%;' rows="20" name="output" ></textarea>
+		         <a href='javascript:void(0);' class='clear_log'>Clear logs</a>
+        	
+        	</div>
+        </div>
+        <div class='row'>
+        	<hr/>
+        </div>
+        <div class='row'>
 
         <div class='col-md-3'>
             <h3>Flash .swf file area</h3>
@@ -88,18 +294,9 @@
                 </div>
             </div>
             
-            <h4>Conversation</h4>
-            <a href='javascript:void(0);' class='btn btn-default' id='play_conversation'>
-            <i class='glyphicon glyphicon-play'></i>Play conversation</a>
-            <div class='well' id='conversation'>
-            Peter: <span title='click to record' class='recording' data-id='1.mp3' data-duration='120'>Hello Mary</span>
-            <br/>
-            Marry: <span title='click to record' class='recording' data-id='2.mp3' data-duration='10'>Hello Peter, How are you?</span>
-            <br/>
-            Peter: <span title='click to record' class='recording' data-id='3.mp3'  data-duration='5'>Im fine thank you, and you?</span>
-            <br/>
-            Marry: <span title='click to record' class='recording' data-id='4.mp3'  data-duration='5'>That's great to hear</span>
-            </div>
+            
+            
+           
         </div>
         
         <div class='col-md-9'>
@@ -136,68 +333,11 @@
 				              <input type="text" name="input2" value="120" id='recording_dur' />
 				              <br/>
 				              
-				              <div  style="background-color:white;">
-					              <h4>Volume Settings</h4>
-					              <div id='volumeToggler'>
-					              <a href='javascript:void(0);'>Settings</a>
-					              <div id='volumeWrapper'>
-					              	<div>
-					                	<i title='Mic volume' class='glyphicon glyphicon-volume-up'
-					                	 style='color:green;'></i> 
-					                	 <span class='scale' id='volumeInValue'>0</span>
-					                	 <span class='scale'>%</span>  
-					                
-										<input type="text"
-										  id='volumeIn' 
-										  value="70" 
-										  data-slider-min="0" 
-										  data-slider-max="100" 
-										  data-slider-step="1" 
-										  data-slider-value="70" 
-										  data-slider-orientation="horizontal" 
-										  data-slider-selection="before"
-										  data-slider-tooltip="show">		
-							        
-							        </div>
-									<div style='min-height:30px'></div>
-					              	<div>
-					                	<i title='Sound volume' class='glyphicon glyphicon-headphones'
-					                	 style='color:green;'></i> 
-					                	 <span class='scale' id='volumeOutValue'>0</span>
-					                	 <span class='scale'>%</span>  
-					                
-										<input type="text"
-										  id='volumeOut' 
-										  value="70" 
-										  data-slider-min="0" 
-										  data-slider-max="100" 
-										  data-slider-step="1" 
-										  data-slider-value="70" 
-										  data-slider-orientation="horizontal" 
-										  data-slider-selection="before"
-										  data-slider-tooltip="show">		
-										<span class='scale'>100</span>            
-						        	</div>
-						        	</div>
-						        	</div> <!-- volumeToggler -->
-						       	</div>
+				              
 					</div>						       
-					<div id='actions'>
+					<div>
 						<h3>Actions</h3>
 							<div>
-				              <i title='Start recording' class='glyphicon glyphicon-record' style='color:green;'
-				              	id='startRecording'></i> 
-			              	 
-			              	 	<i title='Stop recording' class='glyphicon glyphicon-stop' style='color:red;display:none;'
-				              	id='stopRecording'></i> 
-			              	 
-			              	 	<i title='Save recording' class='glyphicon glyphicon-ok' style='color:green;display:none;'
-				              	id='saveRecording'></i> 
-					              
-			              	 	<i title='Replay last recording' class='glyphicon glyphicon-play' 
-			              	 		style='display:none;'
-				              	id='replayRecording'></i> 
-
 <hr/>
 <div>					              
 					              6. <input type="button" class='btn' value="user: Play All recordings" id='play' /><br />
@@ -208,9 +348,6 @@
 		          </div>
 	          </div>
 	          <div id="right-col" class='col-md-6'>
-		          <h3>AS Logs</h3>
-		         <textarea id='log-textarea' style='width:100%;' rows="20" name="output" ></textarea>
-		         <a href='javascript:void(0);' id='clear_log'>Clear logs</a>
 	          </div>
 	     	
      	   </div>
