@@ -10,6 +10,8 @@ var SOUND_CDN = "http://vieted.com/tmp/";
 var recording_dur = 3; //seconds
 var recording_name = 'sample';
 var speakingSpeed = 'slow';
+var current_recording_playing = -1;
+var waitingForUserToStartSpeaking = false;
 $(document).ready(function(){
         
      showMic = true;
@@ -57,8 +59,8 @@ $(document).ready(function(){
           }
           else 
           {
-              $('#replayRecording').show();
-              $("#saveRecording").show();
+              waitingForUserToStartSpeaking = true;
+              $('#replayRecording, #saveRecording, #startRecording').show();
               $("#stopRecording").hide();
           }
       }
@@ -95,7 +97,7 @@ $(document).ready(function(){
           {
               VietEDPlayer = thisMovie("VietEDPlayer");
               VietEDPlayer.stop = function(){
-                  this.pause_resume();
+                  VietEDPlayer.pause_resume();
               };
               init_handlers();
               //TODO: if get_cookie
@@ -159,18 +161,20 @@ $(document).ready(function(){
                  var $nexts = $playing.nextAll(".recording");
                  if ($nexts.size() > 0)
                  {
+                     //TODO
                      $nexts.first().trigger('recording.play');
                  }
-                 else 
+                 else //End of conversation 
                  {
-                     /*
-                     //TODO: depending on playingMode, do different things
-                     $("#play_conversation").show();
-                     $("#pause_conversation, #resume_conversation").hide();
-                     */
                      if (playingMode == 'rolePlaying')
                      {
-                         $("#replayRoleplaying").show();
+                         $("#replayRoleplayingWrapper").show();
+                         $("#record-actions").hide();
+                     }
+                     else if (playingMode == 'playingConversation')
+                     {
+                         $("#play_conversation").show();
+                         $("#resume_conversation, #pause_conversation").hide();
                      }
                      playingMode = -1 ;//playingConversation = false;
                  }
@@ -190,6 +194,8 @@ $(document).ready(function(){
              }
              
              var filename = $this.attr('data-id');
+             current_recording_playing = filename;
+             
              if (playingMode == 'playingConversation')
              {
                  VietEDPlayer.play(SOUND_CDN + filename, -1);
@@ -209,31 +215,44 @@ $(document).ready(function(){
              }
              else if (playingMode == 'rolePlaying')
              {
+                 log_string('triggered.....');
                  //TODO: play the sound if it's not the chosen roles
                  var role = $this.attr('data-role');
                  if ($.inArray(role, chosenRoles) != -1)
                  {
+                     waitingForUserToStartSpeaking = false;
                      //start the record button
                      recording_name = $this.attr('data-id');
                      recording_dur = $this.attr('data-duration');
+                     
+                     $("#record-actions").show();
+                     
                      //trigger the record button
-                     $("#startRecording").trigger('click');
+                     if (speakingSpeed == 'fast')
+                         $("#startRecording").trigger('click');
+                     else 
+                     {
+                         waitingForUserToStartSpeaking = true;
+                         $("#startRecording").show();
+                         $("#stopRecording, #saveRecording, #replayRecording").hide();
+                     }
                      
                      if ($("#roleplay-show-sentence-transcript").is(":checked"))
-                         $("#playingSentenceTranscript").html($this.html());
+                         $("#playingSentenceTranscript").html($this.html()).addClass('userInput');
                      else 
-                         $("#playingSentenceTranscript").html("Please speak now");
+                         $("#playingSentenceTranscript").html("Please speak now").addClass('userInput');
                      
                      //$("#stopRecording").show();
                  }
                  else 
                  {
+                     $("#record-actions").hide();
                      VietEDPlayer.play(SOUND_CDN + filename, -1);
 
                      if ($("#roleplay-show-sentence-transcript").is(":checked"))
-                         $("#playingSentenceTranscript").html($this.html());
+                         $("#playingSentenceTranscript").html($this.html()).removeClass('userInput');
                      else 
-                         $("#playingSentenceTranscript").html("");
+                         $("#playingSentenceTranscript").html("").removeClass('userInput');
 
                  }
              }
@@ -252,6 +271,15 @@ $(document).ready(function(){
          //TODO: remove this when flow is done. This is only used
          // temporarily
          $(".recording").click(function(){
+             //WHen everything is fresh. Clicking on 1 sentence will
+             // play it and following sentences
+             if (playingMode == -1)
+             {
+                 $("#play_conversation").hide();
+                 $("#pause_conversation").show();
+                 playingMode = 'playingConversation';
+             }
+             
              if (playingMode == 'playingConversation')
              {
                  $("#conversation").find("span.playing").removeClass('playing');
@@ -275,18 +303,23 @@ $(document).ready(function(){
          
          $("#pause_conversation").click(function(){
              VietEDPlayer.pause_resume();
-             //$(this).hide();
+             $(this).hide();
              $("#resume_conversation").show();    
          });
 
          $("#resume_conversation").click(function(){
-             VietEDPlayer.pause_resume();
+             //VietEDPlayer.pause_resume();
+             $("#conversation .recording[data-id='" + current_recording_playing + "']").trigger('recording.play');
+             //VietEDPlayer.pause_resume();
+             //VietEDPlayer.play();
              $(this).hide();
              $("#pause_conversation").show();    
          });
          
          /* Start role playing */
          $("#startRoleplaying").on("click", function(){
+             //TODO: VietEDPlayer.stop() here
+             VietEDPlayer.stop();
              chosenRoles = [];
              $("#availableRoles").find(":checked").each(function(){
                  chosenRoles.push($(this).attr('data-role')); 
@@ -297,6 +330,7 @@ $(document).ready(function(){
              }
              else 
              {
+                 $("#record-buttons").show();
                  playingMode = 'rolePlaying';
                  $("#conversation .recording:eq(0)").trigger('recording.play');
              }
@@ -314,10 +348,11 @@ $(document).ready(function(){
                  
                  $("#roleplay-conversation-control").show();
                  $("#conversation-recorder").fadeIn();
+                 $("#roleplay-setting").show();
             });
          });
 
-         $("#show-conversation").click(function(){
+         $("#listen-conversation-again").click(function(){
              $("#conversation-recorder").fadeOut(function(){
                  if ($("#conversation-show-transcript").is(":checked"))
                  {
@@ -328,6 +363,7 @@ $(document).ready(function(){
                  
                  $("#play-conversation-control").fadeIn();
                  $("#roleplay-conversation-control").hide();
+                 $("#play_conversation").trigger('click');
              });
          });
          
@@ -374,12 +410,40 @@ $(document).ready(function(){
 
          /*************************PAGE 2*****************************/
          $("html").keydown(function(event){
-             if (event.which == 32 && playingMode == 'rolePlaying')
+             log_string(event.which);
+             if (event.which == 32 && playingMode == 'rolePlaying'
+                 //Make sure only trigger if it is recording
+             )
              {
-                 $("#stopRecording").trigger('click');    
+                 if (speakingSpeed == 'slow' && waitingForUserToStartSpeaking)
+                 {
+                     $("#startRecording").trigger('click');
+                 }
+                 else 
+                     $("#stopRecording").trigger('click');
+                 
                  event.preventDefault();
                  return false;
              }
+             else if (playingMode == 'rolePlaying' && speakingSpeed == 'slow')
+             {
+                 if (event.which == 83 ) /*S*/
+                 {
+                     //user pressed "saved"
+                     $("#saveRecording").trigger('click');
+                 }
+
+                 else if (event.which == 82 ) /*R*/
+                 {
+                     //user pressed "saved"
+                     $("#replayRecording").trigger('click');
+                 }
+                 
+                 event.preventDefault();
+                 return false;
+
+             }
+             
          });
          
          $("#recording_name").change(function(){
@@ -400,9 +464,10 @@ $(document).ready(function(){
          //var dur = $("#recording_dur").val();
 
          $("#startRecording").on("click", function(){
+             waitingForUserToStartSpeaking = false;
              VietEDPlayer.startRecording(recording_name,recording_dur);
              $('#stopRecording').show();
-             $('#replayRecording,#saveRecording').hide();
+             $('#replayRecording,#saveRecording, #startRecording').hide();
              
          });
 
