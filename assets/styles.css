@@ -47,3 +47,8 @@
 	  	color: red;
 	  	font-weight:bold;
 	  }
+	  #availableRoles label
+	  {
+	  		font-size:300%;
+	  		cursor:pointer;
+	  }

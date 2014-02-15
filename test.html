@@ -147,10 +147,11 @@
 	            </div>
 	                    	
         		<div id='conversation-recorder' style='display:none;'>
-        			<div id='availableRoles'>
-			        			<div>
-			        				Choose role(s) you wanna play
-			        			</div>
+        			<div>
+			        	Choose role(s) you wanna play
+			        </div>
+			        			
+        			<div id='availableRoles' class='well'>
         			</div>
         			<div>
         				Ready? <a href='javascript:void(0);' class='btn btn-default' id='startRoleplaying'
@@ -209,8 +210,38 @@
         	
         	<div class='col-md-3'>
         	<div id='roleplay-setting' style='display:none;'>
-	        			<h4>Difficulty settings</h4>
-        				<div class='well'>
+					<div class="panel panel-default">
+					  <div class="panel-heading">Difficulty settings</div>
+					  <div class="panel-body">
+					    <div class="btn-group btn-group-justified" id='difficult-setting-btns'>
+        			    	<a href="javascript:void(0);" 
+        			    		class="btn btn-primary active "
+        			    		data-difficulty='easy'
+        			    		> Easy </a>
+        			    	<a href="javascript:void(0);"
+        			    		class="btn btn-primary"
+        			    		data-difficulty='difficult' 
+        			    		> Difficult</a>
+        			    </div>
+						
+						<div id='setting-tmp'>
+							<div id='easy-setting' style=''>
+								- Show transcript
+								<br/>
+								- Pause and record
+							</div>
+							
+							<div id='difficult-setting' style='display:none'>
+								- No transcript
+								<br/>
+								- Continuous conversation
+							</div>
+						</div>
+						
+						
+						<a href='javascript:void(0);' class='toggle-dom' target-id='difficulty-setting-customized, #setting-tmp'>Customized Settings</a>
+						
+        				<div class='well' id='difficulty-setting-customized' style='display:none;'>
         					<div>
 				         	<input type='checkbox' name='roleplay-show-sentence-transcript' checked='checked' id='roleplay-show-sentence-transcript'/> 
 				         		<label for='roleplay-show-sentence-transcript'>Show Transcript when speaking</label>
@@ -236,10 +267,15 @@
 							   </select>				         		
 							</div>
         				</div>
+					  </div>
+					</div>
+						
         			</div>
         			
 					<div>
-			              <h4>Recorder Settings</h4>
+					<div class="panel panel-default">
+					  <div class="panel-heading">Recorder settings</div>
+					  <div class="panel-body">
 					              <div id='volumeToggler'>
 					              	<a href='javascript:void(0);'>Settings</a>
 					              	<br/><br/>
@@ -282,6 +318,8 @@
 						        	</div>
 						        	</div>
 						        	</div> <!-- volumeToggler -->
+						        </div>
+				        </div>
         	</div>
         	<div class='col-md-3'>
         	     <h4>AS Logs</h4>

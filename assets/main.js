@@ -453,6 +453,28 @@ $(document).ready(function(){
              recording_dur = $("#recording_dur").val();
          });
          
+         $("#difficult-setting-btns a").click(function()
+         {
+             $("#difficult-setting-btns a").removeClass('active');
+             $(this).addClass('active');
+             var diff = $(this).attr('data-difficulty');
+             if (diff == 'easy')
+             {
+                 $("#easy-setting").show();
+                 $("#difficult-setting").hide();
+                 $("#speaking-speed").val('slow').trigger('change');
+                 $("#roleplay-show-sentence-transcript").attr("checked", "checked");
+             }
+             else if (diff == 'difficult')
+             {
+                 $("#easy-setting").hide();
+                 $("#difficult-setting").show();
+                 $("#speaking-speed").val('fast').trigger('change');
+                 $("#roleplay-show-sentence-transcript").attr("checked", false);
+             }
+             
+         });
+         
          $("#speaking-speed").change(function(){
              speakingSpeed = $(this).val();
              //alert("startRecording clicked");
