@@ -20,6 +20,7 @@ package acodec.encoder
 		private var mp3Shine:ShineMP3Encoder = null;
 		private var _status:String;
 		private var _name:String;
+		private var _callBack:Function;
 		/**
 		 * 
 		 * @param volume
@@ -30,6 +31,7 @@ package acodec.encoder
 			_volume = volume;
 			_wave = new WaveEncoder(_volume);
 			_status = Variables.MP3_ENCODER_INIT;
+			_callBack = function () :void {};
 		}
 		
 		public function get status():String
@@ -86,6 +88,14 @@ package acodec.encoder
 			return wave.getByteArray();
 		}
 		
+		public function getMp3Array(callBack:Function, j:int):ByteArray
+		{
+			if (callBack == null)
+				return mp3Shine.mp3Data;
+			_callBack = function ():void {callBack(j);}
+			return null;
+		}
+		
 		public function clone():IEncoder
 		{
 			var tmp:IEncoder = new Mp3Encoder(_volume);
@@ -120,9 +130,12 @@ package acodec.encoder
 		protected function mp3EncodeComplete(event:Event):void
 		{
 			mp3Shine.removeEventListener(Event.COMPLETE,mp3EncodeComplete);
-			dispatchEvent(new Event(Event.COMPLETE));			
+			dispatchEvent(new Event(Event.COMPLETE));
 			_status = Variables.MP3_ENCODED_MP3;
+			_callBack();
 		}
+		
+	
 		
 		public function get name():String
 		{

@@ -25,7 +25,7 @@ package com.controler
 	import flash.utils.Timer;
 	import flash.utils.clearInterval;
 	import flash.utils.setInterval;
-
+	
 	public class Controler extends EventDispatcher
 	{
 		private var _main:VietEDPlayer;
@@ -78,13 +78,65 @@ package com.controler
 			interValRuning = false;
 		}
 		
-		protected function pushSounds(event:Event):void
+		protected function pushSounds(event:MainEvents):void
 		{
 			var fh:FileHandler = new FileHandler();
-			fh.addFile("curs.wav",(encoders[curEncoderIndex] as Mp3Encoder).getByteArray());
-			var uld:Uploader = new Uploader;
-			uld.sendRequest(fh);
+			
+			var isDone:Number;//=
+			var isUpload:Boolean = true;
+			var j:Number = 0,i:Number = 0;
+			if(event.uploadFile == null){
+				isDone = encoders.length;
+				for(i= 0; i< encoders.length; i++)
+				{
+					if((encoders[i] as Mp3Encoder).status == Variables.MP3_ENCODED_MP3) {
+						fh.addFile((encoders[i] as Mp3Encoder).name,(encoders[i] as Mp3Encoder).getMp3Array(null,i));
+						isDone --;
+					}
+					else {						
+						isUpload = false;
+						(encoders[i] as Mp3Encoder).getMp3Array(addJtoI,i);
+					}
+				}
+			}
+			else
+			{
+				isDone = event.uploadFile.length;
+				
+				for(i = 0; i< event.uploadFile.length; i++)
+				{
+					for(j  = 0; j < encoders.length;j++)
+					{
+						if( (encoders[j] as Mp3Encoder).name == event.uploadFile[i])
+						{
+							if((encoders[j] as Mp3Encoder).status == Variables.MP3_ENCODED_MP3) {
+								fh.addFile(event.uploadFile[i],(encoders[j] as Mp3Encoder).getMp3Array(null,j));
+								isDone --;
+							}
+							else
+								(encoders[i] as Mp3Encoder).getMp3Array(addJtoI,j);
+						}
+					}
+				}
+			}
+			function addJtoI(j:int):void
+			{
+				fh.addFile(event.uploadFile[i],(encoders[j] as Mp3Encoder).getMp3Array(null,j));
+				isDone --;
+				if(isDone <=0)
+				{					
+					var uld:Uploader = new Uploader;
+					uld.sendRequest(fh);
+					isUpload = false;
+				}
+			}
+			if(isUpload){
+				var uld:Uploader = new Uploader;
+				uld.sendRequest(fh);
+			}
 		}
+		
+		
 		
 		protected function getParams(event:MainEvents):void
 		{
@@ -134,9 +186,9 @@ package com.controler
 				clearInterval(interValProcess);
 			interValRuning = false;
 			if(_interval > 0) {
-			interValRuning = true;
-			var ac:MainEvents = new MainEvents(MainEvents.CALLBACK_FUNCTION,true);
-			interValProcess=setInterval(activeProcessFunction, _interval);
+				interValRuning = true;
+				var ac:MainEvents = new MainEvents(MainEvents.CALLBACK_FUNCTION,true);
+				interValProcess=setInterval(activeProcessFunction, _interval);
 				function activeProcessFunction() : void{
 					JScontroler.getInstance().dispatchEvent(ac);
 				}
@@ -199,7 +251,7 @@ package com.controler
 					showSetting(null);
 				else {
 					_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);
-						
+					
 					addEventListener(MainEvents.RESIZED, showSetting);
 				}
 				trace(_main.stage.stageWidth, _main.stage.stageHeight);
@@ -327,7 +379,7 @@ package com.controler
 					this.status = Variables.READY;
 					//addCurrentRecordToPlaylist();
 				}
-					
+				
 			}catch (e:Error)
 			{
 				this.status = Variables.READY;
@@ -335,32 +387,32 @@ package com.controler
 			trace("record done");
 		}
 		
-//		protected function recordClick(event:ButtonEvents):void
-//		{
-//			if(status == Variables.INITIAL){
-//				if(_main.stage.stageWidth > 150 && _main.stage.stageHeight > 150)
-//					showSetting(null);
-//				else {
-//					_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);				
-//					addEventListener(MainEvents.RESIZED, showSetting);
-//				}
-//				trace(_main.stage.stageWidth, _main.stage.stageHeight);
-//			}
-//			
-//			if(status == Variables.RECORD )
-//			{
-//				try{
-//					var isStoping:Boolean = _recorder.stop();
-//					if(!isStoping) {	
-//						_recorder.record();
-//						this.status = Variables.RECORD;
-//					}else
-//						status = Variables.RE_RECORD;
-//					playlist.STOPALL();					
-//				} catch (e:Error) {}
-//			}
-//			trace("Record click");
-//		}
+		//		protected function recordClick(event:ButtonEvents):void
+		//		{
+		//			if(status == Variables.INITIAL){
+		//				if(_main.stage.stageWidth > 150 && _main.stage.stageHeight > 150)
+		//					showSetting(null);
+		//				else {
+		//					_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);				
+		//					addEventListener(MainEvents.RESIZED, showSetting);
+		//				}
+		//				trace(_main.stage.stageWidth, _main.stage.stageHeight);
+		//			}
+		//			
+		//			if(status == Variables.RECORD )
+		//			{
+		//				try{
+		//					var isStoping:Boolean = _recorder.stop();
+		//					if(!isStoping) {	
+		//						_recorder.record();
+		//						this.status = Variables.RECORD;
+		//					}else
+		//						status = Variables.RE_RECORD;
+		//					playlist.STOPALL();					
+		//				} catch (e:Error) {}
+		//			}
+		//			trace("Record click");
+		//		}
 		
 		protected function onStageResize(event:Event):void
 		{

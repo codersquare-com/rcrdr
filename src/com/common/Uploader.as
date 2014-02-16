@@ -33,7 +33,7 @@ package com.common
 			
 		}
 		
-		var connection:NetConnection;
+		private var connection:NetConnection;
 		public function sendRequest(zip:FileHandler):void
 		{
 //			var variables:URLVariables = new URLVariables();

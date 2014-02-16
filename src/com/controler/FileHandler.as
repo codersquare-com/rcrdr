@@ -8,6 +8,7 @@ package com.controler
 	{
 		private var _zip:FZip;
 		
+		private var zipByteArr:ByteArray = new ByteArray();
 		public function FileHandler()
 		{
 			_zip = new FZip;
@@ -29,7 +30,7 @@ package com.controler
 		
 		public function getByteArray():ByteArray
 		{
-			var zipByteArr:ByteArray = new ByteArray();
+			zipByteArr.length = 0;
 			zip.serialize(zipByteArr);
 			zipByteArr.position = 0;
 			return zipByteArr;

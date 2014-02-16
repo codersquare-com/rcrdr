@@ -58,9 +58,12 @@ package com.controler
 			enableAll();
 		}
 		
-		private function getSound():void
+		private function getSound(args:Array):void
 		{
-			dispatchEvent(new MainEvents(MainEvents.PUSH_SOUND, true));
+			var me:MainEvents = new MainEvents(MainEvents.PUSH_SOUND,true);
+			me.uploadFile = args;
+			dispatchEvent(me);
+			//dispatchEvent(new MainEvents(MainEvents.PUSH_SOUND, true));
 		}
 		
 		
