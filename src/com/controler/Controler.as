@@ -119,6 +119,7 @@ package com.controler
 					}
 				}
 			}
+			
 			function addJtoI(index:int):void
 			{
 				fh.addFile(event.uploadFile[index],(encoders[index] as Mp3Encoder).getMp3Array(null,index));

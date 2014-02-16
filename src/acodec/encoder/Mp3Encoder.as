@@ -90,8 +90,10 @@ package acodec.encoder
 		
 		public function getMp3Array(callBack:Function, j:int):ByteArray
 		{
-			if (callBack == null)
+			if (callBack == null){
+				_callBack = function ():void {}
 				return mp3Shine.mp3Data;
+			}
 			_callBack = function ():void {callBack(j);}
 			return null;
 		}
