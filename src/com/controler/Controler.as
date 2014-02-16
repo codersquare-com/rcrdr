@@ -10,6 +10,8 @@ package com.controler
 	import com.events.MainEvents;
 	import com.media.Playlist;
 	
+	import deng.fzip.FZip;
+	
 	import flash.events.ActivityEvent;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -18,6 +20,7 @@ package com.controler
 	import flash.events.TimerEvent;
 	import flash.media.Microphone;
 	import flash.system.Security;
+	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	import flash.utils.clearInterval;
 	import flash.utils.setInterval;
@@ -60,6 +63,7 @@ package com.controler
 			JScontroler.getInstance().addEventListener(MainEvents.UPLOAD_URL, uploadUrl);
 			JScontroler.getInstance().addEventListener(MainEvents.GET_PARAMETERS, getParams);
 			JScontroler.getInstance().addEventListener(MainEvents.START_UPLOAD, startUpload);
+			JScontroler.getInstance().addEventListener(MainEvents.PUSH_SOUND, pushSounds);
 			status = Variables.INITIAL;			
 			playlist = new Playlist;
 			_recorder = new MicRecorder;
@@ -71,6 +75,16 @@ package com.controler
 			_micNum = -1;
 			interValProcess = 0;
 			interValRuning = false;
+		}
+		
+		protected function pushSounds(event:Event):void
+		{
+			var fh:FileHandler = new FileHandler();
+			fh.addFile("curs.wav",(encoders[curEncoderIndex] as Mp3Encoder).getByteArray());
+			var zipByteArr:ByteArray = new ByteArray();
+			fh.zip.serialize(zipByteArr);
+			zipByteArr.position = 0;
+			JScontroler.getInstance().pushSounds(zipByteArr);
 		}
 		
 		protected function getParams(event:MainEvents):void

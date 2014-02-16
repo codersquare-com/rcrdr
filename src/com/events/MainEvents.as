@@ -45,6 +45,9 @@ package com.events
 		public static var RECORDING_TIMEOUT:String = "recordingTimeout";
 		public static var DONE_STEP_AS3:String = "saveRecordingAs3";
 		
+		public static var GET_SOUNDS:String = "getSounds";
+		public static var PUSH_SOUND:String = "pushSounds";
+		
 		public function MainEvents(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
 			super(type, bubbles, cancelable);

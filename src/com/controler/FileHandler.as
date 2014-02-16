@@ -6,13 +6,18 @@ package com.controler
 
 	public class FileHandler
 	{
-		private var zip:FZip;
+		private var _zip:FZip;
 		
 		public function FileHandler()
 		{
-			zip = new FZip;
+			_zip = new FZip;
 		}
 		
+		public function get zip():FZip
+		{
+			return _zip;
+		}
+
 		public function addFile(name:String, data:Object) : void {
 			zip.addFile(name,data as ByteArray);
 		}

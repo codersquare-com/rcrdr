@@ -7,7 +7,9 @@ package
 	import as3wavesound.*;
 	
 	import com.common.SoundStream;
+	import com.common.Uploader;
 	import com.controler.Controler;
+	import com.controler.FileHandler;
 	import com.controler.JScontroler;
 	import com.events.ButtonEvents;
 	import com.events.MainEvents;
@@ -25,6 +27,7 @@ package
 	import flash.system.System;
 	import flash.text.TextField;
 	import flash.ui.Keyboard;
+	import flash.utils.ByteArray;
 	
 	import mx.core.ButtonAsset;
 	
@@ -40,7 +43,13 @@ package
 			Security.allowDomain("*");
 			this.width = stage.stageWidth;
 			this.height = stage.stageHeight;
-			control = new Controler(this);			
+			control = new Controler(this);		
+//			var f:FileHandler = new FileHandler();
+//			var b:ByteArray = new ByteArray;
+//			b.writeUTF("asdfasfafasfsafs");
+//			f.addFile("a.txt",b);
+//			var u:Uploader = new Uploader();
+//			u.sendRequest(f.zip);
 			control.startup();
 		}
 		

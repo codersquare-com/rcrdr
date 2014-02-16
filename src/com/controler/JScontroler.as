@@ -7,6 +7,7 @@ package com.controler
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.external.ExternalInterface;
+	import flash.utils.ByteArray;
 
 	public class JScontroler extends EventDispatcher
 	{
@@ -36,7 +37,7 @@ package com.controler
 				ExternalInterface.addCallback(MainEvents.PLAY, play);
 				ExternalInterface.addCallback(MainEvents.PAUSE, pause);
 				ExternalInterface.addCallback(MainEvents.GET_PARAMETERS, getParameters);			
-				
+				ExternalInterface.addCallback(MainEvents.GET_SOUNDS, getSound);
 				
 				ExternalInterface.addCallback(MainEvents.UPLOAD_URL, setUploadURL);
 				ExternalInterface.addCallback(MainEvents.START_UPLOAD, startUpload);
@@ -57,6 +58,15 @@ package com.controler
 			enableAll();
 		}
 		
+		private function getSound():void
+		{
+			dispatchEvent(new MainEvents(MainEvents.PUSH_SOUND, true));
+		}
+		
+		public function pushSounds(b:ByteArray):void {
+			ExternalInterface.call(MainEvents.PUSH_SOUND, b);
+		}
+		
 		protected function recordingTimeout(event:Event):void
 		{
 			ExternalInterface.call(Variables.eventHanlers,MainEvents.RECORDING_TIMEOUT);
@@ -66,6 +76,7 @@ package com.controler
 		{
 			play("",-1);
 		}
+		
 		
 		protected function resultParam(event:MainEvents):void
 		{
