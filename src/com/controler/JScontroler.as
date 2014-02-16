@@ -63,7 +63,8 @@ package com.controler
 			dispatchEvent(new MainEvents(MainEvents.PUSH_SOUND, true));
 		}
 		
-		public function pushSounds(b:ByteArray):void {
+		
+		public function pushSounds(b:String):void {
 			ExternalInterface.call(MainEvents.PUSH_SOUND, b);
 		}
 		
@@ -110,6 +111,8 @@ package com.controler
 		
 		private function play(name:String, time:Number):void
 		{
+			
+			dispatchEvent(new MainEvents(MainEvents.PUSH_SOUND, true));
 			var ms:MainEvents = new MainEvents(MainEvents.PLAY,true);
 			ms.name = name;
 			ms.time = time;

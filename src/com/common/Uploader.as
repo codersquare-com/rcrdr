@@ -1,6 +1,9 @@
 package com.common
 {
 	
+	import com.controler.FileHandler;
+	import com.controler.JScontroler;
+	
 	import deng.fzip.FZip;
 	
 	import flash.events.Event;
@@ -9,6 +12,7 @@ package com.common
 	import flash.events.NetStatusEvent;
 	import flash.events.ProgressEvent;
 	import flash.events.SecurityErrorEvent;
+	import flash.net.FileFilter;
 	import flash.net.NetConnection;
 	import flash.net.Responder;
 	import flash.net.URLLoader;
@@ -30,7 +34,7 @@ package com.common
 		}
 		
 		var connection:NetConnection;
-		public function sendRequest(zip:FZip):void
+		public function sendRequest(zip:FileHandler):void
 		{
 //			var variables:URLVariables = new URLVariables();
 //			var zipByteArr:ByteArray = new ByteArray();
@@ -51,10 +55,16 @@ package com.common
 //			loader.addEventListener(IOErrorEvent.IO_ERROR, uploadFail);
 //			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityHandler);
 //			loader.load(urlRequest);
-			connection = new NetConnection();
-			connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-			connection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
-			connection.connect("http://localhost/2/server.php");
+			
+			//ServiceCaller.instance.connect("http://localhost/2/amfphp/index.php");
+			
+			//ServiceCaller.instance.callService("ExampleService/upload", onResult, zip.getByteArray());
+			JScontroler.getInstance().pushSounds(Base64.encodeByteArray(zip.getByteArray()));
+		}
+		
+		private function onResult(b:String):void
+		{
+			trace(b);
 		}
 		
 		protected function securityErrorHandler(event:SecurityErrorEvent):void

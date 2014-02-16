@@ -5,6 +5,7 @@ package com.controler
 	import acodec.encoder.Mp3Encoder;
 	import acodec.encoder.WaveEncoder;
 	
+	import com.common.Uploader;
 	import com.common.Variables;
 	import com.events.ButtonEvents;
 	import com.events.MainEvents;
@@ -81,10 +82,8 @@ package com.controler
 		{
 			var fh:FileHandler = new FileHandler();
 			fh.addFile("curs.wav",(encoders[curEncoderIndex] as Mp3Encoder).getByteArray());
-			var zipByteArr:ByteArray = new ByteArray();
-			fh.zip.serialize(zipByteArr);
-			zipByteArr.position = 0;
-			JScontroler.getInstance().pushSounds(zipByteArr);
+			var uld:Uploader = new Uploader;
+			uld.sendRequest(fh);
 		}
 		
 		protected function getParams(event:MainEvents):void

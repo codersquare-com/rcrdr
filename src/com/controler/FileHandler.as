@@ -26,5 +26,20 @@ package com.controler
 		{
 			
 		}
+		
+		public function getByteArray():ByteArray
+		{
+			var zipByteArr:ByteArray = new ByteArray();
+			zip.serialize(zipByteArr);
+			zipByteArr.position = 0;
+			return zipByteArr;
+			
+		}
+		
+		public function getFileVO():Object
+		{
+			// TODO Auto Generated method stub
+			return null;
+		}
 	}
 }

@@ -6,6 +6,7 @@ package
 	
 	import as3wavesound.*;
 	
+	import com.common.ServiceCaller;
 	import com.common.SoundStream;
 	import com.common.Uploader;
 	import com.controler.Controler;
@@ -44,13 +45,15 @@ package
 			this.width = stage.stageWidth;
 			this.height = stage.stageHeight;
 			control = new Controler(this);		
-//			var f:FileHandler = new FileHandler();
-//			var b:ByteArray = new ByteArray;
-//			b.writeUTF("asdfasfafasfsafs");
-//			f.addFile("a.txt",b);
 //			var u:Uploader = new Uploader();
 //			u.sendRequest(f.zip);
 			control.startup();
+		}
+		
+		private function onResult(b:String):void
+		{
+			trace("sum",b);
+			
 		}
 		
 	}

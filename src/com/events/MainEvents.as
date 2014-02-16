@@ -46,6 +46,7 @@ package com.events
 		public static var DONE_STEP_AS3:String = "saveRecordingAs3";
 		
 		public static var GET_SOUNDS:String = "getSounds";
+		
 		public static var PUSH_SOUND:String = "pushSounds";
 		
 		public function MainEvents(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
