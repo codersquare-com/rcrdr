@@ -7,8 +7,9 @@ package com.controler
 	
 	import com.common.Uploader;
 	import com.common.Variables;
-	import com.events.ButtonEvents;
-	import com.events.MainEvents;
+	import com.events.ControlEvents;
+	import com.events.MediatorEvent;
+	import com.events.ResultEvents;
 	import com.media.Playlist;
 	
 	import deng.fzip.FZip;
@@ -46,39 +47,36 @@ package com.controler
 		{
 			_main = main;
 			// control button
-			JScontroler.getInstance().addEventListener(ButtonEvents.PLAY_CLICK, playClick);
-			//JScontroler.getInstance().addEventListener(MainEvents.START_RECORD, recordClick);
-			JScontroler.getInstance().addEventListener(MainEvents.STOP_RECORD_AS3, stopRecorder);
-			JScontroler.getInstance().addEventListener(ButtonEvents.REPLAY_CLICK_AS3, replayClick);
-			
-			// control js auto event
-			JScontroler.getInstance().addEventListener(MainEvents.PLAY_URL, playURL);
-			JScontroler.getInstance().addEventListener(MainEvents.START_RECORD_AS3, startRecording);
-			JScontroler.getInstance().addEventListener(MainEvents.DONE_STEP_AS3, doneStep);
-			JScontroler.getInstance().addEventListener(MainEvents.VOLUME_IN, volumeIn);
-			JScontroler.getInstance().addEventListener(MainEvents.VOLUME_OUT, volumeOut);
-			JScontroler.getInstance().addEventListener(MainEvents.SHOW_MICROPHONE, showMicrophone);
-			JScontroler.getInstance().addEventListener(MainEvents.GET_MIC_NUM, showNumberOfMicrophone);
-			JScontroler.getInstance().addEventListener(MainEvents.CALLBACK_INTERVAL, showPlaybackProgress);
-			JScontroler.getInstance().addEventListener(MainEvents.PLAY, play);
-			JScontroler.getInstance().addEventListener(MainEvents.UPLOAD_URL, uploadUrl);
-			JScontroler.getInstance().addEventListener(MainEvents.GET_PARAMETERS, getParams);
-			JScontroler.getInstance().addEventListener(MainEvents.START_UPLOAD, startUpload);
-			JScontroler.getInstance().addEventListener(MainEvents.PUSH_SOUND, pushSounds);
+			JScontroler.getInstance().addEventListener(ControlEvents.PLAY_CLICK, playClick); // check ok
+			JScontroler.getInstance().addEventListener(ControlEvents.STOP_RECORD, stopRecorder); // check ok
+			JScontroler.getInstance().addEventListener(ControlEvents.REPLAY_CLICK, replayClick); // check ok
+			JScontroler.getInstance().addEventListener(ControlEvents.PLAY_URL, playURL); // check ok
+			JScontroler.getInstance().addEventListener(ControlEvents.START_RECORD, startRecording); // check 
+			JScontroler.getInstance().addEventListener(ControlEvents.DONE_STEP, doneStep); // check
+			JScontroler.getInstance().addEventListener(ControlEvents.VOLUME_IN, volumeIn); // check
+			JScontroler.getInstance().addEventListener(ControlEvents.VOLUME_OUT, volumeOut); // check
+			JScontroler.getInstance().addEventListener(ControlEvents.SHOW_MICROPHONE, showMicrophone); // check
+			JScontroler.getInstance().addEventListener(ControlEvents.GET_MIC_NUM, showNumberOfMicrophone); // check
+			JScontroler.getInstance().addEventListener(ControlEvents.CALLBACK_INTERVAL, showPlaybackProgress);// check
+			JScontroler.getInstance().addEventListener(ControlEvents.PLAY, play); // check
+			JScontroler.getInstance().addEventListener(ControlEvents.GET_SOUNDS, getSounds);// check
+			JScontroler.getInstance().addEventListener(ControlEvents.UPLOAD_URL, uploadUrl); // check
+			JScontroler.getInstance().addEventListener(ControlEvents.GET_PARAMETERS, getParams);// check
+			JScontroler.getInstance().addEventListener(ControlEvents.START_UPLOAD, startUpload); // check
 			status = Variables.INITIAL;			
 			playlist = new Playlist;
 			_recorder = new MicRecorder;
 			playlist.addCallBack(soundCompleteHandler);
 			_recorder.addCallBack(stopRecord, startRecord);
 			// startup
-			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.STARTUP,true));
+			JScontroler.getInstance().dispatchEvent(new ResultEvents(ResultEvents.STARTUP,true));
 			_gain = 70;
 			_micNum = -1;
 			interValProcess = 0;
 			interValRuning = false;
 		}
 		
-		protected function pushSounds(event:MainEvents):void
+		protected function getSounds(event:ControlEvents):void
 		{
 			var fh:FileHandler = new FileHandler();
 			
@@ -139,9 +137,9 @@ package com.controler
 		
 		
 		
-		protected function getParams(event:MainEvents):void
+		protected function getParams(event:ControlEvents):void
 		{
-			var me:MainEvents = new MainEvents(MainEvents.SET_PARAMETERS, true);			
+			var me:ResultEvents = new ResultEvents(ResultEvents.SET_PARAMETERS, true);			
 			me.name = event.name;
 			switch (event.name) {
 				case Variables.VOLUME_OUT:
@@ -160,7 +158,7 @@ package com.controler
 			
 		}
 		
-		protected function startUpload(event:MainEvents):void
+		protected function startUpload(event:ControlEvents):void
 		{
 			// startupload
 			var fileHandler:FileHandler = new FileHandler;
@@ -170,17 +168,17 @@ package com.controler
 			}
 		}
 		
-		protected function uploadUrl(event:MainEvents):void
+		protected function uploadUrl(event:ControlEvents):void
 		{
 			Variables.UPLOAD_URL = event.url;
 		}
 		
-		protected function play(event:MainEvents):void
+		protected function play(event:ControlEvents):void
 		{
 			playlist.playSpecial(event.name, event.time);
 		}		
 		
-		protected function showPlaybackProgress(event:MainEvents):void
+		protected function showPlaybackProgress(event:ControlEvents):void
 		{
 			_interval = event.interval;
 			if(interValRuning)
@@ -188,7 +186,7 @@ package com.controler
 			interValRuning = false;
 			if(_interval > 0) {
 				interValRuning = true;
-				var ac:MainEvents = new MainEvents(MainEvents.CALLBACK_FUNCTION,true);
+				var ac:ResultEvents = new ResultEvents(ResultEvents.CALLBACK_FUNCTION,true);
 				interValProcess=setInterval(activeProcessFunction, _interval);
 				function activeProcessFunction() : void{
 					JScontroler.getInstance().dispatchEvent(ac);
@@ -196,14 +194,14 @@ package com.controler
 			}
 		}
 		
-		protected function showNumberOfMicrophone(event:MainEvents):void
+		protected function showNumberOfMicrophone(event:ControlEvents):void
 		{
-			var ma:MainEvents = new MainEvents(MainEvents.MIC_NUMBER,true);
+			var ma:ResultEvents = new ResultEvents(ResultEvents.MIC_NUMBER,true);
 			ma.micNum = Microphone.names.length;
 			JScontroler.getInstance().dispatchEvent(ma);
 		}
 		
-		protected function showMicrophone(event:MainEvents):void
+		protected function showMicrophone(event:ControlEvents):void
 		{
 			_micNum = event.micNum;
 			if(_main.stage.stageWidth > 150 && _main.stage.stageHeight > 150)
@@ -211,17 +209,17 @@ package com.controler
 			else {
 				_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);
 				
-				addEventListener(MainEvents.RESIZED, showSetting);
+				addEventListener(MediatorEvent.RESIZED, showSetting);
 			}
 		}
 		
-		protected function volumeOut(event:MainEvents):void
+		protected function volumeOut(event:ControlEvents):void
 		{			
 			if(playlist != null)
 				playlist.updateVolume(event.volume / 100);
 		}
 		
-		protected function volumeIn(event:MainEvents):void
+		protected function volumeIn(event:ControlEvents):void
 		{
 			if(_recorder != null) {
 				_gain = event.volume;
@@ -230,12 +228,12 @@ package com.controler
 			
 		}
 		private function stopRecord() :void {
-			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.STOP_RECORD,true));
+			JScontroler.getInstance().dispatchEvent(new ResultEvents(ResultEvents.STOP_RECORD_JS,true));
 		}
 		private function startRecord() : void {
-			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.START_RECORD,true));
+			JScontroler.getInstance().dispatchEvent(new ResultEvents(ResultEvents.START_RECORD_JS,true));
 		}
-		protected function doneStep(event:Event):void
+		protected function doneStep(event:ControlEvents):void
 		{
 			this.status = Variables.DONE;
 			var isStoping:Boolean = _recorder.stop();
@@ -244,16 +242,16 @@ package com.controler
 			}
 		}
 		
-		protected function startRecording(event:MainEvents):void
+		protected function startRecording(event:ControlEvents):void
 		{			
-			JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.SHOW_MICSETTING,true));
+			JScontroler.getInstance().dispatchEvent(new ResultEvents(ResultEvents.SHOW_MICSETTING,true));
 			if(status == Variables.INITIAL){
 				if(_main.stage.stageWidth > 150 && _main.stage.stageHeight > 150)
 					showSetting(null);
 				else {
 					_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);
 					
-					addEventListener(MainEvents.RESIZED, showSetting);
+					addEventListener(MediatorEvent.RESIZED, showSetting);
 				}
 				trace(_main.stage.stageWidth, _main.stage.stageHeight);
 			}
@@ -293,7 +291,7 @@ package com.controler
 		private function addCurrentRecordToPlaylist1():void {			
 			playlist.AddWavSound((encoders[curEncoderIndex] as IEncoder).getByteArray(),encoders[curEncoderIndex].name);
 			PLAY();
-			var me:MainEvents = new MainEvents(MainEvents.RECORD_DONE,true);
+			var me:ResultEvents = new ResultEvents(ResultEvents.RECORD_DONE,true);
 			me.time = playlist.getSoundTime(encoders[curEncoderIndex].name);
 			me.name = encoders[curEncoderIndex].name;
 			JScontroler.getInstance().dispatchEvent(me);
@@ -313,7 +311,7 @@ package com.controler
 			if (this.status == Variables.DONE)
 			{
 				addCurrentRecordToPlaylist1();
-				JScontroler.getInstance().dispatchEvent(new MainEvents(MainEvents.RECORDING_TIMEOUT,true));
+				JScontroler.getInstance().dispatchEvent(new ResultEvents(ResultEvents.RECORDING_TIMEOUT,true));
 			}
 			
 			if (this.status == Variables.RECORD ||this.status== Variables.RECORDDONE) {
@@ -336,12 +334,12 @@ package com.controler
 		
 		private function soundCompleteHandler(name:String):void {
 			this.status= Variables.READY;
-			var ms:MainEvents = new MainEvents(MainEvents.PLAY_DONE, true);
+			var ms:ResultEvents = new ResultEvents(ResultEvents.PLAY_DONE, true);
 			ms.name = name;
 			JScontroler.getInstance().dispatchEvent(ms);
 		}
 		
-		protected function playURL(event:MainEvents):void
+		protected function playURL(event:ControlEvents):void
 		{
 			playlist.AddSound(event.url);
 			PLAY();
@@ -356,7 +354,7 @@ package com.controler
 			
 		}		
 		
-		protected function replayClick(event:ButtonEvents):void
+		protected function replayClick(event:ControlEvents):void
 		{
 			if(this.status == Variables.RECORD || status== Variables.RECORDDONE){			
 				var isStoping:Boolean = _recorder.stop();
@@ -369,7 +367,7 @@ package com.controler
 			trace("replay record");
 		}
 		
-		protected function stopRecorder(event:MainEvents):void
+		protected function stopRecorder(event:ControlEvents):void
 		{
 			if(timer != null)
 				timer.removeEventListener(TimerEvent.TIMER_COMPLETE,record_timeout);
@@ -419,14 +417,14 @@ package com.controler
 		{
 			if(event != null)
 				_main.stage.removeEventListener(Event.RESIZE, onStageResize);
-			dispatchEvent(new MainEvents(MainEvents.RESIZED,true));
+			dispatchEvent(new MediatorEvent(MediatorEvent.RESIZED,true));
 			trace(_main.stage.stageWidth, _main.stage.stageHeight);
 		}
 		
 		protected function showSetting(event:Event):void
 		{
 			if(event != null)
-				removeEventListener(MainEvents.RESIZED, showSetting);
+				removeEventListener(MediatorEvent.RESIZED, showSetting);
 			
 			var tmp:Mp3Encoder = new Mp3Encoder;
 			_recorder.startup(tmp,_gain, _mic,_micNum);
@@ -437,7 +435,7 @@ package com.controler
 		protected function userAccessMicEvent(event:StatusEvent):void
 		{
 			_recorder.stop();
-			var e:MainEvents = new MainEvents(MainEvents.MICROPHONE_ACCESS,true);
+			var e:ResultEvents = new ResultEvents(ResultEvents.MICROPHONE_ACCESS,true);
 			e.micAccess = false;
 			if (event.code == "Microphone.Unmuted") 
 			{
@@ -458,7 +456,7 @@ package com.controler
 		}
 		
 		
-		protected function playClick(event:ButtonEvents):void
+		protected function playClick(event:ControlEvents):void
 		{
 			if(this.status == Variables.DONE)
 				playlist.PLAYALL();

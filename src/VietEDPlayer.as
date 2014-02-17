@@ -12,7 +12,7 @@ package
 	import com.controler.Controler;
 	import com.controler.FileHandler;
 	import com.controler.JScontroler;
-	import com.events.ButtonEvents;
+	import com.events.ControlEvents;
 	import com.events.MainEvents;
 	import com.media.LocalSoundStream;
 	import com.media.NetSoundStream;

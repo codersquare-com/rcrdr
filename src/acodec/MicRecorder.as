@@ -5,7 +5,7 @@ package acodec
 	
 	import com.common.Variables;
 	import com.controler.JScontroler;
-	import com.events.MainEvents;
+	import com.events.ResultEvents;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -18,6 +18,8 @@ package acodec
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	import flash.utils.getTimer;
+	
+	import flashx.textLayout.formats.Float;
 	
 	
 	/**
@@ -61,7 +63,7 @@ package acodec
 	 */	
 	public final class MicRecorder extends EventDispatcher
 	{
-		private var _gain:uint;
+		private var _gain:uint;	
 		private var _rate:uint;
 		private var _silenceLevel:uint;
 		private var _timeOut:uint;
@@ -130,7 +132,7 @@ package acodec
 		{
 			if(!_alowMic)
 			{
-					var e:MainEvents = new MainEvents(MainEvents.MICROPHONE_ACCESS,true);
+					var e:ResultEvents = new ResultEvents(ResultEvents.MICROPHONE_ACCESS,true);
 					e.micAccess = true;
 					JScontroler.getInstance().dispatchEvent(e);
 					_alowMic = true;
@@ -182,7 +184,7 @@ package acodec
 		{
 			if(_alowMic)
 				return;
-			var e:MainEvents = new MainEvents(MainEvents.MICROPHONE_ACCESS,true);
+			var e:ResultEvents = new ResultEvents(ResultEvents.MICROPHONE_ACCESS,true);
 			e.micAccess = false;
 			JScontroler.getInstance().dispatchEvent(e);
 			
@@ -202,7 +204,7 @@ package acodec
 		{
 			if(!_alowMic)
 			{
-				var e:MainEvents = new MainEvents(MainEvents.MICROPHONE_ACCESS,true);
+				var e:ResultEvents = new ResultEvents(ResultEvents.MICROPHONE_ACCESS,true);
 				e.micAccess = true;
 				JScontroler.getInstance().dispatchEvent(e);
 				_alowMic = true;
@@ -223,9 +225,9 @@ package acodec
 			if(!_isRecording)
 				return false;
 			try{
-			_microphone.removeEventListener(SampleDataEvent.SAMPLE_DATA, onSampleData);			
+			_microphone.removeEventListener(SampleDataEvent.SAMPLE_DATA, onSampleData);		
+			_encoder.addEventListener(Event.COMPLETE, completeHandler);	
 			_buffer.position = 0;		
-			_encoder.addEventListener(Event.COMPLETE, completeHandler);
 			_encoder.encode(_buffer, 1);
 			trace(_buffer.length);
 			_isRecording = false;	
