@@ -24,7 +24,7 @@ package com.media
 		private var _timeInterval:Number;
 		private var _isPlaying:Boolean;
 		private var _vol:Number = 1;
-		
+		private var _downloadCallback:Function;
 		public function updateVolume(vol:Number) :void {
 			_vol = vol;
 			if(_currentSoundStream != null)
@@ -33,16 +33,17 @@ package com.media
 				_tmpSoundStream.updateVolume(vol);
 		}
 				
-		public function Playlist()
+		public function Playlist(downloadCallback:Function)
 		{
 			_arrayStream = new Array();
 			_currentSound = 0;
 			_isPlaying = false;
+			_downloadCallback = downloadCallback;
 		}
 		
 		public function AddSound(url:String):void {
 			if(!_isPlaying){
-				var ss:SoundStream = new NetSoundStream();
+				var ss:SoundStream = new NetSoundStream(_downloadCallback);
 				ss.startup(url);
 				_arrayStream.push(ss);
 				_currentSound = _arrayStream.length - 1;	

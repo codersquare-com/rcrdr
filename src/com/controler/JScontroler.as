@@ -55,8 +55,14 @@ package com.controler
 				addEventListener(ResultEvents.CALLBACK_FUNCTION, callBackFunction);// check
 				addEventListener(ResultEvents.SET_PARAMETERS, resultParam); // check
 				addEventListener(ResultEvents.RECORDING_TIMEOUT, recordingTimeout); // check
+				addEventListener(ResultEvents.DOWNLOAD_PROGRESS, downloadProgress);
 			}
 			enableAll();
+		}
+		
+		protected function downloadProgress(event:ResultEvents):void
+		{
+			ExternalInterface.call(Variables.eventHanlers,ResultEvents.DOWNLOAD_PROGRESS,event.url, event.progress);
 		}
 		
 		private function getSound(args:Array):void
@@ -161,8 +167,7 @@ package com.controler
 		{			
 			var me:ControlEvents = new ControlEvents(ControlEvents.VOLUME_IN,true);
 			me.volume = vol;
-			dispatchEvent(me);
-			
+			dispatchEvent(me);			
 		}
 		
 		protected function stopRecord(event:ResultEvents):void

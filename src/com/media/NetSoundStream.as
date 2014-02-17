@@ -7,11 +7,13 @@ package com.media
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
+	import flash.events.TimerEvent;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.media.SoundTransform;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	import flash.utils.Timer;
 	import flash.utils.clearInterval;
 	import flash.utils.setInterval;
 		
@@ -25,19 +27,27 @@ package com.media
 		private var percentLoaded:Number;
 		private var iPosition:Number;
 		private var url:String;
-		
+		private var downloadCallback:Function;
+		private var downloadCallbackInterVal:Timer;
 		public function getName():String{
 			return url;
 		}
 		
-		public function NetSoundStream() {
+		public function NetSoundStream(downloadProgress:Function) {
 			this.oSoundChannel = new SoundChannel();
 			this.oSound = new Sound();
 			this.iVolume=1;
 			this.iPosition=0;
 			isMute=false;
+			downloadCallback = downloadProgress;
+			downloadCallbackInterVal = new Timer(2000);
+			downloadCallbackInterVal.addEventListener(TimerEvent.TIMER,dctimer);
 		}
 		
+		protected function dctimer(event:TimerEvent):void
+		{			
+			downloadCallback(url,percentLoaded);
+		}		
 				
 		public function get oSound():Sound
 		{
@@ -59,6 +69,7 @@ package com.media
 			oSound.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 			oSound.addEventListener(ProgressEvent.PROGRESS, progressHandler);
 			oSound.load(myURLReq);			
+			downloadCallbackInterVal.start();
 		}
 		
 		protected function ioErrorHandler(event:IOErrorEvent):void
@@ -69,6 +80,7 @@ package com.media
 		
 		private function completeHandler(event:Event):void {			
 			trace("completeHandler: " + event);
+			downloadCallbackInterVal.stop();
 		}
 				
 		private function id3Handler(event:Event):void {

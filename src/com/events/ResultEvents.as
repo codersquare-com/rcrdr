@@ -26,6 +26,8 @@ package com.events
 		
 		public var url:Object;
 		public var micNum:Object;
+		public static var DOWNLOAD_PROGRESS:String = "downloadProgress";
+		public var progress:Number;
 		public function ResultEvents(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
 			super(type, bubbles, cancelable);
