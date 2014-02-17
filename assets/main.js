@@ -1,7 +1,7 @@
 var VietEDPlayer, init_handlers;
 var init_sliders; //has to be separated from init_handlers because
 var playingMode = -1;
-var playDone;
+var playDone, pushSounds;
 var availableRoles = [];
 var chosenRoles = [];
 //when the div is hidden, slider init wouldn't work
@@ -218,7 +218,7 @@ $(document).ready(function(){
                  log_string('triggered.....');
                  //TODO: play the sound if it's not the chosen roles
                  var role = $this.attr('data-role');
-                 if ($.inArray(role, chosenRoles) != -1)
+                 if (role && $.inArray(role, chosenRoles) != -1)
                  {
                      waitingForUserToStartSpeaking = false;
                      //start the record button
@@ -544,6 +544,26 @@ $(document).ready(function(){
              VietEDPlayer.pause_resume();
              $("#playURL").show();
              $("#pauseURL, #stopURL").hide();
+         });
+         
+         pushSounds = function(data)
+         {
+             log_string('pushSounds');
+             console.log(data);
+             $.ajax({
+                 type : "POST",
+                 url : "upload.php", 
+                 data : {
+                     mp3 : JSON.stringify(data)
+                 },
+                 success : function(d){
+                     console.log(d);
+                 }
+             });
+         }
+         
+         $("#get_recording").click(function(){
+             VietEDPlayer.getSounds(["2.mp3"]);
          });
      } //init_handlers
 
