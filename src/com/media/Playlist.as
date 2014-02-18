@@ -73,6 +73,7 @@ package com.media
 			{
 				trace("tmp stopped");
 			}
+			_timeInterval = -1;
 		}
 		public function AddWaveSoundAndPlay(byte:ByteArray, isPlay:Boolean) : void {
 			if(_isPlaying)
@@ -161,8 +162,9 @@ package com.media
 		{
 			if(name == "" && _isPlaying)
 			{
-				_timeInterval = _currentSoundStream.getInterval();
+				var tmp:Number = _currentSoundStream.getInterval();
 				STOPALL();
+				_timeInterval = tmp;
 				_isPlaying = false;
 				return;
 			}

@@ -28,6 +28,7 @@ package com.events
 		public var url:String = "";
 		public var uploadFile:Array = null;
 		public var interval:Number = 0;
+		public static var STOP:String = "stopCtr";
 		public function ControlEvents(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
 			super(type, bubbles, cancelable);

@@ -39,6 +39,7 @@ package
 		
 		public function VietEDPlayer()
 		{
+			try {
 			this.stage.align = StageAlign.TOP_LEFT;
 			this.stage.scaleMode = StageScaleMode.NO_SCALE;
 			Security.allowDomain("*");
@@ -48,6 +49,10 @@ package
 //			var u:Uploader = new Uploader();
 //			u.sendRequest(f.zip);
 			control.startup();
+			} catch (e:Error)
+			{
+				JScontroler.getInstance().debug("Global Error:" + e.message);
+			}
 		}
 		
 		private function onResult(b:String):void

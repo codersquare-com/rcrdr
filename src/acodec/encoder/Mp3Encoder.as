@@ -3,6 +3,7 @@ package acodec.encoder
 	import acodec.IEncoder;
 	
 	import com.common.Variables;
+	import com.controler.JScontroler;
 	
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
@@ -38,20 +39,25 @@ package acodec.encoder
 		{
 			return _status;
 		}
-
+		
 		public function get wave():WaveEncoder
 		{
 			return _wave;
 		}
-
+		
 		public function encodeMp3():void {	
 			if(wave.getByteArray().length ==0)
 				return;
-			mp3Shine = new ShineMP3Encoder(wave.getByteArray());
-			mp3Shine.addEventListener(Event.COMPLETE, mp3EncodeComplete);
-			mp3Shine.addEventListener(ProgressEvent.PROGRESS, mp3EncodeProgress);
-			mp3Shine.addEventListener(ErrorEvent.ERROR, mp3EncodeError);
-			mp3Shine.start();
+			try {
+				mp3Shine = new ShineMP3Encoder(wave.getByteArray());
+				mp3Shine.addEventListener(Event.COMPLETE, mp3EncodeComplete);
+				mp3Shine.addEventListener(ProgressEvent.PROGRESS, mp3EncodeProgress);
+				mp3Shine.addEventListener(ErrorEvent.ERROR, mp3EncodeError);
+				mp3Shine.start();
+			} catch(e:Error)
+			{
+				JScontroler.getInstance().debug("encode mp3 error:" + e.name+":" +  e.message);					
+			}
 		}
 		
 		/**
@@ -66,8 +72,8 @@ package acodec.encoder
 		public function encode( samples:ByteArray, channels:int=2, bits:int=16, rate:int=44100 ):void
 		{			
 			//if(status == Variables.MP3_ENCODED_WAV){
-				//dispatchEvent(new Event(Event.COMPLETE));
-				//return;
+			//dispatchEvent(new Event(Event.COMPLETE));
+			//return;
 			//}
 			_wave = new WaveEncoder(_volume);
 			wave.addEventListener(Event.COMPLETE, waveCompleteHandler);
@@ -84,7 +90,7 @@ package acodec.encoder
 		public function getByteArray():ByteArray
 		{
 			//if(mp3Shine != null)
-				//return mp3Shine.mp3Data;
+			//return mp3Shine.mp3Data;
 			return wave.getByteArray();
 		}
 		
@@ -116,7 +122,7 @@ package acodec.encoder
 				mp3Shine = new ShineMP3Encoder(null);
 				mp3Shine.mp3Data.writeBytes(mp3.mp3Data);
 			}
-				
+			
 		}
 		
 		protected function mp3EncodeError(event:Event):void
@@ -137,7 +143,7 @@ package acodec.encoder
 			_callBack();
 		}
 		
-	
+		
 		
 		public function get name():String
 		{

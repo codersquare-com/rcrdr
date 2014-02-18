@@ -2,6 +2,7 @@ package com.media
 {	
 	
 	import com.common.SoundStream;
+	import com.controler.JScontroler;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -69,13 +70,15 @@ package com.media
 			oSound.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 			oSound.addEventListener(ProgressEvent.PROGRESS, progressHandler);
 			oSound.load(myURLReq);			
-			downloadCallbackInterVal.start();
+			downloadCallbackInterVal.start();			
+			JScontroler.getInstance().debug("Start load file");
 		}
 		
 		protected function ioErrorHandler(event:IOErrorEvent):void
 		{
 			trace("ioErrorHandler" + event);
-			
+			JScontroler.getInstance().debug("Play URL error: ioErrorHandler" + event);
+			downloadCallbackInterVal.stop();			
 		}
 		
 		private function completeHandler(event:Event):void {			
@@ -102,7 +105,8 @@ package com.media
 			} else {
 				sound.volume=iVolume;
 			}
-			oSoundChannel.soundTransform=sound;			
+			oSoundChannel.soundTransform=sound;
+			JScontroler.getInstance().debug("Start play file");
 		}
 		public function pause():void {
 			iPosition=oSoundChannel.position;
@@ -166,7 +170,6 @@ package com.media
 		{
 			return position;
 		}
-		
 		
 		
 		public function get _timeTotal():Number {

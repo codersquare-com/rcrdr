@@ -4,6 +4,7 @@ package as3wavesound {
 	import as3wavesound.sazameki.format.wav.Wav;
 	
 	import com.common.SoundStream;
+	import com.controler.JScontroler;
 	
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
@@ -110,7 +111,7 @@ package as3wavesound {
 			load(wavData, audioSettings);
 			_recordName =name;
 			_iPosition = -1;
-			_delay = new Timer(1000,2);
+			_delay = new Timer(1000,1);
 		}
 		
 		public function getName():String
@@ -134,13 +135,13 @@ package as3wavesound {
 			trace("start chek stream");
 			_delay.addEventListener(TimerEvent.TIMER_COMPLETE, endDelayComplete);
 			var activeProcess:Number;
-			activeProcess=setInterval(activeProcessFunction, 200);
+			activeProcess=setInterval(activeProcessFunction, 100);
 			function activeProcessFunction() : void{				
 				trace("clear" + _percentplayed);
 				if (_percentplayed > 99.9 || _percentplayed == 0 ) {
 					//callback(_recordName);
 					_delay.start();
-					clearInterval(activeProcess);
+					clearInterval(activeProcess);					
 				}
 			}
 			

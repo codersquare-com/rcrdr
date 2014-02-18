@@ -40,6 +40,8 @@ package com.controler
 				ExternalInterface.addCallback(MainEvents.GET_SOUNDS, getSound);				// check
 				ExternalInterface.addCallback(MainEvents.UPLOAD_URL, setUploadURL); // check
 				ExternalInterface.addCallback(MainEvents.START_UPLOAD, startUpload); // check
+				ExternalInterface.addCallback(MainEvents.STOP, stop); // check
+				ExternalInterface.addCallback(MainEvents.DEBUG, isdebug); // check
 				
 				
 				// flash call js
@@ -58,6 +60,19 @@ package com.controler
 				addEventListener(ResultEvents.DOWNLOAD_PROGRESS, downloadProgress);
 			}
 			enableAll();
+			isDebug = true;
+		}
+		
+		private var isDebug:Boolean;
+		
+		private function isdebug():void
+		{
+			isDebug = !isDebug;
+		}
+		
+		private function stop():void
+		{
+			dispatchEvent( new ControlEvents(ControlEvents.STOP, true));
 		}
 		
 		protected function downloadProgress(event:ResultEvents):void
@@ -102,7 +117,8 @@ package com.controler
 		}
 		
 		public function debug(string:String):void {
-			ExternalInterface.call(Variables.eventHanlers,"Debug alert", string);
+			if(isDebug)
+				ExternalInterface.call(Variables.eventHanlers,"Debug alert", string);
 		}
 		
 		private function startUpload(args:Array):void
