@@ -6,12 +6,16 @@ var availableRoles = [];
 var chosenRoles = [];
 //when the div is hidden, slider init wouldn't work
 //var SOUND_CDN = "http://mp3.vieted.com/"
-var SOUND_CDN = "http://vieted.com/tmp/";
+//var SOUND_CDN = "http://vieted.com/tmp/";
+var SOUND_CDN = "http://192.168.2.103/";
 var recording_dur = 3; //seconds
 var recording_name = 'sample';
 var speakingSpeed = 'slow';
 var current_recording_playing = -1;
 var waitingForUserToStartSpeaking = false;
+var log_string;
+var playFile;
+
 $(document).ready(function(){
         
      showMic = true;
@@ -32,7 +36,7 @@ $(document).ready(function(){
       }
       
     
-      var log_string = function(txt)
+      log_string = function(txt)
       {
           var t = $("#log-textarea").text();
           t = t + "\n " + txt;
@@ -150,6 +154,15 @@ $(document).ready(function(){
              //VietEDPlayer.recordClick();
          });
 
+         playFile = function(filename)
+         {
+             //if file is remote
+             if (filename.indexOf('http://') === 0)
+                 VietEDPlayer.play(filename, -1);
+             else 
+                 VietEDPlayer.play(SOUND_CDN + filename, -1);
+         }
+         
          playDone = function()
          {
              $("#playingSentenceTranscript").html('');
@@ -198,7 +211,7 @@ $(document).ready(function(){
              
              if (playingMode == 'playingConversation')
              {
-                 VietEDPlayer.play(SOUND_CDN + filename, -1);
+                 playFile(filename);
              }
              else if (playingMode == 'replayRoleplaying')
              {
@@ -210,7 +223,7 @@ $(document).ready(function(){
                  }
                  else 
                  {
-                     VietEDPlayer.play(SOUND_CDN + filename, -1);
+                     playFile(filename);
                  }
              }
              else if (playingMode == 'rolePlaying')
@@ -247,7 +260,7 @@ $(document).ready(function(){
                  else 
                  {
                      $("#record-actions").hide();
-                     VietEDPlayer.play(SOUND_CDN + filename, -1);
+                     playFile(filename);
 
                      if ($("#roleplay-show-sentence-transcript").is(":checked"))
                          $("#playingSentenceTranscript").html($this.html()).removeClass('userInput');
@@ -567,6 +580,16 @@ $(document).ready(function(){
          });
      } //init_handlers
 
+     $('#playbackProgress').slider(
+             {
+                 formater: function(value) {
+                     //VietEDPlayer.volumeIn(value);
+                     //$('#volumeInValue').html(value);
+                     //TODO: return to seconds
+                     return value + '%';
+                   }
+             });
+     
      init_sliders = function()
      {
          $('#volumeIn').slider(
@@ -597,7 +620,17 @@ $(document).ready(function(){
      };
      
      /***********************pre-populate roles ***************/
-     $("span.recording").each(function(){
+     var tmp1 ;
+     if (conversationSource == 'voice')
+     {
+         $tmp1 = $("span.recording");
+     }
+     else //playing conversation youtube
+     {
+         $tmp1 = $("#timeline-ul li");
+     }
+     
+     $tmp1.each(function(){
          var role = $(this).attr('data-role');
          if (role)
          {
@@ -605,6 +638,7 @@ $(document).ready(function(){
          }
      });
      $.unique(availableRoles);
+     
      $.each(availableRoles, function(i,e){
          var html = "<input type='checkbox' name='roles[]' data-role='" + e + "' id='roles-" + e + "-element'/> " +
          "<label for='roles-" + e + "-element'>" + e + "</label>" +  

@@ -1,3 +1,10 @@
+<?php
+function t($x)
+{
+	return $x;
+}
+$mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'yt';
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- saved from url=(0014)about:internet -->
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> 
@@ -29,6 +36,7 @@
 
         <script>
         var jsEventHandler;
+        var conversationSource = '<?echo $mode;?>';
         </script>
         <script src="assets/jquery.js"></script>
     	<script src="assets/bootstrap-3.0.0/dist/js/bootstrap.min.js"></script>
@@ -71,12 +79,35 @@
              JavaScript and Flash plug-in support is available. The div is initially hidden so that it doesn't show
              when JavaScript is disabled.
         -->
-        <a href='yt.html'>yt</a>
+        <div class='container'>
+        	<div class='btn btn-group'>
+	        	<a class='btn btn-default <?if ($mode == 'yt'):?>active<?endif;?>' href='index.php?mode=yt'>
+	        	<?if ($mode == 'yt'):?><i class='glyphicon glyphicon-ok'></i><?endif;?>
+	        	<i class='glyphicon glyphicon-play-circle'></i> Youtube impersonator</a>
+	        	<a class='btn btn-default <?if ($mode == 'voice'):?>active<?endif;?>' href='index.php?mode=voice'>
+	        	<?if ($mode == 'voice'):?><i class='glyphicon glyphicon-ok'></i><?endif;?>
+	        	Voice Roleplay</a>
+        	</div>
+        </div>
         <div class='container'>
         <div><hr/></div>
         <div class='row' id='conversation'>
         	<div class='col-md-6' >
-	            
+	            <div id='player-control'>
+	            		<span class='scale'>00:00</span> 
+	            		<input type="text"
+	            				style='width:80%;'
+										  id='playbackProgress' 
+										  value="0" 
+										  data-slider-min="0" 
+										  data-slider-max="100" 
+										  data-slider-step="1" 
+										  data-slider-value="0" 
+										  data-slider-orientation="horizontal" 
+										  data-slider-selection="before"
+										  data-slider-tooltip="show">		
+			        	<span class='scale'>100%</span>      
+	            </div>
 				<div id='conversation-control' style='padding:10px;border:1px solid #eee;'>
 					
 					<span id='play-conversation-control'>
@@ -107,57 +138,80 @@
 			            <a class='btn btn-default' id='listen-conversation-again'  
 			            	><i class='glyphicon glyphicon-arrow-left'></i> Listen again</a>
 			            	
-			         	<input type='checkbox' name='show-transcript' id='roleplay-show-transcript'/> 
+			         	<input type='checkbox' name='show-transcript' id='roleplay-show-transcript'
+			         	<?if ($mode == 'yt'):?>checked='checked'<?endif;?>
+			         	 /> 
 				         		<label for='roleplay-show-transcript'>Show whole Transcript</label>
 			         </span>   
 	            </div>
 	            
 	            <div id='conversation-transcript'  class='well'>
-	            <!-- 
-			            Intro: <span title='click to record' 
-			            	class='recording' 
-			            	data-id='test.mp3' 
-			            	data-duration='120'
-			            	data-role=''>
-			            - Testing </span>
-			            <br/>
-			            
-	             -->
-			            Peter: <span title='click to record' 
-			            	class='recording' 
-			            	data-id='1.mp3' 
-			            	data-duration='120'
-			            	data-role='Peter'>
-			            - Hello Mary</span>
-			            <br/>
-			            
-			            Mary: 
-			            <span title='click to record' 
-			            	class='recording' 
-			            	data-id='2.mp3' 
-			            	data-duration='1000'
-			            	data-role='Mary'>
-			           		- Hello Peter, How are you?
-			           	</span>
-			            <br/>
-			            
-			            Peter: 
-			            <span title='click to record' class='recording' data-id='3.mp3'  data-duration='5'
-			            data-role='Peter'>
-			            - Fine thank you, and you?
-			            </span>
-			            <br/>
-			            
-			            Mary: <span title='click to record' 
-				            class='recording' 
-				            data-id='4.mp3'
-				            data-duration='5'
-				            data-role='Mary'>
-				            - That's great to hear
-				         </span>
-				         
-	            </div>
-	                    	
+					<? if ($mode == 'voice'):?>	            
+						<div>
+		            <!-- 
+				            Intro: <span title='click to record' 
+				            	class='recording' 
+				            	data-id='test.mp3' 
+				            	data-duration='120'
+				            	data-role=''>
+				            - Testing </span>
+				            <br/>
+				            
+		             -->
+				            Peter: <span title='click to record' 
+				            	class='recording' 
+				            	data-id='http://media.hibooks.net/sach/sach_kinh_doanh/16_ke_su_dung_nhan_tai/2.mp3' 
+				            	data-duration='120'
+				            	data-role='Peter'>
+				            - Hello Mary</span>
+				            <br/>
+				            
+				            Mary: 
+				            <span title='click to record' 
+				            	class='recording' 
+				            	data-id='2.mp3' 
+				            	data-duration='1000'
+				            	data-role='Mary'>
+				           		- Hello Peter, How are you?
+				           	</span>
+				            <br/>
+				            
+				            Peter: 
+				            <span title='click to record' class='recording' data-id='3.mp3'  data-duration='5'
+				            data-role='Peter'>
+				            - Fine thank you, and you?
+				            </span>
+				            <br/>
+				            
+				            Mary: <span title='click to record' 
+					            class='recording' 
+					            data-id='4.mp3'
+					            data-duration='5'
+					            data-role='Mary'>
+					            - That's great to hear
+					         </span>
+					         
+		            </div>
+		                    	
+				    <?elseif ($mode == 'yt'):?>
+	    		           <script>
+					          var js_ytid = '1dk7VjKvrjc'; //Toan shinoda
+					        </script>
+				    		
+		            		<div id="ytplayer" style='text-align:center;'>
+						        <div style='margin-top:180px;font-size:150%;font-weight:bold;'>
+						    		<i class='icon-spinner icon-spin'></i> 
+						    		<?php echo t('loading_video_lecture', 1);?>
+						             . <?php echo t('please_wait', 1);?>
+								</div>
+								<div>
+						    		<?php echo t('if_you_cannot_see_it_after_a_while', 1)?> <a
+						    			href='javascript:location.reload();' id='reload_yt'> <?php echo t('click_to_reload',1);?></a>
+						        </div>
+							</div>
+				    <?endif;?>	       
+			    </div>
+			                 	
         		<div id='conversation-recorder' style='display:none;'>
         			<div>
 			        	Choose role(s) you wanna play
@@ -222,6 +276,57 @@
         	
         	<div class='col-md-3'>
         	<div id='roleplay-setting' style='display:none;'>
+        		<?if ($mode == 'yt'):?>
+        			Youtube transcript:
+	        		<div id='yt-transcript'>
+						<ul id="timeline-ul" style="padding-left: 5px;">
+							<li class="timeline-li" data-st="1" data-type="summary" id="st-1"
+								data-id='st-1'
+								data-role='Mary-Youtuber'
+							>
+								<a class="seekto-nav text-muted" href="javascript:void(0);"> 
+								<span style="font-weight:bold;" class="tl">00:01						
+								</span> &nbsp;  Mary saying something											
+								</a>  
+							</li>
+							<li class="timeline-li" data-st="05" data-type="summary" id="st-05"
+							data-id='st-05'
+							data-role='Peter-Youtuber'
+							>
+							<a class="seekto-nav text-muted" href="javascript:void(0);"> 
+							<span style="font-weight:bold;" class="tl">00:05
+							</span> &nbsp;  Peter saying something											
+							</a>  
+								</li>
+								
+							<li class="timeline-li" data-st="06" data-type="summary" id="st-06"
+								data-id='st-06'
+								data-role='Mary-Youtuber'
+							>
+								<a class="seekto-nav text-muted" href="javascript:void(0);"> 
+								<span style="font-weight:bold;" class="tl">00:06						
+								</span> &nbsp;  Mary saying something 2											
+								</a>  
+							</li>
+							
+							<li class="timeline-li" data-st="10" data-type="summary" id="st-10"
+							data-id='st-10'
+							data-role='Peter-Youtuber'
+							>
+							<a class="seekto-nav text-muted" href="javascript:void(0);"> 
+							<span style="font-weight:bold;" class="tl">00:10
+							</span> &nbsp;  Peter saying something 2											
+							</a>  
+								</li>
+								
+						</ul>
+	   				</div>
+	   				<div style='min-height:50px;'>
+	   				Youtube logging
+	   				<a href='javascript:void(0);' id='yt-get-elapsed-time'>yt-get-elapsed-time</a>
+	   				</div>
+    			<?endif;?>
+    			
 					<div class="panel panel-default">
 					  <div class="panel-heading">Difficulty settings</div>
 					  <div class="panel-body">
@@ -453,4 +558,8 @@
         
         </div></div>     
    </body>
+   <? if ($mode == 'yt'):?>
+        <script src="assets/yt.js"></script>
+        <script src="assets/yt-recorder.js"></script>
+	<?endif;?>   
 </html>
