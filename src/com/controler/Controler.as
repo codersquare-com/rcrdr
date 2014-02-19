@@ -215,16 +215,24 @@ package com.controler
 			JScontroler.getInstance().dispatchEvent(ma);
 		}
 		
+		private var time_mic:Timer = new Timer(1000,2);
 		protected function showMicrophone(event:ControlEvents):void
 		{
-			_micNum = event.micNum;
-			if(_main.stage.stageWidth > 150 && _main.stage.stageHeight > 150)
-				showSetting(null);
-			else {
-				_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);
-				
-				addEventListener(MediatorEvent.RESIZED, showSetting);
-			}
+			if(event != null)
+				_micNum = event.micNum;
+			JScontroler.getInstance().debug("3");
+			time_mic.addEventListener(TimerEvent.TIMER_COMPLETE, showSetting_timout);
+			_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);				
+			addEventListener(MediatorEvent.RESIZED, showSetting);
+			time_mic.start();
+		}
+		
+		protected function showSetting_timout(event:TimerEvent):void
+		{				
+			JScontroler.getInstance().debug("4");
+			removeEventListener(MediatorEvent.RESIZED, showSetting);
+			time_mic.removeEventListener(TimerEvent.TIMER_COMPLETE, showSetting_timout);
+			showSetting(null);
 		}
 		
 		protected function volumeOut(event:ControlEvents):void
@@ -260,13 +268,7 @@ package com.controler
 		{			
 			JScontroler.getInstance().dispatchEvent(new ResultEvents(ResultEvents.SHOW_MICSETTING,true));
 			if(status == Variables.INITIAL){
-				if(_main.stage.stageWidth > 150 && _main.stage.stageHeight > 150)
-					showSetting(null);
-				else {
-					_main.stage.addEventListener(Event.RESIZE, onStageResize, false, 0, true);
-					
-					addEventListener(MediatorEvent.RESIZED, showSetting);
-				}
+				showMicrophone(null);
 				trace(_main.stage.stageWidth, _main.stage.stageHeight);
 			}
 			if (encoders.length > 0 )
@@ -440,6 +442,7 @@ package com.controler
 			if(event != null)
 				removeEventListener(MediatorEvent.RESIZED, showSetting);
 			
+			time_mic.removeEventListener(TimerEvent.TIMER_COMPLETE, showSetting_timout);
 			var tmp:Mp3Encoder = new Mp3Encoder;
 			_recorder.startup(tmp,_gain, _mic,_micNum);
 			_recorder.check();			

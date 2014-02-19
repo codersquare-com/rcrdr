@@ -21,8 +21,8 @@ package com.events
 		public static const GET_SOUNDS:String = "getSounds";
 		public static const UPLOAD_URL:String 	 = "uploadURL";
 		public static const START_UPLOAD:String = "startUpload";
-		public static var STOP:String = "stop";
-		public static var DEBUG:String = "debug";
+		public static const STOP:String = "stop";
+		public static const DEBUG:String = "debug";
 		
 			
 		public function MainEvents(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
