@@ -215,7 +215,7 @@ package com.controler
 			JScontroler.getInstance().dispatchEvent(ma);
 		}
 		
-		private var time_mic:Timer = new Timer(1000,2);
+		private var time_mic:Timer = new Timer(1000,1);
 		protected function showMicrophone(event:ControlEvents):void
 		{
 			if(event != null)
@@ -269,7 +269,7 @@ package com.controler
 			JScontroler.getInstance().dispatchEvent(new ResultEvents(ResultEvents.SHOW_MICSETTING,true));
 			if(status == Variables.INITIAL){
 				showMicrophone(null);
-				trace(_main.stage.stageWidth, _main.stage.stageHeight);
+				//trace(_main.stage.stageWidth, _main.stage.stageHeight);
 			}
 			if (encoders.length > 0 )
 			{
@@ -288,7 +288,7 @@ package com.controler
 					return;
 				}
 			}
-			trace("new record"  + event.name);
+			//trace("new record"  + event.name);
 			this.status = Variables.RECORD;
 			var iencoder:IEncoder = new Mp3Encoder;
 			iencoder.name = event.name;
@@ -314,12 +314,12 @@ package com.controler
 			
 			(encoders[curEncoderIndex] as IEncoder).addEventListener(Event.COMPLETE, encodeMp3Done);
 			(encoders[curEncoderIndex] as IEncoder).encodeMp3();
-			trace("user record done");
+			//trace("user record done");
 		}
 		
 		private function encodeMp3Done(e:Event):void
 		{
-			trace("encode mp3 done");
+			//trace("encode mp3 done");
 		}
 		
 		protected function user_record_done(event:Event):void
@@ -334,7 +334,7 @@ package com.controler
 				// use tmp sound				
 				if(event == null)
 					playlist.AddWaveSoundAndPlay((encoders[curEncoderIndex] as IEncoder).getByteArray(), event == null);
-				trace("xx",curEncoderIndex);
+				//trace("xx",curEncoderIndex);
 			}
 			
 			if (this.status == Variables.RE_RECORD) {
@@ -380,7 +380,7 @@ package com.controler
 					user_record_done(null);
 				}
 			}
-			trace("replay record");
+			//trace("replay record");
 		}
 		
 		protected function stopRecorder(event:ControlEvents):void
@@ -399,7 +399,7 @@ package com.controler
 			{
 				this.status = Variables.READY;
 			}
-			trace("record done");
+			//trace("record done");
 		}
 		
 		//		protected function recordClick(event:ButtonEvents):void
@@ -434,7 +434,7 @@ package com.controler
 			if(event != null)
 				_main.stage.removeEventListener(Event.RESIZE, onStageResize);
 			dispatchEvent(new MediatorEvent(MediatorEvent.RESIZED,true));
-			trace(_main.stage.stageWidth, _main.stage.stageHeight);
+			//trace(_main.stage.stageWidth, _main.stage.stageHeight);
 		}
 		
 		protected function showSetting(event:Event):void
@@ -459,17 +459,17 @@ package com.controler
 				e.micAccess = true;
 			}
 			JScontroler.getInstance().dispatchEvent(e);
-			trace(event);
+			//trace(event);
 		}
 		
 		protected function statusHandler(event:StatusEvent):void
 		{
-			trace(event);
+			//trace(event);
 		}
 		
 		protected function activityHandler(event:ActivityEvent):void
 		{
-			trace(event);			
+			//trace(event);			
 		}
 		
 		

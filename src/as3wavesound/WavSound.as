@@ -132,12 +132,12 @@ package as3wavesound {
 		
 		public function checkStream(callback:Function):void
 		{
-			trace("start chek stream");
+			//trace("start chek stream");
 			_delay.addEventListener(TimerEvent.TIMER_COMPLETE, endDelayComplete);
 			var activeProcess:Number;
 			activeProcess=setInterval(activeProcessFunction, 100);
 			function activeProcessFunction() : void{				
-				trace("clear" + _percentplayed);
+				//trace("clear" + _percentplayed);
 				if (_percentplayed > 99.9 || _percentplayed == 0 ) {
 					//callback(_recordName);
 					_delay.start();
@@ -206,7 +206,7 @@ package as3wavesound {
 			if(_channel != null)
 				_channel.soundTransform.volume = vol;
 			
-			trace("update volume", vol);
+			//trace("update volume", vol);
 		}
 		
 		

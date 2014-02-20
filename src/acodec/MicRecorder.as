@@ -229,13 +229,13 @@ package acodec
 			_encoder.addEventListener(Event.COMPLETE, completeHandler);	
 			_buffer.position = 0;		
 			_encoder.encode(_buffer, 1);
-			trace(_buffer.length);
+			//trace(_buffer.length);
 			_isRecording = false;	
 			if(!check)
 				_stopAlert();
 			} catch (e:Error)
 			{
-				trace(e);
+				//trace(e);
 				return false;
 			}
 			return true;

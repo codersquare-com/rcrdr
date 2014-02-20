@@ -57,7 +57,7 @@ package
 		
 		private function onResult(b:String):void
 		{
-			trace("sum",b);
+			//trace("sum",b);
 			
 		}
 		

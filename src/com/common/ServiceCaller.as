@@ -31,14 +31,14 @@ package com.common
 		
 		private function netStatusHandler(i__event:NetStatusEvent):void 
 		{
-			trace(i__event.info.code);
+			//trace(i__event.info.code);
 		}
 		
 		private function statusHandler(i__object:Object):void
 		{
 			for (var l__key:String in i__object)
-				trace(l__key, i__object[l__key]);
-			trace("CursorManage.removeBusyCursor()");
+				//trace(l__key, i__object[l__key]);
+			//trace("CursorManage.removeBusyCursor()");
 		}
 		
 		private function securityErrorHandler(i__event:SecurityErrorEvent):void 

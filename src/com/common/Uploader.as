@@ -64,7 +64,7 @@ package com.common
 		
 		private function onResult(b:String):void
 		{
-			trace(b);
+			//trace(b);
 		}
 		
 		protected function securityErrorHandler(event:SecurityErrorEvent):void
@@ -77,11 +77,9 @@ package com.common
 		{
 			switch (event.info.code) {
 				case "NetConnection.Connect.Success":
-					trace("ok");
 					connection.call("myCallBack", new Responder(resultCallback));
 					break;
 				case "NetStream.Play.StreamNotFound":
-					trace("Stream not found: " );
 					break;
 			}
 			
@@ -89,12 +87,12 @@ package com.common
 		
 		private function resultCallback(abc:Object):void
 		{
-			trace("XXX" + abc);
+			//trace("XXX" + abc);
 		}
 		
 		protected function securityHandler(event:SecurityErrorEvent):void
 		{
-			trace("security error");
+			//trace("security error");
 		}
 		
 		protected function onProgessEvt(event:ProgressEvent):void
@@ -127,7 +125,7 @@ package com.common
 		
 		protected function uploadComplete(event:Event):void
 		{
-			trace("upload complete" + event);
+			//trace("upload complete" + event);
 			clearMemory();
 		}
 	}

@@ -76,18 +76,18 @@ package com.media
 		
 		protected function ioErrorHandler(event:IOErrorEvent):void
 		{
-			trace("ioErrorHandler" + event);
+			//trace("ioErrorHandler" + event);
 			JScontroler.getInstance().debug("Play URL error: ioErrorHandler" + event);
 			downloadCallbackInterVal.stop();			
 		}
 		
 		private function completeHandler(event:Event):void {			
-			trace("completeHandler: " + event);
+			//trace("completeHandler: " + event);
 			downloadCallbackInterVal.stop();
 		}
 				
 		private function id3Handler(event:Event):void {
-			trace("id3Handler: " + event);
+			//trace("id3Handler: " + event);
 		}
 		
 		private function progressHandler(event:ProgressEvent):void {

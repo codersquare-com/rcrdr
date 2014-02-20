@@ -65,13 +65,13 @@ package com.media
 				_tmpSoundStream.stop();
 			}catch (e:Error)
 			{
-				trace("tmp stopped");
+				//trace("tmp stopped");
 			}
 			try {
 				_currentSoundStream.stop();
 			}catch (e:Error)
 			{
-				trace("tmp stopped");
+				//trace("tmp stopped");
 			}
 			_timeInterval = -1;
 		}
@@ -82,7 +82,7 @@ package com.media
 				_tmpSoundStream.stop();
 			}catch (e:Error)
 			{
-				trace("tmp stopped" + isPlay + " " + byte.length);
+				//trace("tmp stopped" + isPlay + " " + byte.length);
 			}
 			byte.position = 0;
 			_tmpSoundStream = null;
@@ -90,7 +90,7 @@ package com.media
 			if(isPlay)
 				_tmpSoundStream.play();
 			updateVolume(_vol);
-			trace("playing",byte.length);
+			//trace("playing",byte.length);
 		}
 		
 		public function play(time:Number = -1):void
@@ -104,7 +104,7 @@ package com.media
 				_tmpSoundStream.stop();
 			}catch (e:Error)
 			{
-				trace("tmp stopped");
+				//trace("tmp stopped");
 			}
 			_currentSoundStream = _arrayStream[_currentSound];
 			_currentSoundStream.checkStream(_callBack);
@@ -113,7 +113,7 @@ package com.media
 			else _currentSoundStream.play();
 			
 			_isPlaying = true;	
-			trace("play");
+			//trace("play");
 			updateVolume(_vol);
 		}
 				
