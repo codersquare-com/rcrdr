@@ -332,10 +332,8 @@ package com.controler
 			
 			if (this.status == Variables.RECORD ||this.status== Variables.RECORDDONE) {
 				// use tmp sound	
-				trace("f");
 				if(event == null)
 					playlist.AddWaveSoundAndPlay((encoders[curEncoderIndex] as IEncoder).getByteArray(), event == null);
-				
 			}
 			
 			if (this.status == Variables.RE_RECORD) {

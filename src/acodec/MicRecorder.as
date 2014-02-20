@@ -216,7 +216,7 @@ package acodec
 			
 			if(!_alMic)
 			{
-				trace("stoop");
+				//trace("stoop");
 				var e:ResultEvents = new ResultEvents(ResultEvents.MICROPHONE_ACCESS,true);
 				e.micAccess = true;
 				_alMic = true;
