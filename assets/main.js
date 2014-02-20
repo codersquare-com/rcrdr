@@ -7,7 +7,12 @@ var chosenRoles = [];
 //when the div is hidden, slider init wouldn't work
 //var SOUND_CDN = "http://mp3.vieted.com/"
 //var SOUND_CDN = "http://vieted.com/tmp/";
-var SOUND_CDN = "http://192.168.2.103/";
+
+if (typeof SOUND_CDN == 'undefined')
+{
+    var SOUND_CDN = "http://rcrdr.local/";
+}
+
 var recording_dur = 3; //seconds
 var recording_name = 'sample';
 var speakingSpeed = 'slow';
@@ -140,10 +145,11 @@ $(document).ready(function(){
          //button function
          $("#mic_setting").click(function()
          {
+             alert('Shit');
              if(showMic){         
                  maximizeFlash();
                  showMic = false;
-                 thisMovie("VietEDPlayer").showMicrophone(-1);
+                 VietEDPlayer.showMicrophone(-1);
              }
              /*
              else
@@ -156,12 +162,14 @@ $(document).ready(function(){
 
          playFile = function(filename)
          {
-             //if file is remote
-             if (filename.indexOf('http://') === 0)
-                 VietEDPlayer.play(filename, -1);
-             else 
-                 VietEDPlayer.play(SOUND_CDN + filename, -1);
+             if (filename.indexOf('http://') !== 0)
+             {
+                 filename = SOUND_CDN + filename + '.mp3';
+             }
+             console.log("playing " + filename);
+             VietEDPlayer.play(filename, -1);
          }
+         
          
          playDone = function()
          {
@@ -284,6 +292,11 @@ $(document).ready(function(){
          //TODO: remove this when flow is done. This is only used
          // temporarily
          $(".recording").click(function(){
+             // This is to avoid playing the file
+             // when editing questions' recording inline
+             if ($(this).closest('#question-area-edit').size() == 1)
+                 return ;             
+             
              //WHen everything is fresh. Clicking on 1 sentence will
              // play it and following sentences
              if (playingMode == -1)

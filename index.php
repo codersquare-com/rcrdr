@@ -66,7 +66,7 @@ $mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'yt';
             attributes.name = "VietEDPlayer";
             attributes.align = "middle";
             swfobject.embedSWF(
-                "bin-release/VietEDPlayer.swf", "flashContent", 
+                "bin-release/VietEDPlayer.swf?ts=<?php echo time();?>", "flashContent", 
                 "100%", "100%", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes);
