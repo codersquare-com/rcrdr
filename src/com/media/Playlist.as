@@ -85,6 +85,7 @@ package com.media
 				//trace("tmp stopped" + isPlay + " " + byte.length);
 			}
 			byte.position = 0;
+			trace(byte.length);
 			_tmpSoundStream = null;
 			_tmpSoundStream = new WavSound(byte,"tmp");
 			if(isPlay)

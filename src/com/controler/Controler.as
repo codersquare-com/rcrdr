@@ -268,7 +268,7 @@ package com.controler
 		{			
 			JScontroler.getInstance().dispatchEvent(new ResultEvents(ResultEvents.SHOW_MICSETTING,true));
 			if(status == Variables.INITIAL){
-				showMicrophone(null);
+				showSetting(null);
 				//trace(_main.stage.stageWidth, _main.stage.stageHeight);
 			}
 			if (encoders.length > 0 )
@@ -331,10 +331,11 @@ package com.controler
 			}
 			
 			if (this.status == Variables.RECORD ||this.status== Variables.RECORDDONE) {
-				// use tmp sound				
+				// use tmp sound	
+				trace("f");
 				if(event == null)
 					playlist.AddWaveSoundAndPlay((encoders[curEncoderIndex] as IEncoder).getByteArray(), event == null);
-				//trace("xx",curEncoderIndex);
+				
 			}
 			
 			if (this.status == Variables.RE_RECORD) {

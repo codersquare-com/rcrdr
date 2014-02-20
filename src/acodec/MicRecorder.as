@@ -78,7 +78,7 @@ package acodec
 		private var _startAlert:Function;
 		private var _stopAlert:Function;
 		private var _micNum:int;
-		private var _alowMic:Boolean;
+		private var _alMic:Boolean;
 		/**
 		 * 
 		 * @param encoder The audio encoder to use
@@ -103,7 +103,6 @@ package acodec
 			_silenceLevel = silenceLevel;
 			_timeOut = timeOut;
 			_micNum = micNum;
-			_alowMic = false;
 		}
 		
 		public function check():void {
@@ -113,7 +112,7 @@ package acodec
 				Security.showSettings(SecurityPanel.DEFAULT);
 			}
 			
-			_alowMic = false;
+			_alMic = false;
 			if(_isRecording)
 				return;
 			
@@ -130,14 +129,15 @@ package acodec
 		
 		protected function onSampleData1(event:SampleDataEvent):void
 		{
-			if(!_alowMic)
+			if(!_alMic)
 			{
 					var e:ResultEvents = new ResultEvents(ResultEvents.MICROPHONE_ACCESS,true);
 					e.micAccess = true;
+					_alMic = true;
 					JScontroler.getInstance().dispatchEvent(e);
-					_alowMic = true;
 			}
 			_microphone.removeEventListener(SampleDataEvent.SAMPLE_DATA, onSampleData1);	
+			_microphone.removeEventListener(StatusEvent.STATUS, onStatus1);
 		}
 		
 		protected function onStatus1(event:StatusEvent):void
@@ -145,7 +145,8 @@ package acodec
 			// TODO Auto-generated method stub
 			
 		}		
-		
+		private var t:Timer = null;
+		private var timerStart:Boolean;
 		/**
 		 * Starts recording from the default or specified microphone.
 		 * The first time the record() method is called the settings manager may pop-up to request access to the Microphone.
@@ -175,14 +176,16 @@ package acodec
 			if(!check)
 				_startAlert();
 			
-			var t:Timer = new Timer(1000,3);
+			if(t== null)
+				t = new Timer(1000,3);
 			t.addEventListener(TimerEvent.TIMER_COMPLETE, twosecondwithnodata);
 			t.start();
+			timerStart = true;
 		}
 		
 		protected function twosecondwithnodata(event:TimerEvent):void
 		{
-			if(_alowMic)
+			if(_alMic)
 				return;
 			var e:ResultEvents = new ResultEvents(ResultEvents.MICROPHONE_ACCESS,true);
 			e.micAccess = false;
@@ -202,12 +205,22 @@ package acodec
 		 */		
 		private function onSampleData(event:SampleDataEvent):void
 		{
-			if(!_alowMic)
+			if(timerStart)
 			{
+				try{					
+					t.removeEventListener(TimerEvent.TIMER_COMPLETE,twosecondwithnodata);
+					t.stop();
+					timerStart = false;
+				} catch (e:Error) {};
+			}
+			
+			if(!_alMic)
+			{
+				trace("stoop");
 				var e:ResultEvents = new ResultEvents(ResultEvents.MICROPHONE_ACCESS,true);
 				e.micAccess = true;
+				_alMic = true;
 				JScontroler.getInstance().dispatchEvent(e);
-				_alowMic = true;
 			}
 			_recordingEvent.time = getTimer() - _difference;
 			
