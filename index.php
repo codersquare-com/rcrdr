@@ -4,6 +4,7 @@ function t($x)
 	return $x;
 }
 $mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'yt';
+$version = 'bin-debug'; //or bin-release
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- saved from url=(0014)about:internet -->
@@ -29,15 +30,16 @@ $mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'yt';
         -->
         <!-- Enable Browser History by replacing useBrowserHistory tokens with two hyphens -->
         <!-- BEGIN Browser History required section -->
-        <link rel="stylesheet" type="text/css" href="bin-release/history/history.css" />
-        <script type="text/javascript" src="bin-release/history/history.js"></script>
+        <link rel="stylesheet" type="text/css" href="<?php echo $version;?>/history/history.css" />
+        <script type="text/javascript" src="<?php echo $version;?>/history/history.js"></script>
         <!-- END Browser History required section -->  
-        <script type="text/javascript" src="bin-release/swfobject.js"></script>
+        <script type="text/javascript" src="<?php echo $version;?>/swfobject.js"></script>
 
         <script>
         var jsEventHandler;
         var conversationSource = '<?echo $mode;?>';
         </script>
+        
         <script src="assets/jquery.js"></script>
     	<script src="assets/bootstrap-3.0.0/dist/js/bootstrap.min.js"></script>
     	
@@ -50,6 +52,7 @@ $mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'yt';
         <script src="assets/main.js"></script>
         <link rel="stylesheet" type="text/css" href="assets/styles.css" />
             
+    
         <script type="text/javascript">
             // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
             var swfVersionStr = "11.1.0";
@@ -66,7 +69,7 @@ $mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'yt';
             attributes.name = "VietEDPlayer";
             attributes.align = "middle";
             swfobject.embedSWF(
-                "bin-release/VietEDPlayer.swf?ts=<?php echo time();?>", "flashContent", 
+                "<?php echo $version;?>/VietEDPlayer.swf", "flashContent", 
                 "100%", "100%", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes);
@@ -93,6 +96,8 @@ $mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'yt';
         <div><hr/></div>
         <div class='row' id='conversation'>
         	<div class='col-md-6' >
+        		<?php 
+/*        		
 	            <div id='player-control'>
 	            		<span class='scale'>00:00</span> 
 	            		<input type="text"
@@ -108,6 +113,8 @@ $mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'yt';
 										  data-slider-tooltip="show">		
 			        	<span class='scale'>100%</span>      
 	            </div>
+*/	            
+        		?>
 				<div id='conversation-control' style='padding:10px;border:1px solid #eee;'>
 					
 					<span id='play-conversation-control'>
@@ -160,7 +167,7 @@ $mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'yt';
 		             -->
 				            Peter: <span title='click to record' 
 				            	class='recording' 
-				            	data-id='http://media.hibooks.net/sach/sach_kinh_doanh/16_ke_su_dung_nhan_tai/2.mp3' 
+				            	data-id='1' 
 				            	data-duration='120'
 				            	data-role='Peter'>
 				            - Hello Mary</span>
@@ -169,7 +176,7 @@ $mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'yt';
 				            Mary: 
 				            <span title='click to record' 
 				            	class='recording' 
-				            	data-id='2.mp3' 
+				            	data-id='2' 
 				            	data-duration='1000'
 				            	data-role='Mary'>
 				           		- Hello Peter, How are you?
@@ -177,7 +184,7 @@ $mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'yt';
 				            <br/>
 				            
 				            Peter: 
-				            <span title='click to record' class='recording' data-id='3.mp3'  data-duration='5'
+				            <span title='click to record' class='recording' data-id='3'  data-duration='5'
 				            data-role='Peter'>
 				            - Fine thank you, and you?
 				            </span>
@@ -185,7 +192,7 @@ $mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'yt';
 				            
 				            Mary: <span title='click to record' 
 					            class='recording' 
-					            data-id='4.mp3'
+					            data-id='4'
 					            data-duration='5'
 					            data-role='Mary'>
 					            - That's great to hear
@@ -453,7 +460,7 @@ $mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'yt';
         </div>
         <div class='row'>
 
-        <div class='col-md-3'>
+        <div class='col-md-6'>
             <h3>Flash .swf file area</h3>
             <div id ="flashWrapper" style="width:200px; height:150px;" >
                 <div id="flashContent" >
@@ -469,12 +476,10 @@ $mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'yt';
                 </div>
             </div>
             
-            
-            
            
         </div>
         
-        <div class='col-md-9'>
+        <div class='col-md-6'>
         <div class='row'>
 	           <div class='col-md-6'>
 		          <h3> JS control </h3>
@@ -528,7 +533,8 @@ $mode = isset($_REQUEST['mode']) ? $_REQUEST['mode'] : 'yt';
      	   </div>
      	</div>
         <noscript>
-            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="100%" height="100%" id="VietEDPlayer">
+            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="100%" 
+            	height="100%" id="VietEDPlayer">
                 <param name="movie" value="VietEDPlayer.swf" />
                 <param name="quality" value="high" />
                 <param name="bgcolor" value="#ffffff" />

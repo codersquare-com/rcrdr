@@ -10,7 +10,7 @@ var chosenRoles = [];
 
 if (typeof SOUND_CDN == 'undefined')
 {
-    var SOUND_CDN = "http://rcrdr.local/";
+    var SOUND_CDN = "/";
 }
 
 var recording_dur = 3; //seconds
@@ -20,6 +20,7 @@ var current_recording_playing = -1;
 var waitingForUserToStartSpeaking = false;
 var log_string;
 var playFile;
+var conversationSource = 'voice';
 
 $(document).ready(function(){
         
@@ -56,6 +57,7 @@ $(document).ready(function(){
               log_string(arguments[i]);
           }
           log_string("===" + recording_name + "====" + recording_dur + "======");
+          log_string("=============");
       }
       
       var stop_recording_cb = function()
@@ -105,9 +107,7 @@ $(document).ready(function(){
           else if (arguments[0] == 'flashLoaded')
           {
               VietEDPlayer = thisMovie("VietEDPlayer");
-              VietEDPlayer.stop = function(){
-                  VietEDPlayer.pause_resume();
-              };
+
               init_handlers();
               //TODO: if get_cookie
               if (getCookie('mic_setting') == 1)
@@ -142,31 +142,13 @@ $(document).ready(function(){
     
      init_handlers = function()
      {
-         //button function
-         $("#mic_setting").click(function()
-         {
-             alert('Shit');
-             if(showMic){         
-                 maximizeFlash();
-                 showMic = false;
-                 VietEDPlayer.showMicrophone(-1);
-             }
-             /*
-             else
-                 {
-                 minimizeFlash();
-             }
-             */
-             //VietEDPlayer.recordClick();
-         });
-
          playFile = function(filename)
          {
              if (filename.indexOf('http://') !== 0)
              {
                  filename = SOUND_CDN + filename + '.mp3';
              }
-             console.log("playing " + filename);
+             log_string("playing " + filename);
              VietEDPlayer.play(filename, -1);
          }
          
@@ -203,6 +185,23 @@ $(document).ready(function(){
              }
          }
          
+       //button function
+         $("#mic_setting").click(function()
+         {
+             if(showMic){  
+                 maximizeFlash();
+                 showMic = false;
+                 VietEDPlayer.showMicrophone(-1);
+             }
+             /*
+             else
+                 {
+                 minimizeFlash();
+             }
+             */
+             //VietEDPlayer.recordClick();
+         });         
+         
          // custom event to automatically play
          // play 
          $("span.recording").bind('recording.play', function(){
@@ -231,6 +230,7 @@ $(document).ready(function(){
                  }
                  else 
                  {
+                     //play server's file
                      playFile(filename);
                  }
              }
@@ -593,6 +593,7 @@ $(document).ready(function(){
          });
      } //init_handlers
 
+     /*
      $('#playbackProgress').slider(
              {
                  formater: function(value) {
@@ -602,6 +603,7 @@ $(document).ready(function(){
                      return value + '%';
                    }
              });
+     */
      
      init_sliders = function()
      {

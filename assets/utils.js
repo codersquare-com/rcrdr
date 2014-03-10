@@ -20,19 +20,20 @@ setCookie = function(c_name, value, exdays) {
     c_value = c_value + ";path=/";
     document.cookie=c_name + "=" + c_value;
 };
-
-$("html").on('click', ".toggle-dom", function(e){
-    var targetId = $(this).attr('target-id');
-    if ($(this).attr('data-toggle-into') == 'modal')
-    {
-        //toogle DOM into a dialog
-        $("#ajaxModal").find('.modal-header').find('h3,h4').html($(this).text());
-        $("#ajaxModal").find('.modal-body').html($("#" + targetId).html());
-        $("#ajaxModal").modal('show');
-    }
-    else 
-        $("#" + targetId).toggle();
-    
-    e.preventDefault();
-    return false;
+$(document).ready(function(){
+    $("html").on('click', ".toggle-dom", function(e){
+        var targetId = $(this).attr('target-id');
+        if ($(this).attr('data-toggle-into') == 'modal')
+        {
+            //toogle DOM into a dialog
+            $("#ajaxModal").find('.modal-header').find('h3,h4').html($(this).text());
+            $("#ajaxModal").find('.modal-body').html($("#" + targetId).html());
+            $("#ajaxModal").modal('show');
+        }
+        else 
+            $("#" + targetId).toggle();
+        
+        e.preventDefault();
+        return false;
+    });
 });
