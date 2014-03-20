@@ -1,6 +1,9 @@
 var VietEDPlayer, init_handlers;
 var init_sliders; //has to be separated from init_handlers because
-var playingMode = -1;
+if (typeof playingMode == 'undefined')
+{
+    var playingMode = -1;
+}
 var playDone, pushSounds;
 var availableRoles = [];
 var chosenRoles = [];
@@ -24,7 +27,6 @@ var conversationSource = 'voice';
 
 $(document).ready(function(){
         
-     showMic = true;
      // ================================callback
      function thisMovie(movieName) {
          if (navigator.appName.indexOf("Microsoft") != -1) {
@@ -35,10 +37,12 @@ $(document).ready(function(){
      }
      
      function minimizeFlash() {
-        document.getElementById('flashWrapper').setAttribute("style","width:10px;height:10px;");
+         if (document.getElementById('flashWrapper'))
+             document.getElementById('flashWrapper').setAttribute("style","width:10px;height:10px;");
      }
      function maximizeFlash() {
-         document.getElementById('flashWrapper').setAttribute("style","width:250px;height:250px;");
+         if (document.getElementById('flashWrapper'))
+             document.getElementById('flashWrapper').setAttribute("style","width:250px;height:250px;");
       }
       
     
@@ -80,27 +84,36 @@ $(document).ready(function(){
           $("#log-textarea").text('');
       });
       
+      $("#rc-maximize").click(function()
+      {
+          maximizeFlash();
+      });
+      
+      $("#rc-minimize").click(function()
+      {
+          minimizeFlash();
+      });
+      
       // js receive as function
      jsEventHandler = function() {
           log(arguments);
+          
           if(arguments[0] == 'microphoneAccess')
           {
             if(arguments[1] == 'true' || arguments[1] === true)
             {
-                //minimizeFlash();
-                //log('showing actions');
-                setCookie('mic_setting', 1);
+                log_string('setting mic_perm to 1');
+                setLocalStorageCookie('mic_perm', '1');
                 $('#record-area').show();
                 init_sliders();
                 //$("#volumeWrapper").hide();
             }
             else 
             {
-                setCookie('mic_setting', 0);
+                log_string('setting mic_perm to 0');
+                setLocalStorageCookie('mic_perm', '0');
                 maximizeFlash();
                 $('#record-area').hide();
-                //init_sliders();
-                //$("#volumeWrapper").hide();
             }
           
           }
@@ -109,11 +122,20 @@ $(document).ready(function(){
               VietEDPlayer = thisMovie("VietEDPlayer");
 
               init_handlers();
-              //TODO: if get_cookie
-              if (getCookie('mic_setting') == 1)
+              log_string("mic permission is ... " + getLocalStorageCookie('mic_perm'));
+              if (getLocalStorageCookie('mic_perm') == '1')
               {
-                    $("#mic_setting").trigger('click');
+                   //$("#mic_setting").trigger('click');
+                   //alert("Already allowed");
+                   $('#record-area').show();
+                   init_sliders();
+                   minimizeFlash();
               }
+              else 
+              {
+                  $("#mic_setting").trigger('click');
+              }
+              
           }
           else if(arguments[0] == 'saveRecordingDone')
           {
@@ -156,16 +178,19 @@ $(document).ready(function(){
          playDone = function()
          {
              $("#playingSentenceTranscript").html('');
-             var $playing = $("#conversation").find("span.playing").removeClass('playing');
+             
+             var $playing = $("#conversation").find("span.recording.playing").removeClass('playing');
              if (playingMode == 'playingConversation' || playingMode == 'rolePlaying'
                  || playingMode == 'replayRoleplaying'
              )
              {
-                 var $nexts = $playing.nextAll(".recording");
-                 if ($nexts.size() > 0)
+                 var $all = $("#conversation").find(".recording");
+                 var idx = $all.index($playing);
+                 idx = parseInt(idx) + 1;
+                 var $next = $("#conversation").find(".recording:eq(" + idx + ")");
+                 if ($next.size() > 0)
                  {
-                     //TODO
-                     $nexts.first().trigger('recording.play');
+                     $next.trigger('recording.play');
                  }
                  else //End of conversation 
                  {
@@ -185,22 +210,13 @@ $(document).ready(function(){
              }
          }
          
-       //button function
+         //button function
          $("#mic_setting").click(function()
          {
-             if(showMic){  
-                 maximizeFlash();
-                 showMic = false;
-                 VietEDPlayer.showMicrophone(-1);
-             }
-             /*
-             else
-                 {
-                 minimizeFlash();
-             }
-             */
-             //VietEDPlayer.recordClick();
-         });         
+             maximizeFlash();
+             VietEDPlayer.showMicrophone(-1);
+         });
+         
          
          // custom event to automatically play
          // play 
@@ -214,10 +230,16 @@ $(document).ready(function(){
              }
              
              var filename = $this.attr('data-id');
+             
              current_recording_playing = filename;
              
              if (playingMode == 'playingConversation')
              {
+                 playFile(filename);
+             }
+             else if (playingMode == 'editingConversation')
+             {
+                 //alert(playingMode + ' ' + filename);
                  playFile(filename);
              }
              else if (playingMode == 'replayRoleplaying')
