@@ -169,8 +169,14 @@ $(document).ready(function(){
              if (filename.indexOf('http://') !== 0)
              {
                  filename = SOUND_CDN + filename + '.mp3';
+                 if (updateRecording == 1)
+                 {
+                     var ts = +new Date;
+                     filename = filename + '?ts=' + ts; 
+                 }
              }
              log_string("playing " + filename);
+             console.log(filename);
              VietEDPlayer.play(filename, -1);
          }
          
@@ -232,14 +238,17 @@ $(document).ready(function(){
              var filename = $this.attr('data-id');
              
              current_recording_playing = filename;
-             
-             if (playingMode == 'playingConversation')
-             {
-                 playFile(filename);
-             }
-             else if (playingMode == 'editingConversation')
+
+             //Case 1: Editing question's recordings
+             if (playingMode == 'editingConversation')
              {
                  //alert(playingMode + ' ' + filename);
+                 playFile(filename, -1);
+             }
+             
+             //Case 2: Students play role
+             else if (playingMode == 'playingConversation')
+             {
                  playFile(filename);
              }
              else if (playingMode == 'replayRoleplaying')
@@ -314,14 +323,10 @@ $(document).ready(function(){
          //TODO: remove this when flow is done. This is only used
          // temporarily
          $(".recording").click(function(){
-             // This is to avoid playing the file
-             // when editing questions' recording inline
-             if ($(this).closest('#question-area-edit').size() == 1)
-                 return ;             
              
              //WHen everything is fresh. Clicking on 1 sentence will
              // play it and following sentences
-             if (playingMode == -1)
+             if (playingMode == -1 )
              {
                  $("#play_conversation").hide();
                  $("#pause_conversation").show();
@@ -333,17 +338,12 @@ $(document).ready(function(){
                  $("#conversation").find("span.playing").removeClass('playing');
              }
              $(this).trigger('recording.play');
-             /*
-             else 
-             {
-                 
-             }
-             */
          })
          
          /*******************************PAGE 1***************************/
          $("#play_conversation").click(function(){
              playingMode = 'playingConversation';
+             VietEDPlayer.stop();
              $("#conversation .recording:eq(0)").trigger('recording.play'); 
              $(this).hide();
              $("#pause_conversation").show();
