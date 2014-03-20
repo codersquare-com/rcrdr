@@ -169,7 +169,7 @@ $(document).ready(function(){
              if (filename.indexOf('http://') !== 0)
              {
                  filename = SOUND_CDN + filename + '.mp3';
-                 if (updateRecording == 1)
+                 if (typeof updateRecording != 'undefined' && updateRecording == 1)
                  {
                      var ts = +new Date;
                      filename = filename + '?ts=' + ts; 
