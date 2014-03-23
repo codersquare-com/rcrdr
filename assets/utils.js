@@ -21,18 +21,47 @@ setCookie = function(c_name, value, exdays) {
     document.cookie=c_name + "=" + c_value;
 };
 
-$("html").on('click', ".toggle-dom", function(e){
-    var targetId = $(this).attr('target-id');
-    if ($(this).attr('data-toggle-into') == 'modal')
-    {
-        //toogle DOM into a dialog
-        $("#ajaxModal").find('.modal-header').find('h3,h4').html($(this).text());
-        $("#ajaxModal").find('.modal-body').html($("#" + targetId).html());
-        $("#ajaxModal").modal('show');
-    }
-    else 
-        $("#" + targetId).toggle();
-    
-    e.preventDefault();
-    return false;
+
+//check if localStorage is supported. If yes save value into localStorage
+//else save it into cookie
+setLocalStorageCookie = function(c_name, value, exdays) {
+  if (localStorage)
+  {
+      localStorage.setItem(c_name, value);
+  }
+  else 
+  {
+      setCookie(c_name, value);
+  }
+};
+
+getLocalStorageCookie = function(c_name) {
+  if (localStorage)
+  {
+      return localStorage.getItem(c_name);
+  }
+  else 
+  {
+      return getCookie(c_name);
+  }
+};
+
+
+
+$(document).ready(function(){
+    $("html").on('click', ".toggle-dom", function(e){
+        var targetId = $(this).attr('target-id');
+        if ($(this).attr('data-toggle-into') == 'modal')
+        {
+            //toogle DOM into a dialog
+            $("#ajaxModal").find('.modal-header').find('h3,h4').html($(this).text());
+            $("#ajaxModal").find('.modal-body').html($("#" + targetId).html());
+            $("#ajaxModal").modal('show');
+        }
+        else 
+            $("#" + targetId).toggle();
+        
+        e.preventDefault();
+        return false;
+    });
 });
