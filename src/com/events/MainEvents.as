@@ -23,6 +23,7 @@ package com.events
 		public static const START_UPLOAD:String = "startUpload";
 		public static const STOP:String = "stop";
 		public static const DEBUG:String = "debug";
+		public static var PRELOAD:String = "preLoad";
 		
 			
 		public function MainEvents(type:String, bubbles:Boolean=false, cancelable:Boolean=false)

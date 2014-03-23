@@ -194,5 +194,10 @@ package com.media
 				play(-1);
 			}
 		}
+		
+		public function preLoad(name:String):void
+		{
+			AddSound(name);
+		}
 	}
 }

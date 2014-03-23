@@ -42,7 +42,7 @@ package com.controler
 				ExternalInterface.addCallback(MainEvents.START_UPLOAD, startUpload); // check
 				ExternalInterface.addCallback(MainEvents.STOP, stop); // check
 				ExternalInterface.addCallback(MainEvents.DEBUG, isdebug); // check
-				
+				ExternalInterface.addCallback(MainEvents.PRELOAD, preLoad); // check
 				
 				// flash call js
 				addEventListener(ResultEvents.MICROPHONE_ACCESS, microphoneAccess); // check
@@ -61,6 +61,13 @@ package com.controler
 			}
 			enableAll();
 			isDebug = true;
+		}
+		
+		private function preLoad(b:String):void
+		{
+			var ms:ControlEvents = new ControlEvents(ControlEvents.PRELOAD,true);
+			ms.name = b;
+			dispatchEvent(ms);
 		}
 		
 		private var isDebug:Boolean;

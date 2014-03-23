@@ -64,6 +64,7 @@ package com.controler
 			JScontroler.getInstance().addEventListener(ControlEvents.GET_PARAMETERS, getParams);// check
 			JScontroler.getInstance().addEventListener(ControlEvents.START_UPLOAD, startUpload); // check
 			JScontroler.getInstance().addEventListener(ControlEvents.STOP, stop); // check
+			JScontroler.getInstance().addEventListener(ControlEvents.PRELOAD, preload); // check
 			status = Variables.INITIAL;			
 			playlist = new Playlist(downloadCallback);
 			_recorder = new MicRecorder;
@@ -75,6 +76,11 @@ package com.controler
 			_micNum = -1;
 			interValProcess = 0;
 			interValRuning = false;
+		}
+		
+		protected function preload(event:ControlEvents):void
+		{
+			playlist.preLoad(event.name);			
 		}
 		
 		protected function stop(event:Event):void
