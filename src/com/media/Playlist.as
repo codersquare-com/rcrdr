@@ -197,7 +197,12 @@ package com.media
 		
 		public function preLoad(name:String):void
 		{
-			AddSound(name);
+			var ss:SoundStream = new NetSoundStream(_downloadCallback);
+			ss.startup(name);
+			_arrayStream.push(ss);
+			_currentSound = _arrayStream.length - 1;	
+			_timeInterval = -1;
+			updateVolume(_vol);
 		}
 	}
 }
