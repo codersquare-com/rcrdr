@@ -49,6 +49,12 @@ package com.media
 			downloadCallbackInterVal.addEventListener(TimerEvent.TIMER,dctimer);
 		}
 		
+		protected function soundCompleteHandler(event:Event):void
+		{
+			JScontroler.getInstance().debug("SoundComplete event");
+			_callback("");
+		}
+		
 		protected function dctimer(event:TimerEvent):void
 		{			
 			downloadCallback(url,percentLoaded);
@@ -64,8 +70,7 @@ package com.media
 			_oSound = value;
 		}
 
-		public function startup(obj:Object):void {
-			
+		public function startup(obj:Object):void {			
 			var myURLReq:URLRequest = new URLRequest(obj as String);
 			url = obj as String;
 			oSound = new Sound();
@@ -103,6 +108,8 @@ package com.media
 			var sound:SoundTransform;
 			iPosition = startTime > 0 ? startTime :  iPosition;
 			oSoundChannel=oSound.play(iPosition);
+			oSoundChannel.addEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
+			
 			sound=oSoundChannel.soundTransform;
 			if (isMute) {
 				sound.volume=0;
@@ -118,7 +125,10 @@ package com.media
 		}
 		public function stop():void {
 			updatePos(0);
+			//if (_callback != null)
+			//	_callback("");
 			clearInterval(activeProcess);
+			oSoundChannel.removeEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
 			oSoundChannel.stop();
 		}
 		
@@ -162,8 +172,7 @@ package com.media
 		{
 			return _timeTotal;
 		}
-		
-		
+			
 		public function get _timePlayed():Number {
 			return Math.round(oSoundChannel.position);
 		}
@@ -182,27 +191,31 @@ package com.media
 		}
 		
 		var activeProcess:Number;
+		var _callback:Function = null;
 		public function checkStream(callback:Function):void {
-			activeProcess=setInterval(activeProcessFunction, 200);
-			function activeProcessFunction() : void{
-				
-				if (_curp == _percentplayed)
-					_time ++;
-				else {
-					_time = 0;
-					_curp = _percentplayed;
-				}
-				
-				if (_time >= 5){
-					callback(url);
-					clearInterval(activeProcess);
-				}
-					
-				if (percentLoaded==100 && _percentplayed > 99.5) {
-					callback(url);
-					clearInterval(activeProcess);
-				}
-			}
+			//activeProcess=setInterval(activeProcessFunction, 200);
+			JScontroler.getInstance().debug("Add callback");
+			_callback = callback;
+			
+//			function activeProcessFunction() : void{
+//				
+//				if (_curp == _percentplayed)
+//					_time ++;
+//				else {
+//					_time = 0;
+//					_curp = _percentplayed;
+//				}
+//				
+//				if (_time >= 5){
+//					//callback(url);
+//					clearInterval(activeProcess);
+//				}
+//					
+//				if (percentLoaded==100 && _percentplayed > 99.5) {
+//					//callback(url);
+//					clearInterval(activeProcess);
+//				}
+//			}
 		}				
 	}
 }

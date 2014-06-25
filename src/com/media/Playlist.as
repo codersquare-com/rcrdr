@@ -3,6 +3,7 @@ package com.media
 	import as3wavesound.WavSound;
 	
 	import com.common.SoundStream;
+	import com.controler.JScontroler;
 	
 	import flash.external.ExternalInterface;
 	import flash.sampler.pauseSampling;
@@ -60,6 +61,7 @@ package com.media
 		
 		public function AddSound(url:String):void {
 			//STOPALL();
+			JScontroler.getInstance().debug("AddSound :" + _isPlaying);
 			if(!_isPlaying)
 			{
 				var ss:SoundStream = new NetSoundStream(_downloadCallback);
@@ -68,6 +70,7 @@ package com.media
 				_currentSound = _arrayStream.length - 1;	
 				_timeInterval = -1;
 				updateVolume(_vol);
+				JScontroler.getInstance().debug(url);
 			}
 		}
 		
@@ -80,6 +83,7 @@ package com.media
 		}
 		
 		public function STOPALL() :void {
+			JScontroler.getInstance().debug("Stop");
 			try {
 				_tmpSoundStream.stop();
 			}catch (e:Error)
@@ -95,8 +99,8 @@ package com.media
 			_timeInterval = -1;
 		}
 		public function AddWaveSoundAndPlay(byte:ByteArray, isPlay:Boolean) : void {
-			if(_isPlaying)
-				return;
+			//if(_isPlaying)
+			//	return;
 			try {
 				_tmpSoundStream.stop();
 			}catch (e:Error)
@@ -115,8 +119,9 @@ package com.media
 		
 		public function play(time:Number = -1):void
 		{
-			if(_isPlaying)
-				return;
+			JScontroler.getInstance().debug("Call playing");
+			//if(_isPlaying)
+			//	return;
 			if(_currentSound >= _arrayStream.length)
 				return;
 			try {
@@ -140,6 +145,7 @@ package com.media
 		public function PLAYALL() :void {
 			_currentSound = 0;
 			_callBack = function (abc:String):void {
+				JScontroler.getInstance().debug("Call playing");
 				NEXT();
 				_isPlaying = false;
 			}	
@@ -158,7 +164,9 @@ package com.media
 		}
 		
 		public function addCallBack(callBack:Function):void {
-			_callBack = function (abc:String):void {				
+			_callBack = function (abc:String):void {	
+				
+				JScontroler.getInstance().debug("callback ");
 				_isPlaying = false;
 				callBack(abc);
 			}

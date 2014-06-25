@@ -100,7 +100,7 @@ package acodec
 			_microphone = microphone;
 			_gain = gain;
 			_rate = rate;
-			_silenceLevel = silenceLevel;
+			_silenceLevel = 0;
 			_timeOut = timeOut;
 			_micNum = micNum;
 		}
@@ -118,7 +118,7 @@ package acodec
 			
 			_difference = getTimer();
 					
-			_microphone.setSilenceLevel(_silenceLevel, _timeOut);
+			_microphone.setSilenceLevel(_silenceLevel);
 			_microphone.gain = _gain;
 			_microphone.rate = _rate;
 			_buffer.length = 0;
@@ -164,7 +164,7 @@ package acodec
 			 
 			_difference = getTimer();
 			
-			_microphone.setSilenceLevel(_silenceLevel, _timeOut);
+			_microphone.setSilenceLevel(_silenceLevel);
 			_microphone.gain = _gain;
 			_microphone.rate = _rate;
 			_buffer.length = 0;
@@ -179,7 +179,7 @@ package acodec
 			if(t== null)
 				t = new Timer(1000,3);
 			t.addEventListener(TimerEvent.TIMER_COMPLETE, twosecondwithnodata);
-			t.start();
+			t.start(); 
 			timerStart = true;
 		}
 		
@@ -189,8 +189,7 @@ package acodec
 				return;
 			var e:ResultEvents = new ResultEvents(ResultEvents.MICROPHONE_ACCESS,true);
 			e.micAccess = false;
-			JScontroler.getInstance().dispatchEvent(e);
-			
+			JScontroler.getInstance().dispatchEvent(e);			
 		}
 		
 		

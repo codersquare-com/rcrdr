@@ -18,5 +18,6 @@ package com.common
 		public static var UPLOAD_URL:String;
 		public static var VOLUME_OUT:Object = "volumeOut";
 		public static var VOLUME_IN:Object = "volumeIn";
+		public static var version:Object = "V-1.1 ";
 	}
 }

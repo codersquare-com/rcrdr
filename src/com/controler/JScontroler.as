@@ -206,7 +206,7 @@ package com.controler
 		
 		protected function flashStartup(event:ResultEvents):void
 		{
-			ExternalInterface.call(Variables.eventHanlers,ResultEvents.STARTUP);
+			ExternalInterface.call(Variables.eventHanlers,ResultEvents.STARTUP, Variables.version);
 		}		
 		
 		
