@@ -30,6 +30,8 @@ package com.media
 		private var url:String;
 		private var downloadCallback:Function;
 		private var downloadCallbackInterVal:Timer;
+		private var _curp:Number;
+		private var _time:Number;
 		public function getName():String{
 			return url;
 		}
@@ -39,6 +41,8 @@ package com.media
 			this.oSound = new Sound();
 			this.iVolume=1;
 			this.iPosition=0;
+			_curp = 0;
+			_time = 0;
 			isMute=false;
 			downloadCallback = downloadProgress;
 			downloadCallbackInterVal = new Timer(2000);
@@ -114,6 +118,7 @@ package com.media
 		}
 		public function stop():void {
 			updatePos(0);
+			clearInterval(activeProcess);
 			oSoundChannel.stop();
 		}
 		
@@ -176,10 +181,23 @@ package com.media
 			return oSound.length;
 		}
 		
+		var activeProcess:Number;
 		public function checkStream(callback:Function):void {
-			var activeProcess:Number;
 			activeProcess=setInterval(activeProcessFunction, 200);
 			function activeProcessFunction() : void{
+				
+				if (_curp == _percentplayed)
+					_time ++;
+				else {
+					_time = 0;
+					_curp = _percentplayed;
+				}
+				
+				if (_time >= 5){
+					callback(url);
+					clearInterval(activeProcess);
+				}
+					
 				if (percentLoaded==100 && _percentplayed > 99.5) {
 					callback(url);
 					clearInterval(activeProcess);

@@ -59,7 +59,9 @@ package com.media
 		}
 		
 		public function AddSound(url:String):void {
-			if(!_isPlaying){
+			//STOPALL();
+			if(!_isPlaying)
+			{
 				var ss:SoundStream = new NetSoundStream(_downloadCallback);
 				ss.startup(url);
 				_arrayStream.push(ss);
