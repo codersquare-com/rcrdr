@@ -206,9 +206,10 @@ package com.controler
 			interValRuning = false;
 			if(_interval > 0) {
 				interValRuning = true;
-				var ac:ResultEvents = new ResultEvents(ResultEvents.CALLBACK_FUNCTION,true);
 				interValProcess=setInterval(activeProcessFunction, _interval);
 				function activeProcessFunction() : void{
+					var ac:ResultEvents = new ResultEvents(ResultEvents.CALLBACK_FUNCTION,true);
+					ac.progress = playlist.getInterval();
 					JScontroler.getInstance().dispatchEvent(ac);
 				}
 			}

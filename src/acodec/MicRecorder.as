@@ -94,7 +94,7 @@ package acodec
 		}
 		
 		
-		public function startup(encoder:IEncoder, gain:uint, microphone:Microphone ,micNum:Number, rate:uint=44, silenceLevel:uint=0, timeOut:uint=4000) :void
+		public function startup(encoder:IEncoder, gain:uint, microphone:Microphone ,micNum:Number, rate:uint=44, silenceLevel:uint=16, timeOut:uint=4000) :void
 		{
 			_encoder = encoder;
 			_microphone = microphone;

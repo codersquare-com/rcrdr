@@ -4,6 +4,7 @@ package com.media
 	
 	import com.common.SoundStream;
 	
+	import flash.external.ExternalInterface;
 	import flash.sampler.pauseSampling;
 	import flash.sensors.Accelerometer;
 	import flash.utils.ByteArray;
@@ -32,7 +33,23 @@ package com.media
 			if(_tmpSoundStream != null)
 				_tmpSoundStream.updateVolume(vol);
 		}
+		
+		public function getInterval() : Number
+		{
+			try{
+			if (_currentSoundStream != null)
+				return _currentSoundStream.getInterval();
+			else
+				if (_tmpSoundStream != null)
+					return _tmpSoundStream.getInterval();
+			} catch (e:Error)
+			{
 				
+			}
+			return -1;
+		}
+			
+		
 		public function Playlist(downloadCallback:Function)
 		{
 			_arrayStream = new Array();

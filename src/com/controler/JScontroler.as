@@ -60,6 +60,7 @@ package com.controler
 				addEventListener(ResultEvents.DOWNLOAD_PROGRESS, downloadProgress);
 			}
 			enableAll();
+			showPlaybackProgress(100);
 			isDebug = true;
 		}
 		
@@ -150,9 +151,9 @@ package com.controler
 			dispatchEvent(ms);
 		}
 		
-		protected function callBackFunction(event:Event):void
+		protected function callBackFunction(event:ResultEvents):void
 		{
-			ExternalInterface.call(Variables.eventHanlers,ResultEvents.CALLBACK_FUNCTION);
+			ExternalInterface.call(Variables.eventHanlers,ResultEvents.CALLBACK_FUNCTION, event.progress);
 		}
 		
 		private function showPlaybackProgress(val:Number):void
