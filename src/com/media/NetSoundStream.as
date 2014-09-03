@@ -52,7 +52,7 @@ package com.media
 		protected function soundCompleteHandler(event:Event):void
 		{
 			JScontroler.getInstance().debug("SoundComplete event");
-			_callback("");
+			_callback(url);
 		}
 		
 		protected function dctimer(event:TimerEvent):void
